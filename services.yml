@@ -1,0 +1,11 @@
+services:
+  event_dispatcher:
+    class: Symfony\Component\EventDispatcher\EventDispatcher
+    public: true
+  file_system:
+    class: Symfony\Component\Filesystem\Filesystem
+    public: true
+  common_console_application:
+    class: Symfony\Component\Console\Application
+    public: true
+    arguments: ['CommonConsole', '0.0.1']
