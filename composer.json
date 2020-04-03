@@ -10,6 +10,9 @@
     "symfony/dependency-injection": "^4.3@dev",
     "symfony/config": "^4.3@dev"
   },
+  "bin": [
+    "bin/commoncli"
+  ],
   "autoload": {
     "psr-4": {
       "EclipseGc\\CommonConsole\\": "src"
