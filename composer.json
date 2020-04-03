@@ -4,11 +4,11 @@
   "type": "project",
   "require": {
     "symfony/console": "^3.4 || ^4.2",
-    "symfony/yaml": "3.4 || ^4.2",
-    "symfony/filesystem": "3.4 || ^4.3@dev",
-    "symfony/event-dispatcher": "3.4 || ^4.3@dev",
-    "symfony/dependency-injection": "3.4 || ^4.3@dev",
-    "symfony/config": "3.4 || ^4.3@dev"
+    "symfony/yaml": "^3.4 || ^4.2",
+    "symfony/filesystem": "^3.4 || ^4.3@dev",
+    "symfony/event-dispatcher": "^3.4 || ^4.3@dev",
+    "symfony/dependency-injection": "^3.4 || ^4.3@dev",
+    "symfony/config": "^3.4 || ^4.3@dev"
   },
   "bin": [
     "bin/commoncli"
