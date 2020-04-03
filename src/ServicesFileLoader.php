@@ -9,6 +9,44 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 class ServicesFileLoader extends YamlFileLoader {
 
   /**
+   * Manually invoke private methods on the super class.
+   *
+   * Many of the methods provided by YamlFileLoader are private, but the public
+   * load method only thinks in terms of singular paths found by the locator.
+   * We want the locator to retrieve ALL paths that match our criteria. Since
+   * the parent class doesn't think in terms of multiple matches, we wrap the
+   * existing logic in a foreach loop, and proxy to this method to invoke
+   * upstream private calls.
+   *
+   * @param $method
+   * @param mixed ...$args
+   *
+   * @return mixed
+   * @throws \ReflectionException
+   */
+  protected function getPrivateMethod($method, ...$args)
+  {
+    $method = new \ReflectionMethod(YamlFileLoader::class, $method);
+    $method->setAccessible(TRUE);
+    return $method->invoke($this, ...$args);
+  }
+
+  /**
+   * Manually set private properties on the super class.
+   *
+   * @param $property
+   * @param $value
+   *
+   * @throws \ReflectionException
+   */
+  protected function getPrivateProperty($property, $value)
+  {
+    $property = new \ReflectionProperty(YamlFileLoader::class, $property);
+    $property->setAccessible(TRUE);
+    $property->setValue($this, $value);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function load($resource, $type = null)
@@ -26,9 +64,7 @@ class ServicesFileLoader extends YamlFileLoader {
       }
 
       // imports
-      $method = new \ReflectionMethod(YamlFileLoader::class, 'parseImports');
-      $method->setAccessible(TRUE);
-      $method->invoke($this, $content, $path);
+      $this->getPrivateMethod('parseImports', $content, $path);
 
       // parameters
       if (isset($content['parameters'])) {
@@ -37,31 +73,21 @@ class ServicesFileLoader extends YamlFileLoader {
         }
 
         foreach ($content['parameters'] as $key => $value) {
-          $method = new \ReflectionMethod(YamlFileLoader::class, 'resolveServices');
-          $method->setAccessible(TRUE);
-          $this->container->setParameter($key, $method->invoke($this, $value, $path, TRUE));
+          $this->container->setParameter($key, $this->getPrivateMethod('resolveServices', $value, $path, TRUE));
         }
       }
 
       // extensions
-      $method = new \ReflectionMethod(YamlFileLoader::class, 'loadFromExtensions');
-      $method->setAccessible(TRUE);
-      $method->invoke($this, $content);
+      $this->getPrivateMethod('loadFromExtensions', $content);
 
       // services
-      $property = new \ReflectionProperty(YamlFileLoader::class, 'anonymousServicesCount');
-      $property->setAccessible(TRUE);
-      $property->setValue($this, 0);
+      $this->getPrivateProperty('anonymousServicesCount', 0);
 
-      $property = new \ReflectionProperty(YamlFileLoader::class, 'anonymousServicesSuffix');
-      $property->setAccessible(TRUE);
-      $property->setValue($this,'~' . ContainerBuilder::hash($path));
+      $this->getPrivateProperty('anonymousServicesSuffix', '~' . ContainerBuilder::hash($path));
 
       $this->setCurrentDir(\dirname($path));
       try {
-        $method = new \ReflectionMethod(YamlFileLoader::class, 'parseDefinitions');
-        $method->setAccessible(TRUE);
-        $method->invoke($this, $content, $path);
+        $this->getPrivateMethod('parseDefinitions', $content, $path);
       } finally {
         $this->instanceof = [];
         $this->registerAliasesForSinglyImplementedInterfaces();
