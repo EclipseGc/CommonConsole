@@ -23,7 +23,7 @@ if ($installed) {
 }
 $container = new ContainerBuilder();
 $loader = new ServicesFileLoader($container, new FileLocator($locations));
-$loader->load('services.yml');
+$loader->load('commoncli.services.yml');
 $container->addCompilerPass(new RegisterListenersPass());
 $container->addCompilerPass(new CommandCompilerPass());
 $container->compile();
