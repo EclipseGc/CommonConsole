@@ -90,7 +90,9 @@ class ServicesFileLoader extends YamlFileLoader {
         $this->getPrivateMethod('parseDefinitions', $content, $path);
       } finally {
         $this->instanceof = [];
-        $this->registerAliasesForSinglyImplementedInterfaces();
+        if (method_exists($this, 'registerAliasesForSinglyImplementedInterfaces')) {
+          $this->registerAliasesForSinglyImplementedInterfaces();
+        }
       }
     }
   }

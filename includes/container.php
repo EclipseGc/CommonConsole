@@ -6,10 +6,9 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 
-$vendorDir = __DIR__ . '/../vendor';
-
 /** @var \Composer\Autoload\ClassLoader $autoloader */
-$autoloader = require "$vendorDir/autoload.php";
+[$autoloader, $autoloadFile] = require __DIR__ . "/autoload.php";
+$vendorDir = dirname($autoloadFile);
 // Collect all the installed
 $locations = [__DIR__ . '/..'];
 $installed = file_get_contents("$vendorDir/composer/installed.json");
