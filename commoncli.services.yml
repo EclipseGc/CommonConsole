@@ -9,3 +9,13 @@ services:
     class: Symfony\Component\Console\Application
     public: true
     arguments: ['CommonConsole', '0.0.1']
+  console.input:
+    class: Symfony\Component\Console\Input\ArgvInput
+    public: true
+  console.output:
+    class: Symfony\Component\Console\Output\ConsoleOutput
+    public: true
+  console.logger:
+    class: Symfony\Component\Console\Logger\ConsoleLogger
+    public: true
+    arguments: ['@console.output']
