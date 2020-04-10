@@ -19,3 +19,8 @@ services:
     class: Symfony\Component\Console\Logger\ConsoleLogger
     public: true
     arguments: ['@console.output']
+  alias.finder:
+    class: EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand\AliasFinder
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: kernel.event_subscriber }
