@@ -19,6 +19,8 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AliasFinder implements EventSubscriberInterface {
 
+  const ALIAS_PATTERN = '%^@?([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%';
+
   /**
    * AliasFinder constructor.
    *
@@ -61,12 +63,12 @@ class AliasFinder implements EventSubscriberInterface {
     array_shift($tokens);
     $i = 0;
     foreach ($tokens as $token) {
-      if (preg_match('%^@?([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%', $token)) {
+      if (preg_match(self::ALIAS_PATTERN, $token)) {
         $alias = substr($token, 1);
         $findAliasEvent = new FindAliasEvent($alias, $event);
         $this->dispatcher->dispatch(CommonConsoleEvents::ALIAS_FIND, $findAliasEvent);
         if (!$findAliasEvent->getPlatform()) {
-          $output->writeln(sprintf("[ERROR] Alias by name %s not found. Please check your available aliases and try again.", $alias));
+          $output->writeln("<error>" . sprintf("Alias by name %s not found. Please check your available aliases and try again.", $alias) . "</error>");
           $event->disableCommand();
           $event->stopPropagation();
           return;
