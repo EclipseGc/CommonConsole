@@ -10,7 +10,10 @@ use Symfony\Component\EventDispatcher\DependencyInjection\RegisterListenersPass;
 [$autoloader, $autoloadFile] = require __DIR__ . "/autoload.php";
 $vendorDir = dirname($autoloadFile);
 // Collect all the installed
-$locations = [__DIR__ . '/..'];
+$locations = [
+  __DIR__ . '/..',
+  $vendorDir . '/..'
+];
 $installed = file_get_contents("$vendorDir/composer/installed.json");
 if ($installed) {
   $installed = json_decode($installed);
