@@ -77,6 +77,9 @@ class CreatePlatform extends Command {
     $questions += $platform_class::getPlatformQuestions();
     do {
       foreach ($questions as $variable => $question) {
+        if (is_callable($question)) {
+          $question = call_user_func_array($question, [$values]);
+        }
         $values[$variable] = $helper->ask($input, $output, $question);
         $table->addRow([$variable, $values[$variable]]);
       }
