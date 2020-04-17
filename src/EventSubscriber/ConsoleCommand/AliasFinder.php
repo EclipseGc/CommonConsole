@@ -19,7 +19,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AliasFinder implements EventSubscriberInterface {
 
-  const ALIAS_PATTERN = '%^@?([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%';
+  const ALIAS_PATTERN = '%^@([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%';
 
   /**
    * AliasFinder constructor.
@@ -61,7 +61,6 @@ class AliasFinder implements EventSubscriberInterface {
     $command = $event->getCommand();
     $tokens = $this->getTokens($input);
     array_shift($tokens);
-    $i = 0;
     foreach ($tokens as $token) {
       if (preg_match(self::ALIAS_PATTERN, $token)) {
         $alias = substr($token, 1);
@@ -93,12 +92,9 @@ class AliasFinder implements EventSubscriberInterface {
    *
    * @return string[]
    *   The array of tokens passed to this command.
-   * @throws \ReflectionException
    */
-  protected function getTokens(InputInterface $input) {
-    $tokens = new \ReflectionProperty(ArgvInput::class, 'tokens');
-    $tokens->setAccessible(TRUE);
-    return $tokens->getValue($input);
+  protected function getTokens(InputInterface $input): array {
+    return $input->getArguments();
   }
 
 }

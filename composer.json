@@ -18,6 +18,11 @@
       "EclipseGc\\CommonConsole\\": "src"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "EclipseGc\\CommonConsole\\Tests\\": "tests"
+    }
+  },
   "minimum-stability": "dev",
   "require-dev": {
     "phpunit/phpunit": "^9.1@dev"
