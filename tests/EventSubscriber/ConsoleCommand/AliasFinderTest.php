@@ -7,7 +7,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
- * Class AliasFinderTest
+ * Class AliasFinderTest.
  *
  * @group eclipsegc_common_console
  *
@@ -24,17 +24,13 @@ class AliasFinderTest extends TestCase {
    */
   protected static $container;
 
+  /**
+   * {@inheritdoc}
+   */
   public static function setUpBeforeClass(): void {
     parent::setUpBeforeClass();
 
     static::$container = require_once __DIR__ .'/../../../includes/container.php';
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    parent::setUp();
   }
 
   /**
