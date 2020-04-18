@@ -7,8 +7,6 @@ use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\PlatformCommandInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -19,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class AliasFinder implements EventSubscriberInterface {
 
-  const ALIAS_PATTERN = '%^@?([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%';
+  const ALIAS_PATTERN = '%^@([a-zA-Z0-9_-]+)(\.[a-zA-Z0-9_-]+)?(\.[a-zA-Z0-9_-]+)?$%';
 
   /**
    * AliasFinder constructor.
@@ -52,19 +50,15 @@ class AliasFinder implements EventSubscriberInterface {
    *
    * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
    *   The console command event.
-   *
-   * @throws \ReflectionException
    */
   public function onConsoleCommand(ConsoleCommandEvent $event) {
-    $input = $event->getInput();
     $output = $event->getOutput();
     $command = $event->getCommand();
-    $tokens = $this->getTokens($input);
-    array_shift($tokens);
-    $i = 0;
-    foreach ($tokens as $token) {
-      if (preg_match(self::ALIAS_PATTERN, $token)) {
-        $alias = substr($token, 1);
+    $arguments = $event->getInput()->getArguments();
+    array_shift($arguments);
+    foreach ($arguments as $argument) {
+      if (preg_match(self::ALIAS_PATTERN, $argument)) {
+        $alias = substr($argument, 1);
         $findAliasEvent = new FindAliasEvent($alias, $event);
         $this->dispatcher->dispatch(CommonConsoleEvents::ALIAS_FIND, $findAliasEvent);
         if (!$findAliasEvent->getPlatform()) {
@@ -84,21 +78,6 @@ class AliasFinder implements EventSubscriberInterface {
         }
       }
     }
-  }
-
-  /**
-   * Extracts tokens from the input object.
-   *
-   * @param \Symfony\Component\Console\Input\InputInterface $input
-   *
-   * @return string[]
-   *   The array of tokens passed to this command.
-   * @throws \ReflectionException
-   */
-  protected function getTokens(InputInterface $input) {
-    $tokens = new \ReflectionProperty(ArgvInput::class, 'tokens');
-    $tokens->setAccessible(TRUE);
-    return $tokens->getValue($input);
   }
 
 }
