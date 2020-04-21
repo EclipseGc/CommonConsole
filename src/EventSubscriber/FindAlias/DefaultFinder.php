@@ -6,6 +6,7 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\ProcessRunner;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -36,6 +37,11 @@ class DefaultFinder implements EventSubscriberInterface {
   protected $dispatcher;
 
   /**
+   * @var \EclipseGc\CommonConsole\ProcessRunner
+   */
+  protected $runner;
+
+  /**
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
@@ -47,12 +53,15 @@ class DefaultFinder implements EventSubscriberInterface {
    *   The file system object.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param \EclipseGc\CommonConsole\ProcessRunner $runner
+   *   The process runner.
    * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
    *   The container.
    */
-  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, ContainerInterface $container) {
+  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, ProcessRunner $runner, ContainerInterface $container) {
     $this->filesystem = $filesystem;
     $this->dispatcher = $dispatcher;
+    $this->runner = $runner;
     $this->container = $container;
   }
 
@@ -80,21 +89,30 @@ class DefaultFinder implements EventSubscriberInterface {
     $config = Yaml::parse(file_get_contents($alias_file));
     $platform_event = new GetPlatformTypeEvent($config['platform_type']);
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
-    if ($factory = $platform_event->getFactory()) {
+    $event->setPlatform($this->getPlatform($platform_event, $config));
+    $event->stopPropagation();;
+  }
+
+  /**
+   * Instatiates a platform via its factory or through a naive new statement.
+   *
+   * @param \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event
+   *   The GetPlatformTypeEvent object.
+   * @param array $config
+   *   The configuration values to use for instantiating the platform.
+   *
+   * @return \EclipseGc\CommonConsole\PlatformInterface
+   */
+  protected function getPlatform(GetPlatformTypeEvent $event, array $config) {
+    if ($factory = $event->getFactory()) {
       if ($this->container->has($factory)) {
-        $event->setPlatform($this->container->get($factory)->create($config));
-        $event->stopPropagation();
-        return;
+        return $this->container->get($factory)->create($config, $this->runner);
       }
       $factory = new $factory();
-      $event->setPlatform($factory->create($config));
-      $event->stopPropagation();
-      return;
+      return $factory->create($config, $this->runner);
     }
-    $class = $platform_event->getClass();
-    $platform = new $class($config);
-    $event->setPlatform($platform);
-    $event->stopPropagation();;
+    $class = $event->getClass();
+    return new $class($config, $this->runner);
   }
 
   /**

@@ -81,7 +81,14 @@ class CreatePlatform extends Command {
           $question = call_user_func_array($question, [$values]);
         }
         $values[$variable] = $helper->ask($input, $output, $question);
-        $table->addRow([$variable, $values[$variable]]);
+        if (is_array($values[$variable])) {
+          foreach ($values[$variable] as $value) {
+            $table->addRow([$variable, $value]);
+          }
+        }
+        else {
+          $table->addRow([$variable, $values[$variable]]);
+        }
       }
       $table->render();
 

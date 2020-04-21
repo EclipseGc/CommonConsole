@@ -46,6 +46,16 @@ class PlatformWriteEvent extends Event {
   }
 
   /**
+   * Set config values to be saved.
+   *
+   * @param array $config
+   *   The config values to write for the platform.
+   */
+  public function setConfig(array $config) : void {
+    $this->config = $config;
+  }
+
+  /**
    * Set the success of the write event.
    *
    * @param bool $value

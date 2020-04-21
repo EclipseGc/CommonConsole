@@ -19,6 +19,9 @@ services:
     class: Symfony\Component\Console\Logger\ConsoleLogger
     public: true
     arguments: ['@console.output']
+  process.runner:
+    class: EclipseGc\CommonConsole\ProcessRunner
+    arguments: ['@console.input', '@console.output']
   command.platform.create:
     class: EclipseGc\CommonConsole\Command\CreatePlatform
     arguments: ['@event_dispatcher']
@@ -31,6 +34,10 @@ services:
       - { name: kernel.event_subscriber }
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
-    arguments: ['@file_system', '@event_dispatcher', '@service_container']
+    arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
+    tags:
+      - { name: kernel.event_subscriber }
+  platform.ssh:
+    class: EclipseGc\CommonConsole\EventSubscriber\Platform\PlatformSubscriberSsh
     tags:
       - { name: kernel.event_subscriber }
