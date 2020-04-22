@@ -17,7 +17,7 @@ class SshPlatform extends PlatformBase {
   /**
    * {@inheritdoc}
    */
-  public static function getPlatformQuestions() {
+  public static function getQuestions() {
     return [
       'ssh_user' => new Question("SSH Username: "),
       'ssh_url' => new Question("SSH URL: "),

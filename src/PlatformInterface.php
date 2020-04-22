@@ -6,30 +6,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
-interface PlatformInterface {
-
-  /**
-   * Return an array of \Symfony\Component\Console\Question\Question objects.
-   *
-   * The array of Question objects can be represented either directly as
-   * Questions or as a callback to another public static method which evaluates
-   * the values and returns a question.
-   *
-   * Example:
-   *  public static function getPlatformQuestions() {
-   *    return [
-   *      'ssh_user' => new Question("SSH Username: "),
-   *      'ssh_url' => new Question("SSH URL: "),
-   *      'ssh_remote_dir' => new Question("SSH remote directory: "),
-   *      'ssh_remote_vendor_dir' => [SshPlatform::class, 'getRemoteVendorDir'],
-   *    ];
-   *  }
-   *
-   *  public static function getRemoteVendorDir(array $values) {...
-   *
-   * @return array
-   */
-  public static function getPlatformQuestions();
+interface PlatformInterface extends CommandQuestionInterface {
 
   /**
    * Execute a command on the defined platform.

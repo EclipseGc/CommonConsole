@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
+use EclipseGc\CommonConsole\PlatformFactoryInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -73,13 +74,13 @@ class GetPlatformTypeEvent extends Event {
   /**
    * Add a class or service id to be used when instantiating the platform.
    *
-   * @todo, flesh this out. Should be a class name or service id. Probably means we need some container aware factory.
-   *
    * @param string $factory
    *   The factory class name or service id.
    */
   public function addFactory(string $factory) {
-    // @todo add class_implements check for a factory interface.
+    if (class_exists($factory) && !in_array(PlatformFactoryInterface::class, class_implements($factory))) {
+      throw new \Exception(sprintf("Invalid PlatformFactory class. Must implement %s.", PlatformFactoryInterface::class));
+    }
     $this->factory = $factory;
   }
 

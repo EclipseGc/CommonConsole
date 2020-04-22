@@ -6,6 +6,7 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\QuestionFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,11 +36,19 @@ class CreatePlatform extends Command {
   protected $dispatcher;
 
   /**
+   * The question factory.
+   *
+   * @var \EclipseGc\CommonConsole\QuestionFactory
+   */
+  protected $questionFactory;
+
+  /**
    * CreatePlatform constructor.
    */
-  public function __construct(EventDispatcherInterface $dispatcher, string $name = NULL) {
+  public function __construct(EventDispatcherInterface $dispatcher, QuestionFactory $questionFactory, string $name = NULL) {
     parent::__construct($name);
     $this->dispatcher = $dispatcher;
+    $this->questionFactory = $questionFactory;
   }
 
   /**
@@ -74,12 +83,10 @@ class CreatePlatform extends Command {
     $platform_event = new GetPlatformTypeEvent($platform_type);
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
     $platform_class = $platform_event->getClass();
-    $questions += $platform_class::getPlatformQuestions();
+    $questions += $platform_class::getQuestions();
     do {
       foreach ($questions as $variable => $question) {
-        if (is_callable($question)) {
-          $question = call_user_func_array($question, [$values]);
-        }
+        $question = $this->questionFactory->getQuestion($question, $values);
         $values[$variable] = $helper->ask($input, $output, $question);
         if (is_array($values[$variable])) {
           foreach ($values[$variable] as $value) {

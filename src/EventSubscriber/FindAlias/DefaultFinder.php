@@ -7,6 +7,7 @@ use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
 use EclipseGc\CommonConsole\ProcessRunner;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -94,7 +95,7 @@ class DefaultFinder implements EventSubscriberInterface {
   }
 
   /**
-   * Instatiates a platform via its factory or through a naive new statement.
+   * Instantiates a platform via its factory or through a naive new statement.
    *
    * @param \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event
    *   The GetPlatformTypeEvent object.
@@ -106,10 +107,13 @@ class DefaultFinder implements EventSubscriberInterface {
   protected function getPlatform(GetPlatformTypeEvent $event, array $config) {
     if ($factory = $event->getFactory()) {
       if ($this->container->has($factory)) {
-        return $this->container->get($factory)->create($config, $this->runner);
+        return $this->container->get($factory)->create($event, $config, $this->runner);
       }
-      $factory = new $factory();
-      return $factory->create($config, $this->runner);
+      if (class_exists($factory)) {
+        $factory = new $factory();
+        return $factory->create($event, $config, $this->runner);
+      }
+      throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined."));
     }
     $class = $event->getClass();
     return new $class($config, $this->runner);

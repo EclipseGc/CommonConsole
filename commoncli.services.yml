@@ -19,12 +19,15 @@ services:
     class: Symfony\Component\Console\Logger\ConsoleLogger
     public: true
     arguments: ['@console.output']
+  question.finder:
+    class: EclipseGc\CommonConsole\QuestionFactory
+    arguments: ['@service_container']
   process.runner:
     class: EclipseGc\CommonConsole\ProcessRunner
     arguments: ['@console.input', '@console.output']
   command.platform.create:
     class: EclipseGc\CommonConsole\Command\CreatePlatform
-    arguments: ['@event_dispatcher']
+    arguments: ['@event_dispatcher', '@question.finder']
     tags:
       - { name: common_console_command }
   alias.finder:
