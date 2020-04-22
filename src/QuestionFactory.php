@@ -65,7 +65,7 @@ class QuestionFactory {
         }
         $args[] = $this->container->get($service_id);
       }
-      return call_user_func_array($question['question'], [$values]);
+      return call_user_func_array($question['question'], $args);
     }
     throw new LogicException("No question was created.");
   }
