@@ -113,7 +113,7 @@ class DefaultFinder implements EventSubscriberInterface {
         $factory = new $factory();
         return $factory->create($event, $config, $this->runner);
       }
-      throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined."));
+      throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined.", $factory));
     }
     $class = $event->getClass();
     return new $class($config, $this->runner);
