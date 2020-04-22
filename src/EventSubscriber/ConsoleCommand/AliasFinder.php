@@ -73,8 +73,8 @@ class AliasFinder implements EventSubscriberInterface {
         }
         else {
           $findAliasEvent->getPlatform()->execute($command, $output);
-          $output->writeln("$alias");
           $event->disableCommand();
+          $event->stopPropagation();
         }
       }
     }

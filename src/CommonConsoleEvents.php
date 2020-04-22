@@ -12,4 +12,6 @@ final class CommonConsoleEvents {
 
   const PLATFORM_WRITE = 'commonconsole.platform.write';
 
+  const PLATFORM_BOOTSTRAP = 'commonconsole.platform.bootstrap';
+
 }

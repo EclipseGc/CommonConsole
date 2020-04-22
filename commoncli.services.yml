@@ -32,12 +32,24 @@ services:
     arguments: ['@event_dispatcher']
     tags:
       - { name: kernel.event_subscriber }
+  platform.bootstrapper:
+    class: EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand\Bootstrapper
+    tags:
+      - { name: kernel.event_subscriber }
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
     arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
     tags:
       - { name: kernel.event_subscriber }
+
+  # Platform definitions.
   platform.ssh:
     class: EclipseGc\CommonConsole\EventSubscriber\Platform\PlatformSubscriberSsh
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # Platform Bootstraps
+  bootstrap.drupal:
+    class: EclipseGc\CommonConsole\EventSubscriber\Bootstrap\Drupal
     tags:
       - { name: kernel.event_subscriber }
