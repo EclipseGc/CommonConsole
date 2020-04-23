@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole\EventSubscriber\Bootstrap;
 
+use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
 use Drupal\Core\Site\Settings;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
@@ -18,6 +19,24 @@ use Symfony\Component\HttpFoundation\Request;
  * @package EclipseGc\CommonConsole\EventSubscriber\Bootstrap
  */
 class Drupal implements EventSubscriberInterface {
+  /**
+   * The Composer class loader.
+   *
+   * @var \Composer\Autoload\ClassLoader
+   */
+  protected $loader;
+
+  /**
+   * ContentHubAudit constructor.
+   *
+   * @param \Composer\Autoload\ClassLoader $autoloader
+   *   The composer class loader.
+   * @param string $autoloadFile
+   *   The location of the autoload file.
+   */
+  public function __construct(ClassLoader $autoloader) {
+    $this->loader = $autoloader;
+  }
 
   /**
    * {@inheritdoc}

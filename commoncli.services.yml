@@ -54,5 +54,6 @@ services:
   # Platform Bootstraps
   bootstrap.drupal:
     class: EclipseGc\CommonConsole\EventSubscriber\Bootstrap\Drupal
+    arguments: ['%autoloader%', '%autoload.file%']
     tags:
       - { name: kernel.event_subscriber }
