@@ -60,7 +60,13 @@ class Drupal implements EventSubscriberInterface {
         $consoleEvent->disableCommand();
         return;
       }
-      // Set up environment
+
+      $input = $bootstrapEvent->getConsoleCommandEvent()->getInput();
+      $uri = $input->getOption('uri');
+      // Set up super globals before creating a request.
+      if ($uri) {
+        $this->setServerGlobals($uri);
+      }
       $request = Request::createFromGlobals();
       $kernel = new DrupalKernel('prod', $this->loader, FALSE);
       chdir($kernel->getAppRoot());
@@ -72,6 +78,53 @@ class Drupal implements EventSubscriberInterface {
         ->get('request_stack')
         ->push($request);
     }
+  }
+
+  /**
+   * Set up the $_SERVER globals so that Drupal will see the same values
+   * that it does when serving pages via the web server.
+   */
+  protected function setServerGlobals($uri) {
+    // Fake the necessary HTTP headers that Drupal needs:
+    if ($uri) {
+      $drupal_base_url = parse_url($uri);
+      // If there's no url scheme set, add http:// and re-parse the url
+      // so the host and path values are set accurately.
+      if (!array_key_exists('scheme', $drupal_base_url)) {
+        $uri = 'http://' . $uri;
+        $drupal_base_url = parse_url($uri);
+      }
+      // Fill in defaults.
+      $drupal_base_url += array(
+        'path' => '',
+        'host' => NULL,
+        'port' => NULL,
+      );
+      $_SERVER['HTTP_HOST'] = $drupal_base_url['host'];
+
+      if ($drupal_base_url['scheme'] == 'https') {
+        $_SERVER['HTTPS'] = 'on';
+      }
+
+      if ($drupal_base_url['port']) {
+        $_SERVER['HTTP_HOST'] .= ':' . $drupal_base_url['port'];
+      }
+      $_SERVER['SERVER_PORT'] = $drupal_base_url['port'];
+
+      $_SERVER['REQUEST_URI'] = $drupal_base_url['path'] . '/';
+    }
+    else {
+      $_SERVER['HTTP_HOST'] = 'default';
+      $_SERVER['REQUEST_URI'] = '/';
+    }
+
+    $_SERVER['PHP_SELF'] = $_SERVER['REQUEST_URI'] . 'index.php';
+    $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'];
+    $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+    $_SERVER['REQUEST_METHOD']  = 'GET';
+
+    $_SERVER['SERVER_SOFTWARE'] = NULL;
+    $_SERVER['HTTP_USER_AGENT'] = NULL;
   }
 
 }
