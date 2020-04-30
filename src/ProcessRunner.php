@@ -28,17 +28,9 @@ class ProcessRunner {
    *
    * @param \Symfony\Component\Console\Input\InputInterface $input
    *   The input object.
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   *   The output object.
    */
-  public function __construct(InputInterface $input, OutputInterface $output) {
+  public function __construct(InputInterface $input) {
     $this->input = $input;
-    // @todo there's probably a better way to get OutputStyles set up.
-    $warning = new OutputFormatterStyle('black', 'yellow');
-    $output->getFormatter()->setStyle('warning', $warning);
-    $url = new OutputFormatterStyle('white', 'blue', ['bold']);
-    $output->getFormatter()->setStyle('url', $url);
-    $this->output = $output;
   }
 
   /**
@@ -61,6 +53,15 @@ class ProcessRunner {
         $output->writeln("<info>$buffer</info>");
       }
     });
+  }
+
+  public function setOutput(OutputInterface $output) {
+    // @todo there's probably a better way to get OutputStyles set up.
+    $warning = new OutputFormatterStyle('black', 'yellow');
+    $output->getFormatter()->setStyle('warning', $warning);
+    $url = new OutputFormatterStyle('white', 'blue', ['bold']);
+    $output->getFormatter()->setStyle('url', $url);
+    $this->output = $output;
   }
 
 }
