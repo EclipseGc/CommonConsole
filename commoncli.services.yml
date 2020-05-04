@@ -14,6 +14,8 @@ services:
     public: true
   console.output:
     class: Symfony\Component\Console\Output\ConsoleOutput
+    factory: ['EclipseGc\CommonConsole\OutputFactory', 'createOutput']
+    arguments: ['@event_dispatcher']
     public: true
   console.logger:
     class: Symfony\Component\Console\Logger\ConsoleLogger
@@ -42,6 +44,12 @@ services:
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
     arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # Output formatting.
+  formatting.output.default:
+    class: EclipseGc\CommonConsole\EventSubscriber\OutputFormatterStyle\DefaultOutputFormatterStyle
     tags:
       - { name: kernel.event_subscriber }
 

@@ -17,7 +17,7 @@ class OutputFormatterStyleEvent extends Event {
    *
    * @var OutputFormatterStyleInterface[]
    */
-  protected $styles;
+  protected $styles = [];
 
   /**
    * Add output formatter styles to the output.
