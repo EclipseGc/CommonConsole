@@ -58,9 +58,15 @@ class ProcessRunner {
     $definition->setAccessible(TRUE);
     /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
     $definition = $definition->getValue($input);
-    foreach ($input->getOptions() as $option_name => $option) {
-      if ($definition->getOption($option_name)->getDefault() !== $option) {
-        $string .= " --$option_name=$option";
+    foreach ($input->getOptions() as $option_name => $option_value) {
+      $option = $definition->getOption($option_name);
+      if ($option->getDefault() !== $option_value) {
+        if ($option->acceptValue()) {
+          $string .= " --$option_name=$option_value";
+        }
+        else {
+          $string .= "--$option_name";
+        }
       }
     }
     return $string;
