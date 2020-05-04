@@ -14,4 +14,6 @@ final class CommonConsoleEvents {
 
   const PLATFORM_BOOTSTRAP = 'commonconsole.platform.bootstrap';
 
+  const OUTPUT_FORMATTER_STYLE = 'commonconsole.output.formatter_style';
+
 }

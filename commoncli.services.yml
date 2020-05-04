@@ -24,9 +24,9 @@ services:
     arguments: ['@service_container']
   process.runner:
     class: EclipseGc\CommonConsole\ProcessRunner
-    arguments: ['@console.input', '@console.output']
+    arguments: ['@console.input']
   command.platform.create:
-    class: EclipseGc\CommonConsole\Command\CreatePlatform
+    class: EclipseGc\CommonConsole\Command\PlatformCreate
     arguments: ['@event_dispatcher', '@question.finder']
     tags:
       - { name: common_console_command }

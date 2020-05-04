@@ -3,6 +3,7 @@
 namespace EclipseGc\CommonConsole\Platform;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
@@ -37,7 +38,7 @@ class SshPlatform extends PlatformBase {
   public static function getRemoteVendorDir(array $values) {
     $parts = [
       $values['ssh_remote_dir'],
-      'vendor'
+      'vendor',
     ];
     $vendor_dir = implode(DIRECTORY_SEPARATOR, $parts);
     return new Question("Remote vendor directory: [$vendor_dir] ", $vendor_dir);
@@ -46,10 +47,12 @@ class SshPlatform extends PlatformBase {
   /**
    * {@inheritdoc}
    */
-  public function execute(Command $command, OutputInterface $output) : void {
+  public function execute(Command $command, InputInterface $input, OutputInterface $output) : void {
     $sshUrl = "{$this->config['ssh_user']}@{$this->config['ssh_url']}";
-    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli {$command->getName()}'");
-    $this->runner->run($process, $this);
+    $command_string = $this->runner->getCommandString($input);
+//    echo "ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli $command_string'";
+    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli $command_string'");
+    $this->runner->run($process, $this, $output);
   }
 
 }

@@ -3,6 +3,7 @@
 namespace EclipseGc\CommonConsole;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
@@ -21,10 +22,12 @@ interface PlatformInterface extends CommandQuestionInterface {
    *
    * @param \Symfony\Component\Console\Command\Command $command
    *   The command to execute.
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   The input object.
    * @param \Symfony\Component\Console\Output\OutputInterface $output
-   *   The output interface.
+   *   The output object.
    */
-  public function execute(Command $command, OutputInterface $output) : void ;
+  public function execute(Command $command, InputInterface $input, OutputInterface $output) : void ;
 
   /**
    * ProcessRunner proxy method to allow a to response to specific output.

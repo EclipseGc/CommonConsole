@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  *
  * @package EclipseGc\CommonConsole\Command
  */
-class CreatePlatform extends Command {
+class PlatformCreate extends Command {
 
   /**
    * {@inheritdoc}

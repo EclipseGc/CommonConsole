@@ -2,9 +2,10 @@
 
 namespace EclipseGc\CommonConsole;
 
+use EclipseGc\CommonConsole\Event\OutputFormatterStyleEvent;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Process\Process;
 
 class ProcessRunner {
@@ -17,28 +18,52 @@ class ProcessRunner {
   protected $input;
 
   /**
-   * The output object.
+   * The output formatters.
    *
-   * @var \Symfony\Component\Console\Output\OutputInterface
+   * @var \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface[]
    */
-  protected $output;
+  protected $formatters = [];
 
   /**
    * ProcessRunner constructor.
    *
    * @param \Symfony\Component\Console\Input\InputInterface $input
    *   The input object.
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   *   The output object.
    */
-  public function __construct(InputInterface $input, OutputInterface $output) {
+  public function __construct(InputInterface $input) {
     $this->input = $input;
-    // @todo there's probably a better way to get OutputStyles set up.
-    $warning = new OutputFormatterStyle('black', 'yellow');
-    $output->getFormatter()->setStyle('warning', $warning);
-    $url = new OutputFormatterStyle('white', 'blue', ['bold']);
-    $output->getFormatter()->setStyle('url', $url);
-    $this->output = $output;
+  }
+
+  public function getOutputStyles(EventDispatcherInterface $dispatcher) {
+    $event = new OutputFormatterStyleEvent();
+    $dispatcher->dispatch(CommonConsoleEvents::OUTPUT_FORMATTER_STYLE, $event);
+    $this->formatters = $event->getFormatterStyles();
+  }
+
+  /**
+   * Get the command string which was executed from a given input object.
+   *
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   The input object.
+   *
+   * @return string
+   *   The command that was executed.
+   *
+   * @throws \ReflectionException
+   */
+  public function getCommandString(InputInterface $input) {
+    $string = '';
+    $string .= implode(' ', $input->getArguments());
+    $definition = new \ReflectionProperty($input, 'definition');
+    $definition->setAccessible(TRUE);
+    /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
+    $definition = $definition->getValue($input);
+    foreach ($input->getOptions() as $option_name => $option) {
+      if ($definition->getOption($option_name)->getDefault() !== $option) {
+        $string .= " --$option_name=$option";
+      }
+    }
+    return $string;
   }
 
   /**
@@ -50,9 +75,14 @@ class ProcessRunner {
    *
    * @param \Symfony\Component\Process\Process $process
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
    */
-  public function run(Process $process, PlatformInterface $platform) {
-    $output = $this->output;
+  public function run(Process $process, PlatformInterface $platform, OutputInterface $output) {
+    foreach ($this->formatters as $name => $style) {
+      if (!$output->getFormatter()->hasStyle($name)) {
+        $output->getFormatter()->setStyle($name, $style);
+      }
+    }
     $process->run(function ($type, $buffer) use ($process, $output, $platform) {
       $platform->out($process, $output, $type, $buffer);
       if (Process::ERR === $type) {

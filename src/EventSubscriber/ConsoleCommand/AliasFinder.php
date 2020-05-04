@@ -7,6 +7,12 @@ use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\PlatformCommandInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\Input;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -52,11 +58,12 @@ class AliasFinder implements EventSubscriberInterface {
    *   The console command event.
    */
   public function onConsoleCommand(ConsoleCommandEvent $event) {
+    /** @var \Symfony\Component\Console\Input\InputInterface $input */
+    $input = $event->getInput();
     $output = $event->getOutput();
     $command = $event->getCommand();
-    $arguments = $event->getInput()->getArguments();
-    array_shift($arguments);
-    foreach ($arguments as $argument) {
+    $platform_input = $this->getPlatformInput($input);
+    foreach ($input->getArguments() as $name => $argument) {
       if (preg_match(self::ALIAS_PATTERN, $argument)) {
         $alias = substr($argument, 1);
         $findAliasEvent = new FindAliasEvent($alias, $event);
@@ -72,12 +79,30 @@ class AliasFinder implements EventSubscriberInterface {
           continue;
         }
         else {
-          $findAliasEvent->getPlatform()->execute($command, $output);
+          $findAliasEvent->getPlatform()->execute($command, $platform_input, $output);
           $event->disableCommand();
           $event->stopPropagation();
         }
       }
     }
+  }
+
+  protected function getPlatformInput(InputInterface $input) {
+    $property = new \ReflectionProperty($input, 'definition');
+    $property->setAccessible(TRUE);
+    /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
+    $definition = $property->getValue($input);
+    $platformInput = new ArrayInput(['command' => $input->getArgument('command')], $definition);
+    foreach ($input->getArguments() as $key => $argument) {
+      if (preg_match(self::ALIAS_PATTERN, $argument)) {
+        continue;
+      }
+      $platformInput->setArgument($key, $argument);
+    }
+    foreach ($input->getOptions() as $key => $option) {
+      $platformInput->setOption($key, $option);
+    }
+    return $platformInput;
   }
 
 }
