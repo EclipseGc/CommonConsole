@@ -1,6 +1,6 @@
 <?php
 
-namespace Eclipse\CommonConsole\Platform;
+namespace EclipseGc\CommonConsole\Platform;
 
 use EclipseGc\CommonConsole\PlatformInterface;
 
