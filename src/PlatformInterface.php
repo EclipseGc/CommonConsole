@@ -10,6 +10,13 @@ use Symfony\Component\Process\Process;
 interface PlatformInterface extends CommandQuestionInterface {
 
   /**
+   * Gets the platform id.
+   *
+   * @return string
+   */
+  public static function getPlatformId() : string ;
+
+  /**
    * Execute a command on the defined platform.
    *
    * This should perform the necessary steps to execute the command remotely on

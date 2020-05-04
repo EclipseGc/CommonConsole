@@ -15,6 +15,11 @@ use Symfony\Component\Process\Process;
  */
 class SshPlatform extends PlatformBase {
 
+  public static function getPlatformId(): string {
+    return 'SSH';
+  }
+
+
   /**
    * {@inheritdoc}
    */

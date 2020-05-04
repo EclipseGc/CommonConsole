@@ -17,11 +17,11 @@ class PlatformSubscriberSsh implements EventSubscriberInterface {
   }
 
   public function onGetPlatformTypes(GetPlatformTypesEvent $event) {
-    $event->addPlatformType("SSH");
+    $event->addPlatformType(SshPlatform::getPlatformId());
   }
 
   public function onGetPlatformType(GetPlatformTypeEvent $event) {
-    if ($event->getPlatformType() === 'SSH') {
+    if ($event->getPlatformType() === SshPlatform::getPlatformId()) {
       $event->addClass(SshPlatform::class);
       $event->stopPropagation();
     }
