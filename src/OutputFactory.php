@@ -22,7 +22,7 @@ class OutputFactory {
    * @return \Symfony\Component\Console\Output\ConsoleOutput
    *   The ConsoleOutput with full formatter styling applied.
    */
-  public function createOutput(EventDispatcherInterface $dispatcher) {
+  public static function createOutput(EventDispatcherInterface $dispatcher) {
     $event = new OutputFormatterStyleEvent();
     $dispatcher->dispatch(CommonConsoleEvents::OUTPUT_FORMATTER_STYLE, $event);
     $output = new ConsoleOutput();
