@@ -65,3 +65,17 @@ services:
     arguments: ['%autoloader%']
     tags:
       - { name: kernel.event_subscriber }
+
+  # Add Platform to Command expectation validation
+  validate.platform.any:
+    class: EclipseGc\CommonConsole\EventSubscriber\AddPlatform\AnyPlatform
+    tags:
+      - { name: kernel.event_subscriber }
+  validate.platform.id:
+    class: EclipseGc\CommonConsole\EventSubscriber\AddPlatform\PlatformIdMatch
+    tags:
+      - { name: kernel.event_subscriber }
+  validate.platform.instanceof:
+    class: EclipseGc\CommonConsole\EventSubscriber\AddPlatform\PlatformIsInstanceOf
+    tags:
+      - { name: kernel.event_subscriber }

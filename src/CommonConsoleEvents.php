@@ -16,4 +16,6 @@ final class CommonConsoleEvents {
 
   const OUTPUT_FORMATTER_STYLE = 'commonconsole.output.formatter_style';
 
+  const ADD_PLATFORM_TO_COMMAND = 'commonconsole.command.add_platform';
+
 }

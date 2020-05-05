@@ -2,7 +2,8 @@
 
 namespace EclipseGc\CommonConsole\Platform;
 
-use EclipseGc\CommonConsole\PlatformCommandInterface;
+use EclipseGc\CommonConsole\CommonConsoleEvents;
+use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
 use EclipseGc\CommonConsole\PlatformInterface;
 
 /**
@@ -27,13 +28,22 @@ trait PlatformCommandTrait {
   protected $platformAliases;
 
   /**
+   * The event dispatcher.
+   *
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   */
+  protected $dispatcher;
+
+  /**
    * {@inheritdoc}
    */
   public function addPlatform(string $alias, PlatformInterface $platform): void {
     $options = static::getExpectedPlatformOptions();
     foreach ($options as $name => $expectation) {
       if (empty($this->platforms[$name])) {
-        if ($expectation !== PlatformCommandInterface::ANY_PLATFORM && $platform::getPlatformId() !== $expectation) {
+        $event = new AddPlatformToCommandEvent($expectation, $platform, $alias);
+        $this->dispatcher->dispatch(CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND, $event);
+        if ($event->platformMatchesExpectation()) {
           throw new \Exception(sprintf("Invalid Platform value. Expected a platform of type '%s'. Type of '%s' given.", $expectation, $platform::getPlatformId()));
         }
         $this->platforms[$name] = $platform;
