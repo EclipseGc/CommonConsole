@@ -9,6 +9,8 @@ namespace EclipseGc\CommonConsole;
  */
 interface PlatformCommandInterface {
 
+  const ANY_PLATFORM = 'any_platform';
+
   /**
    * Add a platform for using within the command.
    *
@@ -47,8 +49,8 @@ interface PlatformCommandInterface {
    * command, you might do the following:
    *
    *  return [
-   *    'source',
-   *    'destination',
+   *    'source' => SshPlatform::getPlatformId(),
+   *    'destination' => PlatformCommandInterface::ANY_PLATFORM,
    *  ];
    *
    * @return string[]

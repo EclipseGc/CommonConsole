@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole\Platform;
 
+use EclipseGc\CommonConsole\PlatformCommandInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 
 /**
@@ -32,7 +33,7 @@ trait PlatformCommandTrait {
     $options = static::getExpectedPlatformOptions();
     foreach ($options as $name => $expectation) {
       if (empty($this->platforms[$name])) {
-        if ($platform::getPlatformId() !== $expectation) {
+        if ($expectation !== PlatformCommandInterface::ANY_PLATFORM && $platform::getPlatformId() !== $expectation) {
           throw new \Exception(sprintf("Invalid Platform value. Expected a platform of type '%s'. Type of '%s' given.", $expectation, $platform::getPlatformId()));
         }
         $this->platforms[$name] = $platform;
