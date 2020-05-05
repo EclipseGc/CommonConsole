@@ -8,11 +8,7 @@ use EclipseGc\CommonConsole\PlatformCommandInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\Input;
-use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\StreamOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -92,17 +88,25 @@ class AliasFinder implements EventSubscriberInterface {
     $property->setAccessible(TRUE);
     /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
     $definition = $property->getValue($input);
-    $platformInput = new ArrayInput(['command' => $input->getArgument('command')], $definition);
+    $arrayInput = ['command' => $input->getArgument('command')];
     foreach ($input->getArguments() as $key => $argument) {
       if (preg_match(self::ALIAS_PATTERN, $argument)) {
         continue;
       }
-      $platformInput->setArgument($key, $argument);
+      $arrayInput[$key] = $argument;
     }
-    foreach ($input->getOptions() as $key => $option) {
-      $platformInput->setOption($key, $option);
+    foreach ($input->getOptions() as $key => $option_value) {
+      $option = $definition->getOption($key);
+      if ($option->getDefault() !== $option_value) {
+        if ($option->acceptValue()) {
+          $arrayInput["--$key"] = $option_value;
+        }
+        else {
+          $arrayInput["--$key"] = NULL;
+        }
+      }
     }
-    return $platformInput;
+    return new ArrayInput($arrayInput, $definition);
   }
 
 }
