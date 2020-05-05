@@ -43,7 +43,7 @@ trait PlatformCommandTrait {
       if (empty($this->platforms[$name])) {
         $event = new AddPlatformToCommandEvent($expectation, $platform, $alias);
         $this->dispatcher->dispatch(CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND, $event);
-        if ($event->platformMatchesExpectation()) {
+        if (!$event->platformMatchesExpectation()) {
           throw new \Exception(sprintf("Invalid Platform value. Expected a platform of type '%s'. Type of '%s' given.", $expectation, $platform::getPlatformId()));
         }
         $this->platforms[$name] = $platform;

@@ -24,7 +24,7 @@ class PlatformIsInstanceOf implements EventSubscriberInterface {
    */
   public function onAddPlatformToCommand(AddPlatformToCommandEvent $event) {
     $expectation = $event->getExpectation();
-    if (class_exists($expectation) && $event->getPlatform() instanceof $expectation) {
+    if ((class_exists($expectation) || interface_exists($expectation)) && $event->getPlatform() instanceof $expectation) {
       $event->setPlatformExpectationMatch(TRUE);
       $event->stopPropagation();
     }
