@@ -4,6 +4,7 @@ namespace EclipseGc\CommonConsole;
 
 use EclipseGc\CommonConsole\Event\CreateInputEvent;
 use EclipseGc\CommonConsole\Event\OutputFormatterStyleEvent;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -21,11 +22,14 @@ class IoFactory {
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param \Symfony\Component\Console\Application $application
+   *   The console application to retrieve the default input definition.
    *
    * @return \Symfony\Component\Console\Input\ArgvInput
    */
-  public static function createInput(EventDispatcherInterface $dispatcher) {
-    $event = new CreateInputEvent(new InputDefinition());
+  public static function createInput(EventDispatcherInterface $dispatcher, Application $application) {
+    $definition = $application->getDefinition();
+    $event = new CreateInputEvent($definition);
     $dispatcher->dispatch(CommonConsoleEvents::CREATE_INPUT_DEFINITION, $event);
     return new ArgvInput(NULL, $event->getDefinition());
   }

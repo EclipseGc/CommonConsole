@@ -12,7 +12,7 @@ services:
   console.input:
     class: Symfony\Component\Console\Input\ArgvInput
     factory: ['EclipseGc\CommonConsole\IoFactory', 'createInput']
-    arguments: ['@event_dispatcher']
+    arguments: ['@event_dispatcher', '@common_console_application']
     public: true
   console.output:
     class: Symfony\Component\Console\Output\ConsoleOutput
