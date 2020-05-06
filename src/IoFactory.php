@@ -4,9 +4,10 @@ namespace EclipseGc\CommonConsole;
 
 use EclipseGc\CommonConsole\Event\CreateInputEvent;
 use EclipseGc\CommonConsole\Event\OutputFormatterStyleEvent;
+use EclipseGc\CommonConsole\OutputFormatter\BareOutputFormatter;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -23,7 +24,7 @@ class IoFactory {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
    * @param \Symfony\Component\Console\Application $application
-   *   The console application to retrieve the default input definition.
+   *   The console application.
    *
    * @return \Symfony\Component\Console\Input\ArgvInput
    */
@@ -39,14 +40,23 @@ class IoFactory {
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   The input object.
    *
    * @return \Symfony\Component\Console\Output\ConsoleOutput
    *   The ConsoleOutput with full formatter styling applied.
    */
-  public static function createOutput(EventDispatcherInterface $dispatcher) {
+  public static function createOutput(EventDispatcherInterface $dispatcher, InputInterface $input) {
+    $bare = $input->getOption('bare');
+    if ($bare) {
+      $output = new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, FALSE, new BareOutputFormatter());
+      return $output;
+    }
+    else {
+      $output = new ConsoleOutput();
+    }
     $event = new OutputFormatterStyleEvent();
     $dispatcher->dispatch(CommonConsoleEvents::OUTPUT_FORMATTER_STYLE, $event);
-    $output = new ConsoleOutput();
     foreach ($event->getFormatterStyles() as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);

@@ -17,7 +17,7 @@ services:
   console.output:
     class: Symfony\Component\Console\Output\ConsoleOutput
     factory: ['EclipseGc\CommonConsole\IoFactory', 'createOutput']
-    arguments: ['@event_dispatcher']
+    arguments: ['@event_dispatcher', '@console.input']
     public: true
   console.logger:
     class: Symfony\Component\Console\Logger\ConsoleLogger

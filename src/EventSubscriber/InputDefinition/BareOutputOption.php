@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\InputDefinition
  */
-class UriOption implements EventSubscriberInterface {
+class BareOutputOption implements EventSubscriberInterface {
 
   /**
    * {@inheritdoc}
@@ -23,14 +23,15 @@ class UriOption implements EventSubscriberInterface {
   }
 
   /**
-   * Add a uri option.
+   * Add a bare output option.
    *
    * @param \EclipseGc\CommonConsole\Event\CreateInputEvent $event
    *   The create input event.
    */
   public function onCreateInputDefinition(CreateInputEvent $event) {
-    // Provide the option for specifying request url.
-    $event->getDefinition()->addOption(new InputOption('uri', NULL, InputOption::VALUE_OPTIONAL, 'The url from which to mock a request.'));
+    // Removes styling on the output. Useful especially for remote calls to
+    // allow the local output formatter to apply to the returned output.
+    $event->getDefinition()->addOption(new InputOption('bare', NULL, InputOption::VALUE_NONE, 'Prevents output styling.'));
   }
 
 }

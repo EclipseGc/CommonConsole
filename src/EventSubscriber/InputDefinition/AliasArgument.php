@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Class AliasArgument
  *
- * @package EclipseGc\CommonConsole\EventSubscriber\AddPlatform
+ * @package EclipseGc\CommonConsole\EventSubscriber\InputDefinition
  */
 class AliasArgument implements EventSubscriberInterface {
 

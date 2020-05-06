@@ -106,6 +106,7 @@ class AliasFinder implements EventSubscriberInterface {
         }
       }
     }
+    $arrayInput["--bare"] = NULL;
     return new ArrayInput($arrayInput, $definition);
   }
 
