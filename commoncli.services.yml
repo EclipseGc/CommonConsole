@@ -11,10 +11,12 @@ services:
     arguments: ['CommonConsole', '0.0.1']
   console.input:
     class: Symfony\Component\Console\Input\ArgvInput
+    factory: ['EclipseGc\CommonConsole\IoFactory', 'createInput']
+    arguments: ['@event_dispatcher']
     public: true
   console.output:
     class: Symfony\Component\Console\Output\ConsoleOutput
-    factory: ['EclipseGc\CommonConsole\OutputFactory', 'createOutput']
+    factory: ['EclipseGc\CommonConsole\IoFactory', 'createOutput']
     arguments: ['@event_dispatcher']
     public: true
   console.logger:
@@ -50,6 +52,16 @@ services:
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
     arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
+    tags:
+      - { name: kernel.event_subscriber }
+
+  # Input definition.
+  input.definition.alias:
+    class: EclipseGc\CommonConsole\EventSubscriber\InputDefinition\AliasArgument
+    tags:
+      - { name: kernel.event_subscriber }
+  input.definition.uri:
+    class: EclipseGc\CommonConsole\EventSubscriber\InputDefinition\UriOption
     tags:
       - { name: kernel.event_subscriber }
 
