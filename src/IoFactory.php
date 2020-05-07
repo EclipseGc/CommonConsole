@@ -32,7 +32,13 @@ class IoFactory {
     $definition = $application->getDefinition();
     $event = new CreateInputEvent($definition);
     $dispatcher->dispatch(CommonConsoleEvents::CREATE_INPUT_DEFINITION, $event);
-    return new ArgvInput(NULL, $event->getDefinition());
+    // Default command is set in the application AFTER input definition
+    // validation. If we don't check the command now, we will get an error.
+    $argv = $_SERVER['argv'];
+    if (empty($argv[1])) {
+      $argv[1] = 'list';
+    }
+    return new ArgvInput($argv, $event->getDefinition());
   }
 
   /**
