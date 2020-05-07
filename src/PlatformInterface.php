@@ -50,4 +50,11 @@ interface PlatformInterface extends CommandQuestionInterface {
    */
   public function out(Process $process, OutputInterface $output, string $type, string $buffer) : void ;
 
+  /**
+   * Get the configuration of the Platform.
+   *
+   * @return array
+   */
+  public function getConfig() : array ;
+
 }
