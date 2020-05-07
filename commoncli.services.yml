@@ -99,6 +99,11 @@ services:
     arguments: ['@event_dispatcher', '@question.finder']
     tags:
       - { name: common_console_command }
+  command.platform.delete:
+    class: EclipseGc\CommonConsole\Command\PlatformDelete
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: common_console_command }
   command.platform.sites:
     class: EclipseGc\CommonConsole\Command\PlatformSites
     public: true
