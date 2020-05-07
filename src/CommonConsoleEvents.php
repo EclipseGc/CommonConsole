@@ -12,6 +12,8 @@ final class CommonConsoleEvents {
 
   const PLATFORM_WRITE = 'commonconsole.platform.write';
 
+  const PLATFORM_DELETE = 'commonconsole.platform.delete';
+
   const PLATFORM_BOOTSTRAP = 'commonconsole.platform.bootstrap';
 
   const OUTPUT_FORMATTER_STYLE = 'commonconsole.output.formatter_style';

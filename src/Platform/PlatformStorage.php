@@ -129,7 +129,7 @@ class PlatformStorage {
    */
   public function delete(PlatformInterface $platform) : ?bool {
     $directory = $this->ensureDirectory();
-    $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$this->getAlias($platform)}}.yml"]);
+    $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$this->getAlias($platform)}.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
       return NULL;
     }

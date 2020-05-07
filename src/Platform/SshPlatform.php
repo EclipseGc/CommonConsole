@@ -15,10 +15,12 @@ use Symfony\Component\Process\Process;
  */
 class SshPlatform extends PlatformBase {
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getPlatformId(): string {
     return 'SSH';
   }
-
 
   /**
    * {@inheritdoc}
@@ -54,10 +56,15 @@ class SshPlatform extends PlatformBase {
    */
   public function execute(Command $command, InputInterface $input, OutputInterface $output) : void {
     $sshUrl = "{$this->config['ssh_user']}@{$this->config['ssh_url']}";
-    $command_string = $this->runner->getCommandString($input);
-//    echo "ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli $command_string'";
-    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli $command_string'");
+    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli {$input->__toString()}'");
     $this->runner->run($process, $this, $output);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfig(): array {
+    return $this->config;
   }
 
 }

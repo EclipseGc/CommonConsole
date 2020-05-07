@@ -4,6 +4,7 @@ namespace EclipseGc\CommonConsole\EventSubscriber\FindAlias;
 
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
+use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -31,6 +32,7 @@ class DefaultFinder implements EventSubscriberInterface {
   public static function getSubscribedEvents() {
     $events[CommonConsoleEvents::ALIAS_FIND] = 'onFindAlias';
     $events[CommonConsoleEvents::PLATFORM_WRITE] = 'onPlatformWrite';
+    $events[CommonConsoleEvents::PLATFORM_DELETE] = 'onPlatformDelete';
     return $events;
   }
 
@@ -79,6 +81,16 @@ class DefaultFinder implements EventSubscriberInterface {
     };
 
     $event->isSuccessful((bool) $this->storage->save($mock_platform));
+  }
+
+  /**
+   * The default platform delete subscriber.
+   *
+   * @param \EclipseGc\CommonConsole\Event\PlatformDeleteEvent $event
+   *   The platform delete event.
+   */
+  public function onPlatformDelete(PlatformDeleteEvent $event) {
+    $event->isSuccessful($this->storage->delete($event->getPlatform()));
   }
 
 }
