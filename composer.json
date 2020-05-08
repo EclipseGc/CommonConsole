@@ -3,13 +3,14 @@
   "description": "A Common Console base application.",
   "type": "project",
   "require": {
-    "symfony/console": "^3.4 || ^4.2",
-    "symfony/yaml": "^3.4 || ^4.2",
-    "symfony/filesystem": "^3.4 || ^4.3@dev",
-    "symfony/event-dispatcher": "^3.4 || ^4.3@dev",
-    "symfony/dependency-injection": "^3.4 || ^4.3@dev",
+    "consolidation/config": "^1.0@dev",
     "symfony/config": "^3.4 || ^4.3@dev",
-    "symfony/process": "^3.4 || ^4.3@dev"
+    "symfony/console": "^3.4 || ^4.2",
+    "symfony/dependency-injection": "^3.4 || ^4.3@dev",
+    "symfony/event-dispatcher": "^3.4 || ^4.3@dev",
+    "symfony/filesystem": "^3.4 || ^4.3@dev",
+    "symfony/process": "^3.4 || ^4.3@dev",
+    "symfony/yaml": "^3.4 || ^4.2"
   },
   "bin": [
     "bin/commoncli"

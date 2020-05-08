@@ -27,10 +27,10 @@ class SshPlatform extends PlatformBase {
    */
   public static function getQuestions() {
     return [
-      'ssh_user' => new Question("SSH Username: "),
-      'ssh_url' => new Question("SSH URL: "),
-      'ssh_remote_dir' => new Question("SSH remote directory: "),
-      'ssh_remote_vendor_dir' => [SshPlatform::class, 'getRemoteVendorDir'],
+      'ssh.user' => new Question("SSH Username: "),
+      'ssh.url' => new Question("SSH URL: "),
+      'ssh.remote_dir' => new Question("SSH remote directory: "),
+      'ssh.remote_vendor_dir' => [SshPlatform::class, 'getRemoteVendorDir'],
     ];
   }
 
@@ -44,7 +44,7 @@ class SshPlatform extends PlatformBase {
    */
   public static function getRemoteVendorDir(array $values) {
     $parts = [
-      $values['ssh_remote_dir'],
+      $values['ssh.remote_dir'],
       'vendor',
     ];
     $vendor_dir = implode(DIRECTORY_SEPARATOR, $parts);
@@ -55,16 +55,9 @@ class SshPlatform extends PlatformBase {
    * {@inheritdoc}
    */
   public function execute(Command $command, InputInterface $input, OutputInterface $output) : void {
-    $sshUrl = "{$this->config['ssh_user']}@{$this->config['ssh_url']}";
-    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->config['ssh_remote_vendor_dir']}/bin/commoncli {$input->__toString()}'");
+    $sshUrl = "{$this->get('ssh.user')}@{$this->get('ssh.url')}";
+    $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->get('ssh.remote_vendor_dir')}/bin/commoncli {$input->__toString()}'");
     $this->runner->run($process, $this, $output);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getConfig(): array {
-    return $this->config;
   }
 
 }

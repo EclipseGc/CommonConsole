@@ -6,6 +6,7 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Platform\PlatformCommandTrait;
 use EclipseGc\CommonConsole\PlatformCommandInterface;
+use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -66,7 +67,7 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $platform = $this->getPlatform('source');
     $helper = $this->getHelper('question');
-    $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->getConfig()['name']));
+    $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->getConfig()->get(PlatformInterface::PLATFORM_NAME)));
     $answer = $helper->ask($input, $output, $quest);
     if ($answer) {
       $event = new PlatformDeleteEvent($platform, $output);

@@ -76,6 +76,8 @@ class GetPlatformTypeEvent extends Event {
    *
    * @param string $factory
    *   The factory class name or service id.
+   *
+   * @throws \Exception
    */
   public function addFactory(string $factory) {
     if (class_exists($factory) && !in_array(PlatformFactoryInterface::class, class_implements($factory))) {

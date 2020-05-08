@@ -2,6 +2,8 @@
 
 namespace EclipseGc\CommonConsole\Platform;
 
+use Consolidation\Config\Config;
+use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -67,20 +69,20 @@ class PlatformStorage {
   /**
    * Loads a platform object by alias.
    *
-   * @param $alias
+   * @param string $alias
    *   The alias of the platform to load.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface|null
    *   The platform object on success. NULL if it doesn't exist.
    */
-  public function load($alias) : ?PlatformInterface {
+  public function load(string $alias) : ?PlatformInterface {
     $directory = $this->ensureDirectory();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "$alias.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
       return NULL;
     }
-    $config = Yaml::parse(file_get_contents($alias_file));
-    $platform_event = new GetPlatformTypeEvent($config['platform_type']);
+    $config = new Config(Yaml::parse(file_get_contents($alias_file)));
+    $platform_event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_ID));
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
     return $this->getPlatform($platform_event, $config);
   }
@@ -113,7 +115,7 @@ class PlatformStorage {
     $alias = $this->getAlias($platform);
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$alias}.yml"]);
     try {
-      $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->getConfig()));
+      $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export()));
       return $this->load($alias);
     }
     catch (IOException $e) {}
@@ -150,8 +152,7 @@ class PlatformStorage {
    * @return string
    */
   protected function getAlias(PlatformInterface $platform) : string {
-    $config = $platform->getConfig();
-    return $config['alias'];
+    return $platform->get(PlatformInterface::PLATFORM_ALIAS);
   }
 
   /**
@@ -159,14 +160,15 @@ class PlatformStorage {
    *
    * @param \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event
    *   The GetPlatformTypeEvent object.
-   * @param array $config
+   * @param \Consolidation\Config\ConfigInterface $config
    *   The configuration values to use for instantiating the platform.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  protected function getPlatform(GetPlatformTypeEvent $event, array $config) {
+  protected function getPlatform(GetPlatformTypeEvent $event, ConfigInterface $config) {
     if ($factory = $event->getFactory()) {
       if ($this->container->has($factory)) {
+        // @todo check the factory is an instance of PlatformFactoryInterface.
         return $this->container->get($factory)->create($event, $config, $this->runner);
       }
       if (class_exists($factory)) {

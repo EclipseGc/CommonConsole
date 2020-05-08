@@ -2,10 +2,12 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
+use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\PlatformInterface;
 use EclipseGc\CommonConsole\QuestionFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -71,14 +73,14 @@ class PlatformCreate extends Command {
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPES, $event);
     $question = new ChoiceQuestion("Platform Type: ", $event->getPlatformTypes());
     $platform_type = $helper->ask($input, $output, $question);
-    $table->addRow(['platform_type', $platform_type]);
+    $table->addRow([PlatformInterface::PLATFORM_TYPE_ID, $platform_type]);
     $values = [
-      'platform_type' => $platform_type
+      PlatformInterface::PLATFORM_TYPE_ID => $platform_type
     ];
 
     $questions = [
-      'name' => new Question("Name: "),
-      'alias' => new Question("Alias: "),
+      PlatformInterface::PLATFORM_NAME => new Question("Name: "),
+      PlatformInterface::PLATFORM_ALIAS => new Question("Alias: "),
     ];
     $platform_event = new GetPlatformTypeEvent($platform_type);
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
@@ -102,7 +104,7 @@ class PlatformCreate extends Command {
       $quest = new ConfirmationQuestion('Are these values correct? ');
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
-    $write_event = new PlatformWriteEvent($values);
+    $write_event = new PlatformWriteEvent($this->getConfigFromValues($values));
     $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_WRITE, $write_event);
     if ($write_event->success()) {
       $output->writeln("<info>Platform successfully saved.</info>");
@@ -110,6 +112,23 @@ class PlatformCreate extends Command {
     else {
       $output->writeln("<error>Platform save failed.</error>");
     }
+  }
+
+  /**
+   * Generates a ConfigInterface object from an array of values.
+   *
+   * @param array $values
+   *   The keys and values from which to generate a Config object.
+   *
+   * @return \Consolidation\Config\ConfigInterface
+   *   The configuration object representing the values.
+   */
+  protected function getConfigFromValues(array $values) {
+    $config = new Config();
+    foreach ($values as $key => $value) {
+      $config->set($key, $value);
+    }
+    return $config;
   }
 
 }

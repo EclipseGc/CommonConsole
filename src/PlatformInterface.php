@@ -9,6 +9,12 @@ use Symfony\Component\Process\Process;
 
 interface PlatformInterface extends CommandQuestionInterface {
 
+  const PLATFORM_TYPE_ID = 'platform.type';
+
+  const PLATFORM_NAME = 'platform.name';
+
+  const PLATFORM_ALIAS = 'platform.alias';
+
   /**
    * Gets the platform id.
    *
@@ -51,10 +57,39 @@ interface PlatformInterface extends CommandQuestionInterface {
   public function out(Process $process, OutputInterface $output, string $type, string $buffer) : void ;
 
   /**
-   * Get the configuration of the Platform.
+   * Gets the configuration value.
+   *
+   * @param string $key
+   *   The configuration key name.
+   *
+   * @return mixed
+   *   The configuration value associated with the key name.
+   *
+   * @see \Consolidation\Config\ConfigInterface::get()
+   */
+  public function get(string $key);
+
+  /**
+   * Sets the configuration value.
+   *
+   * @param string $key
+   *   The configuration key name.
+   * @param mixed $value
+   *   The value to associate to the key.
+   *
+   * @return $this
+   *
+   * @see \Consolidation\Config\ConfigInterface::set()
+   */
+  public function set(string $key, $value);
+
+  /**
+   * Export the config values as an array.
    *
    * @return array
+   *
+   * @see \Consolidation\Config\ConfigInterface::export()
    */
-  public function getConfig() : array ;
+  public function export() : array ;
 
 }
