@@ -2,12 +2,14 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
+use Consolidation\Config\ConfigInterface;
+use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class PlatformWriteEvent extends Event {
 
   /**
-   * @var array
+   * @var \Consolidation\Config\ConfigInterface
    */
   protected $config;
 
@@ -19,10 +21,10 @@ class PlatformWriteEvent extends Event {
   /**
    * PlatformWriteEvent constructor.
    *
-   * @param array $config
+   * @param \Consolidation\Config\ConfigInterface $config
    *   The configuration values to be written.
    */
-  public function __construct(array $config) {
+  public function __construct(ConfigInterface $config) {
     $this->config = $config;
   }
 
@@ -33,26 +35,16 @@ class PlatformWriteEvent extends Event {
    */
   public function getAlias() : string {
     // @todo be better.
-    return $this->config['alias'];
+    return $this->config->get(PlatformInterface::PLATFORM_ALIAS);
   }
 
   /**
    * Get the configuration which will be written.
    *
-   * @return array
+   * @return \Consolidation\Config\ConfigInterface
    */
-  public function getConfig() : array {
+  public function getConfig() : ConfigInterface {
     return $this->config;
-  }
-
-  /**
-   * Set config values to be saved.
-   *
-   * @param array $config
-   *   The config values to write for the platform.
-   */
-  public function setConfig(array $config) : void {
-    $this->config = $config;
   }
 
   /**

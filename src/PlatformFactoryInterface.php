@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole;
 
+use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 
 /**
@@ -18,11 +19,11 @@ interface PlatformFactoryInterface {
    * instantiated. When this is true, a PlatformFactory facilitates this.
    *
    * @param \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event
-   * @param array $values
+   * @param \Consolidation\Config\ConfigInterface $config
    * @param \EclipseGc\CommonConsole\ProcessRunner $runner
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function create(GetPlatformTypeEvent $event, array $values, ProcessRunner $runner) : PlatformInterface ;
+  public function create(GetPlatformTypeEvent $event, ConfigInterface $config, ProcessRunner $runner) : PlatformInterface ;
 
 }

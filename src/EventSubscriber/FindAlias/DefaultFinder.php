@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole\EventSubscriber\FindAlias;
 
+use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
@@ -69,7 +70,7 @@ class DefaultFinder implements EventSubscriberInterface {
 
       protected $config = [];
 
-      public function __construct(array $config) {
+      public function __construct(ConfigInterface $config) {
         $this->config = $config;
       }
 
@@ -77,7 +78,16 @@ class DefaultFinder implements EventSubscriberInterface {
       public static function getPlatformId(): string {}
       public function execute(Command $command, InputInterface $input, OutputInterface $output): void {}
       public function out(Process $process, OutputInterface $output, string $type, string $buffer): void {}
-      public function getConfig(): array { return $this->config; }
+      public function get(string $key) {
+        return $this->config->get($key);
+      }
+      public function set(string $key, $value) : self {
+        $this->config->set($key, $value);
+        return $this;
+      }
+      public function export() : array {
+        return $this->config->export();
+      }
     };
 
     $event->isSuccessful((bool) $this->storage->save($mock_platform));
