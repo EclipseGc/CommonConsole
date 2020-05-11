@@ -2,11 +2,10 @@
 
 namespace EclipseGc\CommonConsole;
 
-use EclipseGc\CommonConsole\Event\CreateInputEvent;
+use EclipseGc\CommonConsole\Event\CreateApplicationEvent;
 use EclipseGc\CommonConsole\Event\OutputFormatterStyleEvent;
 use EclipseGc\CommonConsole\OutputFormatter\BareOutputFormatter;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -19,26 +18,18 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class IoFactory {
 
   /**
-   * Creates a new ArgvInput object and applies input definition.
+   * Create the application.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher.
-   * @param \Symfony\Component\Console\Application $application
-   *   The console application.
+   *   The event dispatcher
    *
-   * @return \Symfony\Component\Console\Input\ArgvInput
+   * @return \Symfony\Component\Console\Application
    */
-  public static function createInput(EventDispatcherInterface $dispatcher, Application $application) {
-    $definition = $application->getDefinition();
-    $event = new CreateInputEvent($definition);
-    $dispatcher->dispatch(CommonConsoleEvents::CREATE_INPUT_DEFINITION, $event);
-    // Default command is set in the application AFTER input definition
-    // validation. If we don't check the command now, we will get an error.
-    $argv = $_SERVER['argv'];
-    if (empty($argv[1])) {
-      $argv[1] = 'list';
-    }
-    return new ArgvInput($argv, $event->getDefinition());
+  public static function createApplication(EventDispatcherInterface $dispatcher) : Application {
+    $application = new Application('CommonConsole', '0.0.1');
+    $event = new CreateApplicationEvent($application);
+    $dispatcher->dispatch(CommonConsoleEvents::CREATE_APPLICATION, $event);
+    return $application;
   }
 
   /**
@@ -53,8 +44,7 @@ class IoFactory {
    *   The ConsoleOutput with full formatter styling applied.
    */
   public static function createOutput(EventDispatcherInterface $dispatcher, InputInterface $input) {
-    $bare = $input->getOption('bare');
-    if ($bare) {
+    if ($input->hasParameterOption('--bare')) {
       $output = new ConsoleOutput(ConsoleOutput::VERBOSITY_NORMAL, FALSE, new BareOutputFormatter());
       return $output;
     }

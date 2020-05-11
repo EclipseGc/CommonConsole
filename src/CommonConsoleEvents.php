@@ -18,6 +18,6 @@ final class CommonConsoleEvents {
 
   const ADD_PLATFORM_TO_COMMAND = 'commonconsole.command.add_platform';
 
-  const CREATE_INPUT_DEFINITION = 'commonconsole.input.create_definition';
+  const CREATE_APPLICATION = 'commonconsole.input.create_definition';
 
 }

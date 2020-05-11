@@ -7,12 +7,11 @@ services:
     public: true
   common_console_application:
     class: Symfony\Component\Console\Application
+    factory: ['EclipseGc\CommonConsole\IoFactory', 'createApplication']
+    arguments: ['@event_dispatcher']
     public: true
-    arguments: ['CommonConsole', '0.0.1']
   console.input:
     class: Symfony\Component\Console\Input\ArgvInput
-    factory: ['EclipseGc\CommonConsole\IoFactory', 'createInput']
-    arguments: ['@event_dispatcher', '@common_console_application']
     public: true
   console.output:
     class: Symfony\Component\Console\Output\ConsoleOutput
