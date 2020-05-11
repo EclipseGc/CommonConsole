@@ -77,10 +77,9 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
     $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
     if (!$event->hasError()) {
       $output->writeln("Successfully deleted.");
+      return;
     }
-    else {
-      $output->writeln(sprintf("<error>The platform was not successfully deleted. The errors encountered were:\n%s</error>", implode("\n", $event->getErrors())));
-    }
+    $output->writeln(sprintf("<error>The platform was not successfully deleted. The errors encountered were:\n%s</error>", implode("\n", $event->getErrors())));
   }
 
 }
