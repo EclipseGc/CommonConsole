@@ -9,11 +9,11 @@ use Symfony\Component\Process\Process;
 
 interface PlatformInterface extends CommandQuestionInterface {
 
-  const PLATFORM_TYPE_ID = 'platform.type';
+  const PLATFORM_TYPE_KEY = 'platform.type';
 
-  const PLATFORM_NAME = 'platform.name';
+  const PLATFORM_NAME_KEY = 'platform.name';
 
-  const PLATFORM_ALIAS = 'platform.alias';
+  const PLATFORM_ALIAS_KEY = 'platform.alias';
 
   /**
    * Gets the platform id.

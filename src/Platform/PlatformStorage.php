@@ -82,7 +82,7 @@ class PlatformStorage {
       return NULL;
     }
     $config = new Config(Yaml::parse(file_get_contents($alias_file)));
-    $platform_event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_ID));
+    $platform_event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
     return $this->getPlatform($platform_event, $config);
   }

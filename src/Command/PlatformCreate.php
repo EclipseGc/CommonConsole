@@ -73,14 +73,14 @@ class PlatformCreate extends Command {
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPES, $event);
     $question = new ChoiceQuestion("Platform Type: ", $event->getPlatformTypes());
     $platform_type = $helper->ask($input, $output, $question);
-    $table->addRow([PlatformInterface::PLATFORM_TYPE_ID, $platform_type]);
+    $table->addRow([PlatformInterface::PLATFORM_TYPE_KEY, $platform_type]);
     $values = [
-      PlatformInterface::PLATFORM_TYPE_ID => $platform_type
+      PlatformInterface::PLATFORM_TYPE_KEY => $platform_type
     ];
 
     $questions = [
-      PlatformInterface::PLATFORM_NAME => new Question("Name: "),
-      PlatformInterface::PLATFORM_ALIAS => new Question("Alias: "),
+      PlatformInterface::PLATFORM_NAME_KEY => new Question("Name: "),
+      PlatformInterface::PLATFORM_ALIAS_KEY => new Question("Alias: "),
     ];
     $platform_event = new GetPlatformTypeEvent($platform_type);
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);

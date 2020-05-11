@@ -74,7 +74,7 @@ class DefaultFinder implements EventSubscriberInterface {
         $this->config = $config;
       }
       public function getAlias(): string {
-        return $this->config->get(PlatformInterface::PLATFORM_ALIAS);
+        return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
       }
       public static function getQuestions() {}
       public static function getPlatformId(): string {}
