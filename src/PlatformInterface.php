@@ -23,6 +23,13 @@ interface PlatformInterface extends CommandQuestionInterface {
   public static function getPlatformId() : string ;
 
   /**
+   * Extracts the alias string from a platform.
+   *
+   * @return string
+   */
+  public function getAlias() : string ;
+
+  /**
    * Execute a command on the defined platform.
    *
    * This should perform the necessary steps to execute the command remotely on

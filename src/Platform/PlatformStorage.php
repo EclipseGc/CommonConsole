@@ -112,7 +112,7 @@ class PlatformStorage {
    */
   public function save(PlatformInterface $platform) : ?PlatformInterface {
     $directory = $this->ensureDirectory();
-    $alias = $this->getAlias($platform);
+    $alias = $platform->getAlias();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$alias}.yml"]);
     try {
       $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export()));
@@ -131,7 +131,7 @@ class PlatformStorage {
    */
   public function delete(PlatformInterface $platform) : ?bool {
     $directory = $this->ensureDirectory();
-    $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$this->getAlias($platform)}.yml"]);
+    $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$platform->getAlias()}.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
       return NULL;
     }
@@ -141,18 +141,6 @@ class PlatformStorage {
     }
     catch (IOException $e) {}
     return FALSE;
-  }
-
-  /**
-   * Extracts the alias string from a platform.
-   *
-   * @param \EclipseGc\CommonConsole\PlatformInterface $platform
-   *   The platform from which to extract the alias.
-   *
-   * @return string
-   */
-  protected function getAlias(PlatformInterface $platform) : string {
-    return $platform->get(PlatformInterface::PLATFORM_ALIAS);
   }
 
   /**

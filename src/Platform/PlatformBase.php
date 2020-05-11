@@ -43,10 +43,14 @@ abstract class PlatformBase implements PlatformInterface {
   }
 
   /**
-   * @param \Symfony\Component\Process\Process $process
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   * @param string $type
-   * @param string $buffer
+   * {@inheritdoc}
+   */
+  public function getAlias(): string {
+    return $this->get(PlatformInterface::PLATFORM_ALIAS);
+  }
+
+  /**
+   * {@inheritdoc}
    */
   public function out(Process $process, OutputInterface $output, string $type, string $buffer) : void {}
 
