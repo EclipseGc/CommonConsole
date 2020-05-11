@@ -69,15 +69,17 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
     $helper = $this->getHelper('question');
     $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->get(PlatformInterface::PLATFORM_NAME)));
     $answer = $helper->ask($input, $output, $quest);
-    if ($answer) {
-      $event = new PlatformDeleteEvent($platform, $output);
-      $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
-      if (!$event->hasError()) {
-        $output->writeln("Successfully deleted.");
-      }
-      else {
-        $output->writeln(sprintf("<error>The platform was not successfully deleted. The errors encountered were:\n%s</error>", implode("\n", $event->getErrors())));
-      }
+    if (!$answer) {
+      $output->writeln("Delete aborted.");
+      return;
+    }
+    $event = new PlatformDeleteEvent($platform, $output);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
+    if (!$event->hasError()) {
+      $output->writeln("Successfully deleted.");
+    }
+    else {
+      $output->writeln(sprintf("<error>The platform was not successfully deleted. The errors encountered were:\n%s</error>", implode("\n", $event->getErrors())));
     }
   }
 
