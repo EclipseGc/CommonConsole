@@ -46,7 +46,7 @@ abstract class PlatformBase implements PlatformInterface {
    * {@inheritdoc}
    */
   public function getAlias(): string {
-    return $this->get(PlatformInterface::PLATFORM_ALIAS);
+    return $this->get(PlatformInterface::PLATFORM_ALIAS_KEY);
   }
 
   /**

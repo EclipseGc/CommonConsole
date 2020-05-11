@@ -35,7 +35,7 @@ class PlatformWriteEvent extends Event {
    */
   public function getAlias() : string {
     // @todo be better.
-    return $this->config->get(PlatformInterface::PLATFORM_ALIAS);
+    return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
   }
 
   /**

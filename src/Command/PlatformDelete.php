@@ -67,7 +67,7 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
   protected function execute(InputInterface $input, OutputInterface $output) {
     $platform = $this->getPlatform('source');
     $helper = $this->getHelper('question');
-    $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->get(PlatformInterface::PLATFORM_NAME)));
+    $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->get(PlatformInterface::PLATFORM_NAME_KEY)));
     $answer = $helper->ask($input, $output, $quest);
     if (!$answer) {
       $output->writeln("Delete aborted.");
