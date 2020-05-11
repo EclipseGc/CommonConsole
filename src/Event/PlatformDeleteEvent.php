@@ -22,9 +22,9 @@ class PlatformDeleteEvent {
   protected $output;
 
   /**
-   * @var bool
+   * @var array
    */
-  protected $success = FALSE;
+  protected $errors = [];
 
   /**
    * PlatformDeleteEvent constructor.
@@ -54,21 +54,31 @@ class PlatformDeleteEvent {
   }
 
   /**
-   * Set the success of the write event.
+   * Adds errors encountered during the event.
    *
-   * @param bool $value
+   * @param string $error
+   *   The specific error message.
    */
-  public function isSuccessful(bool $value) {
-    $this->success = $value;
+  public function addError(string $error) {
+    $this->errors[] = $error;
   }
 
   /**
-   * Whether or not the write was successful. Defaults to false.
+   * Whether or not any errors were encountered during the event.
    *
    * @return bool
    */
-  public function success() : bool {
-    return $this->success;
+  public function hasError() : bool {
+    return (bool) $this->errors;
+  }
+
+  /**
+   * Gets any logged errors encountered by the event.
+   *
+   * @return array
+   */
+  public function getErrors() : array {
+    return $this->errors;
   }
 
 }
