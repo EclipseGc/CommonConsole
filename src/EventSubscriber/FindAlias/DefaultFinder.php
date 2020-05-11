@@ -73,7 +73,9 @@ class DefaultFinder implements EventSubscriberInterface {
       public function __construct(ConfigInterface $config) {
         $this->config = $config;
       }
-
+      public function getAlias(): string {
+        return $this->config->get(PlatformInterface::PLATFORM_ALIAS);
+      }
       public static function getQuestions() {}
       public static function getPlatformId(): string {}
       public function execute(Command $command, InputInterface $input, OutputInterface $output): void {}
@@ -100,7 +102,12 @@ class DefaultFinder implements EventSubscriberInterface {
    *   The platform delete event.
    */
   public function onPlatformDelete(PlatformDeleteEvent $event) {
-    $event->isSuccessful($this->storage->delete($event->getPlatform()));
+    try {
+      $this->storage->delete($event->getPlatform());
+    }
+    catch (\Exception $exception) {
+      $event->addError($exception->getMessage());
+    }
   }
 
 }

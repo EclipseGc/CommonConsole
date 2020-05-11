@@ -127,20 +127,16 @@ class PlatformStorage {
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    *   The platform to delete.
    *
-   * @return bool|null
+   * @throws \Exception
    */
-  public function delete(PlatformInterface $platform) : ?bool {
+  public function delete(PlatformInterface $platform) : void {
     $directory = $this->ensureDirectory();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$platform->getAlias()}.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
-      return NULL;
+      // @todo throw custom exception.
+      throw new \Exception(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
-    try {
-      $this->filesystem->remove($alias_file);
-      return TRUE;
-    }
-    catch (IOException $e) {}
-    return FALSE;
+    $this->filesystem->remove($alias_file);
   }
 
   /**
