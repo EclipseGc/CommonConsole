@@ -74,9 +74,9 @@ class PlatformCreate extends Command {
     $question = new ChoiceQuestion("Platform Type: ", $event->getPlatformTypes());
     $platform_type = $helper->ask($input, $output, $question);
     $table->addRow([PlatformInterface::PLATFORM_TYPE_KEY, $platform_type]);
-    $values = [
-      PlatformInterface::PLATFORM_TYPE_KEY => $platform_type
-    ];
+
+    $config = new Config();
+    $config->set(PlatformInterface::PLATFORM_TYPE_KEY, $platform_type);
 
     $questions = [
       PlatformInterface::PLATFORM_NAME_KEY => new Question("Name: "),
@@ -88,23 +88,23 @@ class PlatformCreate extends Command {
     $questions += $platform_class::getQuestions();
     do {
       foreach ($questions as $variable => $question) {
-        $question = $this->questionFactory->getQuestion($question, $values);
-        $values[$variable] = $helper->ask($input, $output, $question);
-        if (is_array($values[$variable])) {
-          foreach ($values[$variable] as $value) {
+        $question = $this->questionFactory->getQuestion($question, $config);
+        $config->set($variable, $helper->ask($input, $output, $question));
+        if (is_array($config->get($variable))) {
+          foreach ($config->get($variable) as $value) {
             $table->addRow([$variable, $value]);
           }
         }
         else {
-          $table->addRow([$variable, $values[$variable]]);
+          $table->addRow([$variable, $config->get($variable)]);
         }
       }
       $table->render();
 
-      $quest = new ConfirmationQuestion('Are these values correct? ');
+      $quest = new ConfirmationQuestion('Are these config correct? ');
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
-    $write_event = new PlatformWriteEvent($this->getConfigFromValues($values));
+    $write_event = new PlatformWriteEvent($config);
     $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_WRITE, $write_event);
     if ($write_event->success()) {
       $output->writeln("<info>Platform successfully saved.</info>");
@@ -112,23 +112,6 @@ class PlatformCreate extends Command {
     else {
       $output->writeln("<error>Platform save failed.</error>");
     }
-  }
-
-  /**
-   * Generates a ConfigInterface object from an array of values.
-   *
-   * @param array $values
-   *   The keys and values from which to generate a Config object.
-   *
-   * @return \Consolidation\Config\ConfigInterface
-   *   The configuration object representing the values.
-   */
-  protected function getConfigFromValues(array $values) {
-    $config = new Config();
-    foreach ($values as $key => $value) {
-      $config->set($key, $value);
-    }
-    return $config;
   }
 
 }

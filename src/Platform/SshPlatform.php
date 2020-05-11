@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole\Platform;
 
+use Consolidation\Config\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -37,14 +38,14 @@ class SshPlatform extends PlatformBase {
   /**
    * Creates a vendor directory question based on the remote directory value.
    *
-   * @param array $values
-   *   The collected values.
+   * @param \Consolidation\Config\Config $config
+   *   The collected configuration values.
    *
    * @return \Symfony\Component\Console\Question\Question
    */
-  public static function getRemoteVendorDir(array $values) {
+  public static function getRemoteVendorDir(Config $config) {
     $parts = [
-      $values['ssh.remote_dir'],
+      $config->get('ssh.remote_dir'),
       'vendor',
     ];
     $vendor_dir = implode(DIRECTORY_SEPARATOR, $parts);

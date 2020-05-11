@@ -2,6 +2,7 @@
 
 namespace EclipseGc\CommonConsole;
 
+use Consolidation\Config\Config;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,21 +44,21 @@ class QuestionFactory {
    * Identifies and instantiates questions as necessary.
    *
    * @param mixed $question
-   * @param array $values
+   * @param \Consolidation\Config\Config $config
    *
    * @return \Symfony\Component\Console\Question\Question
    */
-  public function getQuestion($question, array $values) : Question {
+  public function getQuestion($question, Config $config): Question {
     if ($question instanceof Question) {
       return $question;
     }
     if (is_callable($question)) {
-      return call_user_func_array($question, [$values]);
+      return call_user_func_array($question, [$config]);
     }
     if (!empty($question['question']) && !empty($question['services']) && is_callable($question['question'])) {
       $services = $question['services'];
       $args = [
-        $values
+        $config
       ];
       foreach ($services as $service_id) {
         if (!$this->container->has($service_id)) {
