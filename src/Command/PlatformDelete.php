@@ -2,9 +2,8 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
-use EclipseGc\CommonConsole\CommonConsoleEvents;
-use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Platform\PlatformCommandTrait;
+use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformCommandInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\Console\Command\Command;
@@ -28,11 +27,11 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
   protected static $defaultName = 'platform:delete';
 
   /**
-   * The event dispatcher.
+   * The platform storage.
    *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+   * @var \EclipseGc\CommonConsole\Platform\PlatformStorage
    */
-  protected $dispatcher;
+  protected $storage;
 
   /**
    * PlatformDelete constructor.
@@ -42,11 +41,15 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
    * @param string|NULL $name
    *   The name of this command.
    */
-  public function __construct(EventDispatcherInterface $dispatcher, string $name = NULL) {
+  public function __construct(EventDispatcherInterface $dispatcher, PlatformStorage $storage, string $name = NULL) {
     parent::__construct($name);
     $this->dispatcher = $dispatcher;
+    $this->storage = $storage;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   protected function configure() {
     $this->setDescription('Deletes the specified platform.');
   }
@@ -73,13 +76,13 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
       $output->writeln("Delete aborted.");
       return;
     }
-    $event = new PlatformDeleteEvent($platform, $output);
-    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
-    if (!$event->hasError()) {
+    try {
+      $this->storage->delete($platform);
       $output->writeln("Successfully deleted.");
-      return;
     }
-    $output->writeln(sprintf("<error>The platform was not successfully deleted. The errors encountered were:\n%s</error>", implode("\n", $event->getErrors())));
+    catch (\Exception $exception) {
+      $output->writeln(sprintf("<error>The platform was not successfully deleted.\nERROR: %s</error>", $exception->getMessage()));
+    }
   }
 
 }

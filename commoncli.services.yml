@@ -30,7 +30,10 @@ services:
     arguments: ['@console.input']
   platform.storage:
     class: EclipseGc\CommonConsole\Platform\PlatformStorage
-    arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
+    arguments: ['@file_system', '@event_dispatcher', '@platform.factory']
+  platform.factory:
+    class: EclipseGc\CommonConsole\Platform\PlatformFactory
+    arguments: ['@event_dispatcher', '@process.runner', '@service_container']
   alias.finder:
     class: EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand\AliasFinder
     arguments: ['@event_dispatcher']
@@ -42,7 +45,7 @@ services:
       - { name: kernel.event_subscriber }
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
-    arguments: ['@platform.storage']
+    arguments: ['@platform.storage', '@platform.factory']
     tags:
       - { name: kernel.event_subscriber }
 
@@ -101,7 +104,7 @@ services:
       - { name: common_console_command }
   command.platform.delete:
     class: EclipseGc\CommonConsole\Command\PlatformDelete
-    arguments: ['@event_dispatcher']
+    arguments: ['@event_dispatcher', '@platform.storage']
     tags:
       - { name: common_console_command }
   command.platform.sites:

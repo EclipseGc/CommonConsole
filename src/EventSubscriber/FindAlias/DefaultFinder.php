@@ -2,18 +2,13 @@
 
 namespace EclipseGc\CommonConsole\EventSubscriber\FindAlias;
 
-use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
-use EclipseGc\CommonConsole\PlatformInterface;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\Process\Process;
 
 /**
  * Class DefaultFinder
@@ -28,12 +23,16 @@ class DefaultFinder implements EventSubscriberInterface {
   protected $storage;
 
   /**
+   * @var \EclipseGc\CommonConsole\Platform\PlatformFactory
+   */
+  protected $factory;
+
+  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     $events[CommonConsoleEvents::ALIAS_FIND] = 'onFindAlias';
     $events[CommonConsoleEvents::PLATFORM_WRITE] = 'onPlatformWrite';
-    $events[CommonConsoleEvents::PLATFORM_DELETE] = 'onPlatformDelete';
     return $events;
   }
 
@@ -42,9 +41,12 @@ class DefaultFinder implements EventSubscriberInterface {
    *
    * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
    *   The platform storage object.
+   * @param \EclipseGc\CommonConsole\Platform\PlatformFactory $factory
+   *   The platform factory.
    */
-  public function __construct(PlatformStorage $storage) {
+  public function __construct(PlatformStorage $storage, PlatformFactory $factory) {
     $this->storage = $storage;
+    $this->factory = $factory;
   }
 
   /**
@@ -65,33 +67,7 @@ class DefaultFinder implements EventSubscriberInterface {
    *   The platform write event.
    */
   public function onPlatformWrite(PlatformWriteEvent $event) {
-    // Create a mock platform object to save
-    $mock_platform = new class($event->getConfig()) implements PlatformInterface {
-
-      protected $config = [];
-
-      public function __construct(ConfigInterface $config) {
-        $this->config = $config;
-      }
-      public function getAlias(): string {
-        return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
-      }
-      public static function getQuestions() {}
-      public static function getPlatformId(): string {}
-      public function execute(Command $command, InputInterface $input, OutputInterface $output): void {}
-      public function out(Process $process, OutputInterface $output, string $type, string $buffer): void {}
-      public function get(string $key) {
-        return $this->config->get($key);
-      }
-      public function set(string $key, $value) : self {
-        $this->config->set($key, $value);
-        return $this;
-      }
-      public function export() : array {
-        return $this->config->export();
-      }
-    };
-
+    $mock_platform = $this->factory->getMockPlatformFromConfig($event->getConfig());
     $event->isSuccessful((bool) $this->storage->save($mock_platform));
   }
 

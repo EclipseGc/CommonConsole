@@ -3,7 +3,6 @@
 namespace EclipseGc\CommonConsole\Event;
 
 use EclipseGc\CommonConsole\PlatformInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 
 class PlatformDeleteEvent {
 
@@ -15,13 +14,6 @@ class PlatformDeleteEvent {
   protected $platform;
 
   /**
-   * The output object.
-   *
-   * @var \Symfony\Component\Console\Output\OutputInterface
-   */
-  protected $output;
-
-  /**
    * @var array
    */
   protected $errors = [];
@@ -31,12 +23,9 @@ class PlatformDeleteEvent {
    *
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    *   The platform to delete.
-   * @param \Symfony\Component\Console\Output\OutputInterface $output
-   *   The output object.
    */
-  public function __construct(PlatformInterface $platform, OutputInterface $output) {
+  public function __construct(PlatformInterface $platform) {
     $this->platform = $platform;
-    $this->output = $output;
   }
 
   /**
@@ -47,19 +36,12 @@ class PlatformDeleteEvent {
   }
 
   /**
-   * @return \Symfony\Component\Console\Output\OutputInterface
-   */
-  public function getOutput() : OutputInterface {
-    return $this->output;
-  }
-
-  /**
    * Adds errors encountered during the event.
    *
    * @param string $error
    *   The specific error message.
    */
-  public function addError(string $error) {
+  public function addError(string $error) : void {
     $this->errors[] = $error;
   }
 
