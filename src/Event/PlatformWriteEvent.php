@@ -2,7 +2,6 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
-use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\Event;
 
@@ -14,23 +13,23 @@ use Symfony\Component\EventDispatcher\Event;
 class PlatformWriteEvent extends Event {
 
   /**
-   * @var \Consolidation\Config\ConfigInterface
+   * @var \EclipseGc\CommonConsole\PlatformInterface
    */
-  protected $config;
+  protected $platform;
 
   /**
-   * @var bool
+   * @var array
    */
-  protected $success = FALSE;
+  protected $errors = [];
 
   /**
    * PlatformWriteEvent constructor.
    *
-   * @param \Consolidation\Config\ConfigInterface $config
-   *   The configuration values to be written.
+   * @param \EclipseGc\CommonConsole\PlatformInterface $platform
+   *   The platform to be written.
    */
-  public function __construct(ConfigInterface $config) {
-    $this->config = $config;
+  public function __construct(PlatformInterface $platform) {
+    $this->platform = $platform;
   }
 
   /**
@@ -40,34 +39,44 @@ class PlatformWriteEvent extends Event {
    */
   public function getAlias() : string {
     // @todo be better.
-    return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
+    return $this->platform->getAlias();
   }
 
   /**
-   * Get the configuration which will be written.
+   * Get the platform to be saved.
    *
-   * @return \Consolidation\Config\ConfigInterface
+   * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function getConfig() : ConfigInterface {
-    return $this->config;
+  public function getPlatform() : PlatformInterface {
+    return $this->platform;
   }
 
   /**
-   * Set the success of the write event.
+   * Adds errors encountered during the event.
    *
-   * @param bool $value
+   * @param string $error
+   *   The specific error message.
    */
-  public function isSuccessful(bool $value) {
-    $this->success = $value;
+  public function addError(string $error) : void {
+    $this->errors[] = $error;
   }
 
   /**
-   * Whether or not the write was successful. Defaults to false.
+   * Whether or not any errors were encountered during the event.
    *
    * @return bool
    */
-  public function success() : bool {
-    return $this->success;
+  public function hasError() : bool {
+    return (bool) $this->errors;
+  }
+
+  /**
+   * Gets any logged errors encountered by the event.
+   *
+   * @return array
+   */
+  public function getErrors() : array {
+    return $this->errors;
   }
 
 }

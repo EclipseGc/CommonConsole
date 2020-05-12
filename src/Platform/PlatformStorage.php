@@ -5,9 +5,9 @@ namespace EclipseGc\CommonConsole\Platform;
 use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
+use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
@@ -95,18 +95,20 @@ class PlatformStorage {
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    *   The platform to save.
    *
-   * @return \EclipseGc\CommonConsole\PlatformInterface|null
+   * @return \EclipseGc\CommonConsole\PlatformInterface
    *   Returns a fully loaded platform object on success. Null on failure.
    */
-  public function save(PlatformInterface $platform) : ?PlatformInterface {
+  public function save(PlatformInterface $platform) : PlatformInterface {
     $directory = $this->ensureDirectory();
     $alias = $platform->getAlias();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$alias}.yml"]);
-    try {
-      $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export(), 7));
-      return $this->load($alias);
+    $event = new PlatformWriteEvent($platform);
+    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_WRITE, $event);
+    if ($event->hasError()) {
+      throw new \Exception(sprintf("Save aborted! An unexpected error occurred during save.\nERROR: %s", implode("\n", $event->getErrors())));
     }
-    catch (IOException $e) {}
+    $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export(), 7));
+    return $this->load($alias);
   }
 
   /**
@@ -125,7 +127,7 @@ class PlatformStorage {
       throw new \Exception(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
     $event = new PlatformDeleteEvent($platform);
-    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
+    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_DELETE, $event);
     if ($event->hasError()) {
       throw new \Exception(sprintf("Deletion aborted! An unexpected error occurred during deletion.\nERROR: %s", implode("\n", $event->getErrors())));
     }

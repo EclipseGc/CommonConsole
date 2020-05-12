@@ -7,6 +7,8 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\Platform\PlatformFactory;
+use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
 use EclipseGc\CommonConsole\QuestionFactory;
 use Symfony\Component\Console\Command\Command;
@@ -38,6 +40,20 @@ class PlatformCreate extends Command {
   protected $dispatcher;
 
   /**
+   * The platform storage.
+   *
+   * @var \EclipseGc\CommonConsole\Platform\PlatformStorage
+   */
+  protected $storage;
+
+  /**
+   * The platform factory.
+   *
+   * @var \EclipseGc\CommonConsole\Platform\PlatformFactory
+   */
+  protected $factory;
+
+  /**
    * The question factory.
    *
    * @var \EclipseGc\CommonConsole\QuestionFactory
@@ -47,9 +63,11 @@ class PlatformCreate extends Command {
   /**
    * CreatePlatform constructor.
    */
-  public function __construct(EventDispatcherInterface $dispatcher, QuestionFactory $questionFactory, string $name = NULL) {
+  public function __construct(EventDispatcherInterface $dispatcher, PlatformStorage $storage, PlatformFactory $factory, QuestionFactory $questionFactory, string $name = NULL) {
     parent::__construct($name);
     $this->dispatcher = $dispatcher;
+    $this->storage = $storage;
+    $this->factory = $factory;
     $this->questionFactory = $questionFactory;
   }
 
@@ -104,13 +122,13 @@ class PlatformCreate extends Command {
       $quest = new ConfirmationQuestion('Are these config correct? ');
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
-    $write_event = new PlatformWriteEvent($config);
-    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_WRITE, $write_event);
-    if ($write_event->success()) {
-      $output->writeln("<info>Platform successfully saved.</info>");
+    try {
+      $platform = $this->factory->getMockPlatformFromConfig($config);
+      $this->storage->save($platform);
+      $output->writeln("Successfully deleted.");
     }
-    else {
-      $output->writeln("<error>Platform save failed.</error>");
+    catch (\Exception $exception) {
+      $output->writeln(sprintf("<error>The platform was not successfully deleted.\nERROR: %s</error>", $exception->getMessage()));
     }
   }
 
