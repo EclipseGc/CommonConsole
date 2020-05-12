@@ -23,16 +23,10 @@ class DefaultFinder implements EventSubscriberInterface {
   protected $storage;
 
   /**
-   * @var \EclipseGc\CommonConsole\Platform\PlatformFactory
-   */
-  protected $factory;
-
-  /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
     $events[CommonConsoleEvents::ALIAS_FIND] = 'onFindAlias';
-    $events[CommonConsoleEvents::PLATFORM_WRITE] = 'onPlatformWrite';
     return $events;
   }
 
@@ -41,12 +35,9 @@ class DefaultFinder implements EventSubscriberInterface {
    *
    * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
    *   The platform storage object.
-   * @param \EclipseGc\CommonConsole\Platform\PlatformFactory $factory
-   *   The platform factory.
    */
-  public function __construct(PlatformStorage $storage, PlatformFactory $factory) {
+  public function __construct(PlatformStorage $storage) {
     $this->storage = $storage;
-    $this->factory = $factory;
   }
 
   /**
@@ -58,32 +49,6 @@ class DefaultFinder implements EventSubscriberInterface {
   public function onFindAlias(FindAliasEvent $event) {
     $event->setPlatform($this->storage->load($event->getAlias()));
     $event->stopPropagation();
-  }
-
-  /**
-   * The default platform writer.
-   *
-   * @param \EclipseGc\CommonConsole\Event\PlatformWriteEvent $event
-   *   The platform write event.
-   */
-  public function onPlatformWrite(PlatformWriteEvent $event) {
-    $mock_platform = $this->factory->getMockPlatformFromConfig($event->getConfig());
-    $event->isSuccessful((bool) $this->storage->save($mock_platform));
-  }
-
-  /**
-   * The default platform delete subscriber.
-   *
-   * @param \EclipseGc\CommonConsole\Event\PlatformDeleteEvent $event
-   *   The platform delete event.
-   */
-  public function onPlatformDelete(PlatformDeleteEvent $event) {
-    try {
-      $this->storage->delete($event->getPlatform());
-    }
-    catch (\Exception $exception) {
-      $event->addError($exception->getMessage());
-    }
   }
 
 }

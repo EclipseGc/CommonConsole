@@ -45,7 +45,7 @@ services:
       - { name: kernel.event_subscriber }
   finder.default:
     class: EclipseGc\CommonConsole\EventSubscriber\FindAlias\DefaultFinder
-    arguments: ['@platform.storage', '@platform.factory']
+    arguments: ['@platform.storage']
     tags:
       - { name: kernel.event_subscriber }
 
@@ -99,7 +99,7 @@ services:
   # Commands
   command.platform.create:
     class: EclipseGc\CommonConsole\Command\PlatformCreate
-    arguments: ['@event_dispatcher', '@question.finder']
+    arguments: ['@event_dispatcher', '@platform.storage', '@platform.factory', '@question.finder']
     tags:
       - { name: common_console_command }
   command.platform.delete:
