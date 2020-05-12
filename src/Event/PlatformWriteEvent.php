@@ -6,6 +6,11 @@ use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class PlatformWriteEvent
+ *
+ * @package EclipseGc\CommonConsole\Event
+ */
 class PlatformWriteEvent extends Event {
 
   /**

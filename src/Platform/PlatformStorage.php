@@ -3,13 +3,9 @@
 namespace EclipseGc\CommonConsole\Platform;
 
 use Consolidation\Config\Config;
-use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
-use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
+use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\PlatformInterface;
-use EclipseGc\CommonConsole\ProcessRunner;
-use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -38,14 +34,11 @@ class PlatformStorage {
   protected $dispatcher;
 
   /**
-   * @var \EclipseGc\CommonConsole\ProcessRunner
+   * The platform factory.
+   *
+   * @var \EclipseGc\CommonConsole\Platform\PlatformFactory
    */
-  protected $runner;
-
-  /**
-   * @var \Symfony\Component\DependencyInjection\ContainerInterface
-   */
-  protected $container;
+  protected $factory;
 
   /**
    * DefaultFinder constructor.
@@ -54,16 +47,13 @@ class PlatformStorage {
    *   The file system object.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
-   * @param \EclipseGc\CommonConsole\ProcessRunner $runner
-   *   The process runner.
-   * @param \Symfony\Component\DependencyInjection\ContainerInterface $container
-   *   The container.
+   * @param \EclipseGc\CommonConsole\Platform\PlatformFactory $factory
+   *   The platform factory.
    */
-  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, ProcessRunner $runner, ContainerInterface $container) {
+  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, PlatformFactory $factory) {
     $this->filesystem = $filesystem;
     $this->dispatcher = $dispatcher;
-    $this->runner = $runner;
-    $this->container = $container;
+    $this->factory = $factory;
   }
 
   /**
@@ -82,9 +72,7 @@ class PlatformStorage {
       return NULL;
     }
     $config = new Config(Yaml::parse(file_get_contents($alias_file)));
-    $platform_event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
-    $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
-    return $this->getPlatform($platform_event, $config);
+    return $this->getPlatformFactory()->getPlatform($config);
   }
 
   /**
@@ -115,7 +103,7 @@ class PlatformStorage {
     $alias = $platform->getAlias();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$alias}.yml"]);
     try {
-      $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export()));
+      $this->filesystem->dumpFile($alias_file, Yaml::dump($platform->export(), 7));
       return $this->load($alias);
     }
     catch (IOException $e) {}
@@ -136,33 +124,12 @@ class PlatformStorage {
       // @todo throw custom exception.
       throw new \Exception(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
-    $this->filesystem->remove($alias_file);
-  }
-
-  /**
-   * Instantiates a platform via its factory or through a naive new statement.
-   *
-   * @param \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event
-   *   The GetPlatformTypeEvent object.
-   * @param \Consolidation\Config\ConfigInterface $config
-   *   The configuration values to use for instantiating the platform.
-   *
-   * @return \EclipseGc\CommonConsole\PlatformInterface
-   */
-  protected function getPlatform(GetPlatformTypeEvent $event, ConfigInterface $config) {
-    if ($factory = $event->getFactory()) {
-      if ($this->container->has($factory)) {
-        // @todo check the factory is an instance of PlatformFactoryInterface.
-        return $this->container->get($factory)->create($event, $config, $this->runner);
-      }
-      if (class_exists($factory)) {
-        $factory = new $factory();
-        return $factory->create($event, $config, $this->runner);
-      }
-      throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined.", $factory));
+    $event = new PlatformDeleteEvent($platform);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
+    if ($event->hasError()) {
+      throw new \Exception(sprintf("Deletion aborted! An unexpected error occurred during deletion.\nERROR: %s", implode("\n", $event->getErrors())));
     }
-    $class = $event->getClass();
-    return new $class($config, $this->runner);
+    $this->filesystem->remove($alias_file);
   }
 
   /**
@@ -171,7 +138,7 @@ class PlatformStorage {
    * @return string
    *   The location of the platform directory.
    */
-  protected function ensureDirectory() {
+  protected function ensureDirectory() : string {
     $dir_parts = static::PLATFORM_LOCATION;
     array_unshift($dir_parts, getenv('HOME'));
     $directory = implode(DIRECTORY_SEPARATOR, $dir_parts);
@@ -179,6 +146,15 @@ class PlatformStorage {
       $this->filesystem->mkdir($directory);
     }
     return $directory;
+  }
+
+  /**
+   * Gets the platform factory object to create platforms.
+   *
+   * @return \EclipseGc\CommonConsole\Platform\PlatformFactory
+   */
+  protected function getPlatformFactory() : PlatformFactory {
+    return $this->factory;
   }
 
 }
