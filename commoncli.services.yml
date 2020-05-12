@@ -53,6 +53,11 @@ services:
     arguments: ['@file_system', '@event_dispatcher', '@process.runner', '@service_container']
     tags:
       - { name: kernel.event_subscriber }
+  options_checker:
+    class: EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand\OptionsChecker
+    arguments: ['@event_dispatcher']
+    tags:
+      - { name: kernel.event_subscriber }
 
   # Input definition.
   input.definition.alias:
