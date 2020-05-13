@@ -67,14 +67,27 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
   /**
    * {@inheritdoc}
    */
+  protected function initialize(InputInterface $input, OutputInterface $output) {
+    if (!$input->getArgument('alias')) {
+      throw new \Exception('Command requires the "alias" argument!');
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $platform = $this->getPlatform('source');
+    if (!$platform) {
+      $output->writeln(sprintf('<error>Such platform "%s" does not exist! Make sure you prepended with "@" annotation.</error>', $input->getArgument('alias')));
+      return 1;
+    }
     $helper = $this->getHelper('question');
     $quest = new ConfirmationQuestion(sprintf('Are you certain you want to delete the %s platform? ', $platform->get(PlatformInterface::PLATFORM_NAME_KEY)));
     $answer = $helper->ask($input, $output, $quest);
     if (!$answer) {
       $output->writeln("Delete aborted.");
-      return;
+      return 2;
     }
     try {
       $this->storage->delete($platform);
@@ -83,6 +96,8 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
     catch (\Exception $exception) {
       $output->writeln(sprintf("<error>The platform was not successfully deleted.\nERROR: %s</error>", $exception->getMessage()));
     }
+
+    return 0;
   }
 
 }

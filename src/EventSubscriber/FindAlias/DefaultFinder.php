@@ -45,9 +45,15 @@ class DefaultFinder implements EventSubscriberInterface {
    *
    * @param \EclipseGc\CommonConsole\Event\FindAliasEvent $event
    *   The find alias event.
+   *
+   * @throws \Exception
    */
   public function onFindAlias(FindAliasEvent $event) {
-    $event->setPlatform($this->storage->load($event->getAlias()));
+    $platform = $this->storage->load($event->getAlias());
+    if (!$platform) {
+      throw new \Exception(sprintf('Such platform "%s" does not exist!', $event->getAlias()));
+    }
+    $event->setPlatform($platform);
     $event->stopPropagation();
   }
 
