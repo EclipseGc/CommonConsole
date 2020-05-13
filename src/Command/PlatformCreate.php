@@ -6,7 +6,6 @@ use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
-use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
 use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -125,10 +124,10 @@ class PlatformCreate extends Command {
     try {
       $platform = $this->factory->getMockPlatformFromConfig($config);
       $this->storage->save($platform);
-      $output->writeln("Successfully deleted.");
+      $output->writeln("Successfully saved.");
     }
     catch (\Exception $exception) {
-      $output->writeln(sprintf("<error>The platform was not successfully deleted.\nERROR: %s</error>", $exception->getMessage()));
+      $output->writeln(sprintf("<error>The platform was not successfully saved.\nERROR: %s</error>", $exception->getMessage()));
     }
   }
 
