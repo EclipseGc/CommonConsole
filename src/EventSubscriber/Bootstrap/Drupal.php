@@ -70,13 +70,7 @@ class Drupal implements EventSubscriberInterface {
       $request = Request::createFromGlobals();
       $kernel = new DrupalKernel('prod', $this->loader, FALSE);
       chdir($kernel->getAppRoot());
-      $kernel::bootEnvironment();
-      $kernel->setSitePath($kernel::findSitePath($request));
-      Settings::initialize($kernel->getAppRoot(), $kernel->getSitePath(), $this->loader);
-      $kernel->boot();
-      $kernel->getContainer()
-        ->get('request_stack')
-        ->push($request);
+      $kernel->handle($request);
     }
   }
 
