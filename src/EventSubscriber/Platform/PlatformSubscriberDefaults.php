@@ -6,6 +6,7 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
 use EclipseGc\CommonConsole\Platform\DdevPlatform;
+use EclipseGc\CommonConsole\Platform\DockerStackPlatform;
 use EclipseGc\CommonConsole\Platform\SshPlatform;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -20,6 +21,7 @@ class PlatformSubscriberDefaults implements EventSubscriberInterface {
   public function onGetPlatformTypes(GetPlatformTypesEvent $event) {
     $event->addPlatformType(SshPlatform::getPlatformId());
     $event->addPlatformType(DdevPlatform::getPlatformId());
+    $event->addPlatformType(DockerStackPlatform::getPlatformId());
   }
 
   public function onGetPlatformType(GetPlatformTypeEvent $event) {
@@ -32,6 +34,11 @@ class PlatformSubscriberDefaults implements EventSubscriberInterface {
       $event->addClass(DdevPlatform::class);
       $event->stopPropagation();
       return;
+    }
+
+    if ($event->getPlatformType() === DockerStackPlatform::getPlatformId()) {
+      $event->addClass(DockerStackPlatform::class);
+      $event->stopPropagation();
     }
   }
 
