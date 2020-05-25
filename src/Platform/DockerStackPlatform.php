@@ -5,12 +5,13 @@ namespace EclipseGc\CommonConsole\Platform;
 use Consolidation\Config\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
 /**
- * Class SshPlatform
+ * Class DockerStackPlatform.
  *
  * @package EclipseGc\CommonConsole\Platform
  */
@@ -44,6 +45,7 @@ class DockerStackPlatform extends PlatformBase {
       $uriProcess = Process::fromShellCommandline("cd $location; docker-compose config | grep -A 11 $service | grep hostname | grep -v database | awk '{print $2}'");
       $uriProcess->run();
       $uri = trim($uriProcess->getOutput());
+      $output->writeln("Executed on '$service'");
       $process = Process::fromShellCommandline("cd $location; docker-compose exec -T $service ./vendor/bin/commoncli --uri $uri {$input->__toString()}");
       $this->runner->run($process, $this, $output);
     }
