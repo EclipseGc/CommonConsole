@@ -6,6 +6,7 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -51,7 +52,7 @@ class DefaultFinder implements EventSubscriberInterface {
   public function onFindAlias(FindAliasEvent $event) {
     $platform = $this->storage->load($event->getAlias());
     if (!$platform) {
-      throw new \Exception(sprintf('Such platform "%s" does not exist!', $event->getAlias()));
+      throw new MissingPlatformException(sprintf('Such platform "%s" does not exist!', $event->getAlias()));
     }
     $event->setPlatform($platform);
     $event->stopPropagation();
