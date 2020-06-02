@@ -102,6 +102,16 @@ services:
     arguments: ['@event_dispatcher', '@platform.storage', '@platform.factory', '@question.finder']
     tags:
       - { name: common_console_command }
+  command.platform.describe:
+    class: EclipseGc\CommonConsole\Command\PlatformDescribe
+    arguments: ['@platform.storage']
+    tags:
+      - { name: common_console_command }
+  command.platform.list:
+    class: EclipseGc\CommonConsole\Command\PlatformList
+    arguments: ['@platform.storage']
+    tags:
+      - { name: common_console_command }
   command.platform.delete:
     class: EclipseGc\CommonConsole\Command\PlatformDelete
     arguments: ['@event_dispatcher', '@platform.storage']
