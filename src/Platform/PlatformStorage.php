@@ -6,6 +6,7 @@ use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
+use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -123,8 +124,7 @@ class PlatformStorage {
     $directory = $this->ensureDirectory();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$platform->getAlias()}.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
-      // @todo throw custom exception.
-      throw new \Exception(sprintf("The expected alias file was missing from: %s.", $alias_file));
+      throw new MissingPlatformException(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
     $event = new PlatformDeleteEvent($platform);
     $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_DELETE, $event);
