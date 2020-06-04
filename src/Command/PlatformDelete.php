@@ -2,25 +2,21 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
-use EclipseGc\CommonConsole\Platform\PlatformCommandTrait;
+use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
-use EclipseGc\CommonConsole\PlatformCommandInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class PlatformDelete
+ * Class PlatformDelete.
  *
  * @package EclipseGc\CommonConsole\Command
  */
-class PlatformDelete extends Command implements PlatformCommandInterface {
-
-  use PlatformCommandTrait;
-
+class PlatformDelete extends Command {
+  
   /**
    * {@inheritdoc}
    */
@@ -36,14 +32,13 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
   /**
    * PlatformDelete constructor.
    *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher.
+   * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
+   *   The platform storage service.
    * @param string|NULL $name
    *   The name of this command.
    */
-  public function __construct(EventDispatcherInterface $dispatcher, PlatformStorage $storage, string $name = NULL) {
+  public function __construct(PlatformStorage $storage, string $name = NULL) {
     parent::__construct($name);
-    $this->dispatcher = $dispatcher;
     $this->storage = $storage;
   }
 
@@ -51,25 +46,22 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
    * {@inheritdoc}
    */
   protected function configure() {
-    $this->setDescription('Deletes the specified platform.');
-  }
-
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getExpectedPlatformOptions(): array {
-    return [
-      'source' => PlatformCommandInterface::ANY_PLATFORM,
-    ];
+    $this->setDescription('Deletes the specified platform.')
+      ->setHelp('Delete the platform configuration file. The argument should be an existing platform, omit the "@" sign.')
+      ->setAliases(['pdel']);
   }
 
   /**
    * {@inheritdoc}
    */
   protected function initialize(InputInterface $input, OutputInterface $output) {
-    if (!$input->getArgument('alias')) {
+    $alias = $input->getArgument('alias');
+    if (!$alias) {
       throw new \Exception('Command requires the "alias" argument!');
+    }
+
+    if (!$this->storage->exists($alias)) {
+      throw new MissingPlatformException("Such platform '$alias' doesn't exist!");
     }
   }
 
@@ -77,9 +69,10 @@ class PlatformDelete extends Command implements PlatformCommandInterface {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $platform = $this->getPlatform('source');
+    $alias = $input->getArgument('alias');
+    $platform = $this->storage->load($alias);
     if (!$platform) {
-      $output->writeln(sprintf('<error>Such platform "%s" does not exist! Make sure you prepended with "@" annotation.</error>', $input->getArgument('alias')));
+      $output->writeln(sprintf('<error>Such platform "%s" does not exist!</error>', $alias));
       return 1;
     }
     $helper = $this->getHelper('question');

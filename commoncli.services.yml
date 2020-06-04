@@ -114,7 +114,7 @@ services:
       - { name: common_console_command }
   command.platform.delete:
     class: EclipseGc\CommonConsole\Command\PlatformDelete
-    arguments: ['@event_dispatcher', '@platform.storage']
+    arguments: ['@platform.storage']
     tags:
       - { name: common_console_command }
   command.platform.sites:
