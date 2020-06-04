@@ -54,13 +54,25 @@ class PlatformList extends Command {
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
     $aliases = $this->loadAll();
+    if (!$aliases) {
+      $output->writeln("No platform available.");
+      return 0;
+    }
+    
     $table = new Table($output);
     $table->setHeaders(['Alias', 'Type']);
     foreach ($aliases as $alias) {
-      $platform = $this->platformStorage->load($alias);
-      $table->addRow([$alias, $platform->get('platform.type')]);
+      try {
+        $platform = $this->platformStorage->load($alias);
+        $table->addRow([$alias, $platform->get('platform.type')]);
+      }
+      catch (\Exception $exception) {
+        $output->writeln("<error>Could not resolve platform. {$exception->getMessage()}</error>");
+      }
     }
     $table->render();
+    
+    return 0;
   }
 
   /**

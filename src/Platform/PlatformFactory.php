@@ -74,7 +74,12 @@ class PlatformFactory {
       }
       throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined.", $factory));
     }
+    
     $class = $event->getClass();
+    if (!$class) {
+      throw new LogicException("Platform definition is missing for '{$config->get('platform.alias')}'!");
+    }
+    
     return new $class($config, $this->runner);
   }
 

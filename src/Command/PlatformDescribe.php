@@ -33,6 +33,7 @@ class PlatformDescribe extends Command {
    */
   protected function configure() {
     $this->setDescription('Obtain more details about a platform.')
+      ->setHelp('Get detailed information about a specific platform. The argument should be an existing platform, omit the "@" sign.')
       ->setAliases(['pd']);
   }
 
@@ -72,6 +73,7 @@ class PlatformDescribe extends Command {
     $platform = $this->platformStorage->load($alias);
 
     $output->writeln(Yaml::dump($platform->export(), 7));
+    return 0;
   }
 
 }
