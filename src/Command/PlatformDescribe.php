@@ -60,7 +60,7 @@ class PlatformDescribe extends Command {
     }
 
     if (!$this->platformStorage->exists($alias)) {
-      throw new MissingPlatformException($alias);
+      throw new MissingPlatformException("Such platform '$alias' doesn't exist!");
     }
   }
 
