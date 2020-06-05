@@ -30,7 +30,7 @@ services:
     arguments: ['@console.input']
   platform.storage:
     class: EclipseGc\CommonConsole\Platform\PlatformStorage
-    arguments: ['@file_system', '@event_dispatcher', '@platform.factory']
+    arguments: ['@file_system', '@event_dispatcher', '@platform.factory', '@console.logger']
   platform.factory:
     class: EclipseGc\CommonConsole\Platform\PlatformFactory
     arguments: ['@event_dispatcher', '@process.runner', '@service_container']

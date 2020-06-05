@@ -59,10 +59,6 @@ class PlatformDelete extends Command {
     if (!$alias) {
       throw new \Exception('Command requires the "alias" argument!');
     }
-
-    if (!$this->storage->exists($alias)) {
-      throw new MissingPlatformException("Such platform '$alias' doesn't exist!");
-    }
   }
 
   /**

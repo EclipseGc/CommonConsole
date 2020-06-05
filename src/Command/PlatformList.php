@@ -53,46 +53,20 @@ class PlatformList extends Command {
    * {@inheritdoc}
    */
   protected function execute(InputInterface $input, OutputInterface $output) {
-    $aliases = $this->loadAll();
+    $aliases = $this->platformStorage->loadAll();
     if (!$aliases) {
-      $output->writeln("No platform available.");
+      $output->writeln('No platform available.');
       return 0;
     }
     
     $table = new Table($output);
     $table->setHeaders(['Alias', 'Type']);
-    foreach ($aliases as $alias) {
-      try {
-        $platform = $this->platformStorage->load($alias);
-        $table->addRow([$alias, $platform->get('platform.type')]);
-      }
-      catch (\Exception $exception) {
-        $output->writeln("<error>Could not resolve platform. {$exception->getMessage()}</error>");
-      }
+    foreach ($aliases as $platform) {
+      $table->addRow([$platform->getAlias(), $platform->get('platform.type')]);
     }
     $table->render();
     
     return 0;
-  }
-
-  /**
-   * Returns all available platforms.
-   *
-   * @return array
-   *   The list of platforms.
-   */
-  protected function loadAll(): array {
-    $dir = join(DIRECTORY_SEPARATOR, array_merge([getenv('HOME')], PlatformStorage::PLATFORM_LOCATION));
-    $itarator = new \DirectoryIterator($dir);
-    $aliases = [];
-    foreach ($itarator as $item) {
-      if ($item->getExtension() !== 'yml') {
-        continue;
-      }
-      $file_name = $item->getFilename();
-      $aliases[] = mb_substr($file_name, 0, strlen($file_name)-strlen($item->getExtension())-1);
-    }
-    return $aliases;
   }
 
 }
