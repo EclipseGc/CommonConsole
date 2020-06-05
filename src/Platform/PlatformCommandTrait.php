@@ -5,6 +5,8 @@ namespace EclipseGc\CommonConsole\Platform;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
 use EclipseGc\CommonConsole\PlatformInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Trait PlatformCommandTrait.
@@ -33,6 +35,16 @@ trait PlatformCommandTrait {
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $dispatcher;
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function initialize(InputInterface $input, OutputInterface $output) {
+    $alias = $input->getArgument('alias');
+    if (!$alias) {
+      throw new \Exception('Command requires the "alias" argument!');
+    }
+  }
 
   /**
    * {@inheritdoc}
