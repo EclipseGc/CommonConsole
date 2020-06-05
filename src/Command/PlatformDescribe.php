@@ -2,7 +2,6 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
-use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
