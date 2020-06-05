@@ -8,6 +8,8 @@ use EclipseGc\CommonConsole\Event\PlatformDeleteEvent;
 use EclipseGc\CommonConsole\Event\PlatformWriteEvent;
 use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use EclipseGc\CommonConsole\PlatformInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
@@ -42,6 +44,13 @@ class PlatformStorage {
   protected $factory;
 
   /**
+   * The logger channel.
+   *
+   * @var \Psr\Log\LoggerInterface
+   */
+  protected $logger;
+
+  /**
    * DefaultFinder constructor.
    *
    * @param \Symfony\Component\Filesystem\Filesystem $filesystem
@@ -51,10 +60,11 @@ class PlatformStorage {
    * @param \EclipseGc\CommonConsole\Platform\PlatformFactory $factory
    *   The platform factory.
    */
-  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, PlatformFactory $factory) {
+  public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, PlatformFactory $factory, LoggerInterface $logger) {
     $this->filesystem = $filesystem;
     $this->dispatcher = $dispatcher;
     $this->factory = $factory;
+    $this->logger = $logger;
   }
 
   /**
@@ -70,10 +80,36 @@ class PlatformStorage {
     $directory = $this->ensureDirectory();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "$alias.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
-      return NULL;
+      throw new MissingPlatformException(sprintf('Such platform "%s" does not exist!', $alias));
     }
     $config = new Config(Yaml::parse(file_get_contents($alias_file)));
     return $this->getPlatformFactory()->getPlatform($config);
+  }
+
+  /**
+   * Returns all available platforms.
+   *
+   * @return \EclipseGc\CommonConsole\PlatformInterface[]
+   *   The list of platforms.
+   */
+  public function loadAll(): array {
+    $dir = $this->ensureDirectory();
+    $iterator = new \DirectoryIterator($dir);
+    $platforms = [];
+    foreach ($iterator as $item) {
+      if ($item->getExtension() !== 'yml') {
+        continue;
+      }
+      $config = new Config(Yaml::parse(file_get_contents(implode(DIRECTORY_SEPARATOR, [$dir, $item->getFilename()]))));
+      try {
+        $platforms[] = $this->getPlatformFactory()->getPlatform($config);
+      }
+      catch (LogicException $e) {
+        $this->logger->error($e->getMessage());
+      }
+    }
+
+    return $platforms;
   }
 
   /**
