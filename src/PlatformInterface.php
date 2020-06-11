@@ -99,4 +99,11 @@ interface PlatformInterface extends CommandQuestionInterface {
    */
   public function export() : array ;
 
+  /**
+   * Saves the platform object.
+   *
+   * @return \EclipseGc\CommonConsole\PlatformInterface
+   */
+  public function save() : PlatformInterface ;
+
 }

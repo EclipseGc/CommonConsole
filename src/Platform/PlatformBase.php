@@ -30,16 +30,26 @@ abstract class PlatformBase implements PlatformInterface {
   protected $runner;
 
   /**
+   * The platform storage.
+   *
+   * @var \EclipseGc\CommonConsole\Platform\PlatformStorage
+   */
+  protected $storage;
+
+  /**
    * SshPlatform constructor.
    *
    * @param \Consolidation\Config\ConfigInterface $config
    *   The configuration for this platform.
    * @param \EclipseGc\CommonConsole\ProcessRunner $runner
    *   The process runner.
+   * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
+   *   The platform storage.
    */
-  public function __construct(ConfigInterface $config, ProcessRunner $runner) {
+  public function __construct(ConfigInterface $config, ProcessRunner $runner, PlatformStorage $storage) {
     $this->config = $config;
     $this->runner = $runner;
+    $this->storage = $storage;
   }
 
   /**
@@ -74,6 +84,13 @@ abstract class PlatformBase implements PlatformInterface {
    */
   public function export() : array {
     return $this->config->export();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() : PlatformInterface {
+    return $this->storage->save($this);
   }
 
 }

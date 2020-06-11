@@ -122,8 +122,8 @@ class PlatformCreate extends Command {
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
     try {
-      $platform = $this->factory->getMockPlatformFromConfig($config);
-      $this->storage->save($platform);
+      $platform = $this->factory->getMockPlatformFromConfig($config, $this->storage);
+      $platform->save();
       $output->writeln("Successfully saved.");
     }
     catch (\Exception $exception) {

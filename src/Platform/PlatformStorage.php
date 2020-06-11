@@ -83,7 +83,7 @@ class PlatformStorage {
       throw new MissingPlatformException(sprintf('Such platform "%s" does not exist!', $alias));
     }
     $config = new Config(Yaml::parse(file_get_contents($alias_file)));
-    return $this->getPlatformFactory()->getPlatform($config);
+    return $this->getPlatformFactory()->getPlatform($config, $this);
   }
 
   /**
@@ -102,7 +102,7 @@ class PlatformStorage {
       }
       $config = new Config(Yaml::parse(file_get_contents(implode(DIRECTORY_SEPARATOR, [$dir, $item->getFilename()]))));
       try {
-        $platforms[] = $this->getPlatformFactory()->getPlatform($config);
+        $platforms[] = $this->getPlatformFactory()->getPlatform($config, $this);
       }
       catch (LogicException $e) {
         $this->logger->error($e->getMessage());

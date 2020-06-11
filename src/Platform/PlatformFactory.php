@@ -31,16 +31,22 @@ use Symfony\Component\Process\Process;
 class PlatformFactory {
 
   /**
+   * The event dispatcher.
+   *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $dispatcher;
 
   /**
+   * The process runner.
+   *
    * @var \EclipseGc\CommonConsole\ProcessRunner
    */
   protected $runner;
 
   /**
+   * The dependency injection container.
+   *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
   protected $container;
@@ -57,20 +63,23 @@ class PlatformFactory {
    * @param \Consolidation\Config\ConfigInterface $config
    *   The configuration values to use for instantiating the platform.
    *
+   * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
+   *   The platform storage.
+   *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function getPlatform(ConfigInterface $config) : PlatformInterface {
+  public function getPlatform(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
     $event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $event);
 
     if ($factory = $event->getFactory()) {
       if ($this->container->has($factory)) {
         // @todo check the factory is an instance of PlatformFactoryInterface.
-        return $this->container->get($factory)->create($event, $config, $this->runner);
+        return $this->container->get($factory)->create($event, $config, $this->runner, $storage);
       }
       if (class_exists($factory)) {
         $factory = new $factory();
-        return $factory->create($event, $config, $this->runner);
+        return $factory->create($event, $config, $this->runner, $storage);
       }
       throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined.", $factory));
     }
@@ -80,7 +89,7 @@ class PlatformFactory {
       throw new LogicException("Platform definition is missing for '{$config->get('platform.alias')}'!");
     }
     
-    return new $class($config, $this->runner);
+    return new $class($config, $this->runner, $storage);
   }
 
   /**
@@ -98,16 +107,21 @@ class PlatformFactory {
    * @param \Consolidation\Config\ConfigInterface $config
    *   The config for the mock platform.
    *
+   * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
+   *   The platform storage.
+   *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function getMockPlatformFromConfig(ConfigInterface $config) : PlatformInterface {
+  public function getMockPlatformFromConfig(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
     // Create a mock platform object to save
-    $mock_platform = new class($config) implements PlatformInterface {
+    return new class($config, $storage) implements PlatformInterface {
 
       protected $config = [];
+      protected $storage;
 
-      public function __construct(ConfigInterface $config) {
+      public function __construct(ConfigInterface $config, PlatformStorage $storage) {
         $this->config = $config;
+        $this->storage = $storage;
       }
       public function getAlias(): string {
         return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
@@ -126,8 +140,10 @@ class PlatformFactory {
       public function export() : array {
         return $this->config->export();
       }
+      public function save() : PlatformInterface {
+        return $this->storage->save($this);
+      }
     };
-    return $mock_platform;
   }
 
 }
