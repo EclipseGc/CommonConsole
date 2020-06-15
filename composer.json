@@ -10,7 +10,8 @@
     "symfony/event-dispatcher": "^3.4 || ^4.3@dev",
     "symfony/filesystem": "^3.4 || ^4.3@dev",
     "symfony/process": "^3.4 || ^4.3@dev",
-    "symfony/yaml": "^3.4 || ^4.2"
+    "symfony/yaml": "^3.4 || ^4.2",
+    "ext-json": "*"
   },
   "bin": [
     "bin/commoncli"
