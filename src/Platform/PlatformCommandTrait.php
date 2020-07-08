@@ -60,6 +60,7 @@ trait PlatformCommandTrait {
         }
         $this->platforms[$name] = $platform;
         $this->platformAliases[$name] = $alias;
+        return;
       }
     }
   }
