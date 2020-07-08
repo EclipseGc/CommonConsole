@@ -52,14 +52,15 @@ trait PlatformCommandTrait {
   public function addPlatform(string $alias, PlatformInterface $platform): void {
     $options = static::getExpectedPlatformOptions();
     foreach ($options as $name => $expectation) {
-      if (empty($this->platforms[$name]) && empty($this->platformAliases[$alias])) {
+      if (empty($this->platforms[$name])) {
         $event = new AddPlatformToCommandEvent($expectation, $platform, $alias);
         $this->dispatcher->dispatch(CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND, $event);
         if (!$event->platformMatchesExpectation()) {
           throw new \Exception(sprintf("Invalid Platform value. Expected a platform of type '%s'. Type of '%s' given.", $expectation, $platform::getPlatformId()));
         }
         $this->platforms[$name] = $platform;
-        $this->platformAliases[$alias] = $name;
+        $this->platformAliases[$name] = $alias;
+        return;
       }
     }
   }
