@@ -22,4 +22,11 @@ final class CommonConsoleEvents {
 
   const CREATE_APPLICATION = 'commonconsole.input.create_definition';
 
+  /**
+   * Dispatched right before a command is executed on a platform.
+   *
+   * @see \EclipseGc\CommonConsole\Event\PlatformArgumentsEvent
+   */
+  const PLATFORM_ARGS = 'commonconsole.platform.arguments';
+
 }
