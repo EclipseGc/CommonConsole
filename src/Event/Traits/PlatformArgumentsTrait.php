@@ -7,7 +7,10 @@ use EclipseGc\CommonConsole\Event\PlatformArgumentsEvent;
 
 /**
  * Trait PlatformArgumentsTrait.
- *
+ * 
+ * Provides helper methods to dispatch the CommonConsoleEvents::PLATFORM_ARGS
+ * event.
+ * 
  * @package EclipseGc\CommonConsole\Event\Traits
  */
 trait PlatformArgumentsTrait {

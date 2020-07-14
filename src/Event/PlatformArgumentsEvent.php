@@ -10,6 +10,8 @@ use Symfony\Contracts\EventDispatcher\Event;
  * Class PlatformArgumentsEvent.
  * 
  * Dispatched right before a command is executed on a platform.
+ * 
+ * @see \EclipseGc\CommonConsole\Event\Traits\PlatformArgumentsTrait
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -30,18 +32,18 @@ class PlatformArgumentsEvent extends Event {
   protected $sites;
 
   /**
+   * The name of the current command.
+   *
+   * @var string
+   */
+  protected $commandName;
+  
+  /**
    * Decorated input containing the mapping between sites and their args.
    * 
    * @var array
    */
   protected $decoratedInput;
-
-  /**
-   * The name of the current command.
-   * 
-   * @var string
-   */
-  protected $commandName;
 
   /**
    * PlatformArgumentsEvent constructor.
@@ -85,7 +87,7 @@ class PlatformArgumentsEvent extends Event {
    * @return array
    *   The list of inputs mapped to platform sites.
    */
-  public function getDecoratedInput() {
+  public function getDecoratedInput(): array {
     return $this->decoratedInput;
   }
 
@@ -110,7 +112,7 @@ class PlatformArgumentsEvent extends Event {
    * 
    * @throws \Exception
    */
-  protected function setDecoratedInput(array $arguments) {
+  public function setDecoratedInput(array $arguments): void {
     $args = $this->input->getArguments();
     $options = $this->input->getOptions();
 
@@ -149,7 +151,7 @@ class PlatformArgumentsEvent extends Event {
    * @return bool
    *   TRUE if it is an option, in other words, it starts with --/-
    */
-  protected function isOption(string $arg) {
+  protected function isOption(string $arg): bool {
     return (bool) preg_match('/-(-)?\w.*/', $arg);
   }
   
