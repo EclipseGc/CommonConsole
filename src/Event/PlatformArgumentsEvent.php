@@ -25,7 +25,7 @@ class PlatformArgumentsEvent extends Event {
   protected $input;
 
   /**
-   * The list of sites in a plaform.
+   * The list of sites in a platform.
    * 
    * @var array 
    */
@@ -72,6 +72,16 @@ class PlatformArgumentsEvent extends Event {
   }
 
   /**
+   * Returns the name of the current command.
+   *
+   * @return string
+   *   The name of the command.
+   */
+  public function getCommandName(): string {
+    return $this->commandName;
+  }
+
+  /**
    * Returns the input in hand.
    *
    * @return \Symfony\Component\Console\Input\InputInterface
@@ -106,10 +116,7 @@ class PlatformArgumentsEvent extends Event {
    *
    * @param array $arguments
    *   An associative array containing the sites and the customized input.
-   * 
-   * @return array
-   *   The resolved list of sites and input values.
-   * 
+   *
    * @throws \Exception
    */
   public function setDecoratedInput(array $arguments): void {
