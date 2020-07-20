@@ -105,14 +105,14 @@ class PlatformArgumentInjectionEvent extends Event {
    * Maps customized arguments to sites derived from a platform.
    *
    * Example:
-   * @code
+   * ```php
    *   [
    *     'site_name' => [
    *       '--option' => 'option_value',
    *       'some_argument' => 'arg_value',
    *     ],
    *   ]
-   * @endcode
+   * ```
    *
    * @param array $arguments
    *   An associative array containing the sites and the customized input.
