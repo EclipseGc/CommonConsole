@@ -25,8 +25,8 @@ final class CommonConsoleEvents {
   /**
    * Dispatched right before a command is executed on a platform.
    *
-   * @see \EclipseGc\CommonConsole\Event\PlatformArgumentsEvent
+   * @see \EclipseGc\CommonConsole\Event\PlatformArgumentInjectionEvent
    */
-  const PLATFORM_ARGS = 'commonconsole.platform.arguments';
+  const PLATFORM_ARGS_INJ = 'commonconsole.platform.argument.injection';
 
 }

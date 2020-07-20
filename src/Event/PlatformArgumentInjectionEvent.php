@@ -7,15 +7,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class PlatformArgumentsEvent.
- * 
+ * Class PlatformArgumentInjectionEvent.
+ *
  * Dispatched right before a command is executed on a platform.
- * 
- * @see \EclipseGc\CommonConsole\Event\Traits\PlatformArgumentsTrait
+ *
+ * @see \EclipseGc\CommonConsole\Event\Traits\PlatformArgumentInjectionTrait
  *
  * @package EclipseGc\CommonConsole\Event
  */
-class PlatformArgumentsEvent extends Event {
+class PlatformArgumentInjectionEvent extends Event {
 
   /**
    * The command's input object.
@@ -46,7 +46,7 @@ class PlatformArgumentsEvent extends Event {
   protected $decoratedInput;
 
   /**
-   * PlatformArgumentsEvent constructor.
+   * PlatformArgumentInjectionEvent constructor.
    *
    * @param \Symfony\Component\Console\Input\InputInterface $input
    *   The current command's input object.
@@ -122,6 +122,10 @@ class PlatformArgumentsEvent extends Event {
   public function setDecoratedInput(array $arguments): void {
     $args = $this->input->getArguments();
     $options = $this->input->getOptions();
+    foreach ($options as $key => $val) {
+      $options["--$key"] = $val;
+      unset($options[$key]);
+    }
 
     $res = [];
     foreach ($arguments as $site => $params) {
@@ -161,5 +165,5 @@ class PlatformArgumentsEvent extends Event {
   protected function isOption(string $arg): bool {
     return (bool) preg_match('/-(-)?\w.*/', $arg);
   }
-  
+
 }
