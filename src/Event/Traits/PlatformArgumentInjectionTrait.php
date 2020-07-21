@@ -4,6 +4,7 @@ namespace EclipseGc\CommonConsole\Event\Traits;
 
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\PlatformArgumentInjectionEvent;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 
 /**
@@ -31,16 +32,16 @@ trait PlatformArgumentInjectionTrait {
    *   source.
    * @param array $sites
    *   The sites to customize input for.
-   * @param string $command_name
-   *   The name of the current command.
+   * @param \Symfony\Component\Console\Command\Command $command
+   *   The current command.
    *
    * @return array
    *   The end result of the mapping.
    *
    * @throws \Exception
    */
-  protected function dispatchPlatformArgumentInjectionEvent(InputInterface $input, array $sites, string $command_name): array {
-    $event = new PlatformArgumentInjectionEvent($input, $sites, $command_name);
+  protected function dispatchPlatformArgumentInjectionEvent(InputInterface $input, array $sites, Command $command): array {
+    $event = new PlatformArgumentInjectionEvent($input, $sites, $command);
     $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_ARGS_INJ, $event);
     return $event->getDecoratedInput();
   }
