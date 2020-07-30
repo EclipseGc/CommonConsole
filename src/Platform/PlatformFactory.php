@@ -5,6 +5,7 @@ namespace EclipseGc\CommonConsole\Platform;
 use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
+use EclipseGc\CommonConsole\PlatformDependencyInjectionInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use EclipseGc\CommonConsole\ProcessRunner;
 use Symfony\Component\Console\Command\Command;
@@ -72,21 +73,13 @@ class PlatformFactory {
     $event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
     $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $event);
 
-    if ($factory = $event->getFactory()) {
-      if ($this->container->has($factory)) {
-        // @todo check the factory is an instance of PlatformFactoryInterface.
-        return $this->container->get($factory)->create($event, $config, $this->runner, $storage);
-      }
-      if (class_exists($factory)) {
-        $factory = new $factory();
-        return $factory->create($event, $config, $this->runner, $storage);
-      }
-      throw new LogicException(sprintf("Platform factory service id: %s is missing or undefined.", $factory));
-    }
-    
     $class = $event->getClass();
-    if (!$class) {
+    if (!$class || !class_exists($class)) {
       throw new LogicException("Platform definition is missing for '{$config->get('platform.alias')}'!");
+    }
+
+    if (in_array(PlatformDependencyInjectionInterface::class, class_implements($class))) {
+      return $class::create($this->container, $config, $this->runner, $storage);
     }
     
     return new $class($config, $this->runner, $storage);

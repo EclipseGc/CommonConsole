@@ -71,28 +71,4 @@ class GetPlatformTypeEvent extends Event {
     return $this->class;
   }
 
-  /**
-   * Add a class or service id to be used when instantiating the platform.
-   *
-   * @param string $factory
-   *   The factory class name or service id.
-   *
-   * @throws \Exception
-   */
-  public function addFactory(string $factory) {
-    if (class_exists($factory) && !in_array(PlatformFactoryInterface::class, class_implements($factory))) {
-      throw new \Exception(sprintf("Invalid PlatformFactory class. Must implement %s.", PlatformFactoryInterface::class));
-    }
-    $this->factory = $factory;
-  }
-
-  /**
-   * Get a factory for instantiating the platform.
-   *
-   * @return string
-   */
-  public function getFactory() : string {
-    return $this->factory;
-  }
-
 }
