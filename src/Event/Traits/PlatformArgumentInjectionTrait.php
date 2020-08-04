@@ -41,8 +41,6 @@ trait PlatformArgumentInjectionTrait {
    */
   protected function dispatchPlatformArgumentInjectionEvent(InputInterface $input, array $sites, string $command_name): array {
     $event = new PlatformArgumentInjectionEvent($input, $sites, $command_name);
-    // Set a default value.
-    $event->setDecoratedInput(array_fill_keys($sites, NULL));
     $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_ARGS_INJ, $event);
     return $event->getDecoratedInput();
   }

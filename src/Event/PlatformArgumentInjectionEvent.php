@@ -59,6 +59,9 @@ class PlatformArgumentInjectionEvent extends Event {
     $this->input = $input;
     $this->sites = $sites;
     $this->commandName = $command_name;
+
+    // Set a default value.
+    $this->setDecoratedInput(array_fill_keys($sites, NULL));
   }
 
   /**
