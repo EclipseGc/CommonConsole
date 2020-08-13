@@ -2,6 +2,8 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Contracts\EventDispatcher\Event;
@@ -32,11 +34,11 @@ class PlatformArgumentInjectionEvent extends Event {
   protected $sites;
 
   /**
-   * The name of the current command.
+   * The current command.
    *
    * @var string
    */
-  protected $commandName;
+  protected $command;
   
   /**
    * Decorated input containing the mapping between sites and their args.
@@ -52,13 +54,13 @@ class PlatformArgumentInjectionEvent extends Event {
    *   The current command's input object.
    * @param array $sites
    *   The list of sites.
-   * @param string $command_name
-   *   The name of the command.
+   * @param \Symfony\Component\Console\Command\Command $command
+   *   The current command.
    */
-  public function __construct(InputInterface $input, array $sites, string $command_name) {
+  public function __construct(InputInterface $input, array $sites, Command $command) {
     $this->input = $input;
     $this->sites = $sites;
-    $this->commandName = $command_name;
+    $this->command = $command;
 
     // Set a default value.
     $this->setDecoratedInput(array_fill_keys($sites, NULL));
@@ -81,7 +83,7 @@ class PlatformArgumentInjectionEvent extends Event {
    *   The name of the command.
    */
   public function getCommandName(): string {
-    return $this->commandName;
+    return $this->command->getName();
   }
 
   /**
@@ -125,8 +127,20 @@ class PlatformArgumentInjectionEvent extends Event {
   public function setDecoratedInput(array $arguments): void {
     $args = $this->input->getArguments();
     $options = $this->input->getOptions();
+    $definition = $this->command->getDefinition();
     foreach ($options as $key => $val) {
-      $options["--$key"] = $val;
+      $option = $definition->getOption($key);
+      // Option value must be TRUE so it can be qualified as a used option.
+      if ($option->acceptValue() && (bool) $val === TRUE) {
+        $options["--$key"] = $val;
+      }
+      else {
+        // Insert the option into the array IF it was actually used.
+        if ((bool) $val === TRUE) {
+          $options["--$key"] = NULL;
+        }
+      }
+
       unset($options[$key]);
     }
 
@@ -148,7 +162,7 @@ class PlatformArgumentInjectionEvent extends Event {
       }
       
       $res[$site] = new ArrayInput(array_merge(
-        ['command' => $this->commandName] + $args,
+        ['command' => $this->getCommandName()] + $args,
         $options
       ));
     }
