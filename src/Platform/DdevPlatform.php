@@ -30,15 +30,36 @@ class DdevPlatform extends PlatformBase {
     return [
       'ddev.local.wrapper_dir' => new Question("Directory containing the .ddev directory: "),
       'ddev.remote.vendor_dir' => new Question("The location of the vendor dir within the container: "),
+      'ddev.prod' => [DdevPlatform::class, 'getEnvironmentInfo'],
     ];
   }
 
+  /**
+   * Creates question about the environment.
+   *
+   * @return \Symfony\Component\Console\Question\Question
+   */
+  public static function getEnvironmentInfo() : Question {
+    $options = [
+      'TRUE' => 'Yes',
+      'FALSE' => 'No',
+    ];
+
+    return new ChoiceQuestion("Is this production environment?", $options);
+  }
   /**
    * {@inheritdoc}
    */
   public function execute(Command $command, InputInterface $input, OutputInterface $output) : void {
     $process = Process::fromShellCommandline("cd {$this->get('ddev.local.wrapper_dir')}; ddev exec {$this->get('ddev.remote.vendor_dir')}/bin/commoncli {$input->__toString()}");
     $this->runner->run($process, $this, $output);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isProdEnvironment(): bool {
+    return $this->get('ddev.prod') === 'TRUE';
   }
 
 }

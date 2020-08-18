@@ -106,4 +106,11 @@ interface PlatformInterface extends CommandQuestionInterface {
    */
   public function save() : PlatformInterface ;
 
+  /**
+   * Checks is it production environment or not.
+   * 
+   * @return bool
+   *   TRUE if production, FALSE otherwise.
+   */
+  public function isProdEnvironment(): bool ;
 }

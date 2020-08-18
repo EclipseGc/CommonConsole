@@ -6,6 +6,7 @@ use Consolidation\Config\Config;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
@@ -32,6 +33,7 @@ class SshPlatform extends PlatformBase {
       'ssh.url' => new Question("SSH URL: "),
       'ssh.remote_dir' => new Question("SSH remote directory: "),
       'ssh.remote_vendor_dir' => [SshPlatform::class, 'getRemoteVendorDir'],
+      'ssh.prod' => [SshPlatform::class, 'getEnvironmentInfo'],
     ];
   }
 
@@ -53,12 +55,33 @@ class SshPlatform extends PlatformBase {
   }
 
   /**
+   * Creates question about the environment.
+   *
+   * @return \Symfony\Component\Console\Question\Question
+   */
+  public static function getEnvironmentInfo() : Question {
+    $options = [
+      'TRUE' => 'Yes',
+      'FALSE' => 'No',
+    ];
+
+    return new ChoiceQuestion("Is this production environment?", $options);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function execute(Command $command, InputInterface $input, OutputInterface $output) : void {
     $sshUrl = "{$this->get('ssh.user')}@{$this->get('ssh.url')}";
     $process = Process::fromShellCommandline("ssh $sshUrl '.{$this->get('ssh.remote_vendor_dir')}/bin/commoncli {$input->__toString()}'");
     $this->runner->run($process, $this, $output);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function isProdEnvironment(): bool {
+    return $this->get('ssh.prod') === 'TRUE';
   }
 
 }
