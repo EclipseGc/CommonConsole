@@ -13,6 +13,9 @@
     "symfony/yaml": "^3.4 || ^4.2",
     "ext-json": "*"
   },
+  "require-dev": {
+    "phpunit/phpunit": "^9.3@dev"
+  },
   "bin": [
     "bin/commoncli"
   ],
@@ -26,7 +29,5 @@
       "EclipseGc\\CommonConsole\\Tests\\": "tests"
     }
   },
-  "minimum-stability": "dev",
-  "require-dev": {
-  }
+  "minimum-stability": "dev"
 }

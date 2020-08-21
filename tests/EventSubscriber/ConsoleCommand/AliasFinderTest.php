@@ -3,7 +3,6 @@
 namespace EclipseGc\CommonConsole\Tests\EventSubscriber\ConsoleCommand;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
@@ -39,8 +38,8 @@ class AliasFinderTest extends TestCase {
    * @dataProvider appParameterDataProvider
    */
   public function testOnConsoleCommand(array $parameters, string $expected, string $message) {
-    /** @var \Composer\Console\Application $application */
-    $application = new Application();
+    /** @var \Symfony\Component\Console\Application $application */
+    $application = static::$container->get('common_console_application');
     $application->setDispatcher(static::$container->get('event_dispatcher'));
     $application->setAutoExit(FALSE);
     $app_tester = new ApplicationTester($application);

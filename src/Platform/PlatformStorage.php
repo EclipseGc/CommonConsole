@@ -80,7 +80,7 @@ class PlatformStorage {
     $directory = $this->ensureDirectory();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "$alias.yml"]);
     if (!$this->filesystem->exists($alias_file)) {
-      throw new MissingPlatformException(sprintf('Such platform "%s" does not exist!', $alias));
+      throw new MissingPlatformException(sprintf("Alias by name %s not found. Please check your available aliases and try again.", $alias));
     }
     $config = new Config(Yaml::parse(file_get_contents($alias_file)));
     return $this->getPlatformFactory()->getPlatform($config, $this);

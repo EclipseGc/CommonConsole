@@ -7,7 +7,7 @@ if (file_exists($autoloadFile = __DIR__ . '/../vendor/autoload.php')
   || file_exists($autoloadFile = __DIR__ . '/../../autoload.php')
   || file_exists($autoloadFile = __DIR__ . '/../../../autoload.php')
 ) {
-  $loader = include_once($autoloadFile);
+  $loader = require $autoloadFile;
 } else {
   throw new \Exception("Could not locate autoload.php. cwd is $cwd; __DIR__ is " . __DIR__);
 }
