@@ -57,4 +57,18 @@ interface PlatformCommandInterface {
    */
   public static function getExpectedPlatformOptions() : array ;
 
+  /**
+   * Filters the list of platform sites provided by the platform object.
+   *
+   * This will dispatch the
+   * \EclipseGc\CommonConsole\CommonConsoleEvents::FILTER_PLATFORM_SITES event
+   * allowing external code to inspect sites of a particular platform for a
+   * given command being run.
+   *
+   * @param string $name
+   *
+   * @return array
+   */
+  public function getPlatformSites(string $name) : array ;
+
 }

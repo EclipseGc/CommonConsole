@@ -4,6 +4,7 @@ namespace EclipseGc\CommonConsole\Platform;
 
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
+use EclipseGc\CommonConsole\Event\FilterPlatformSites;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -70,6 +71,20 @@ trait PlatformCommandTrait {
    */
   public function getPlatform(string $name): ?PlatformInterface {
     return $this->platforms[$name] ?? NULL;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getPlatformSites(string $name) {
+    $platform = $this->getPlatform($name);
+    // Not all platforms implement the platform sites interface. Set empty
+    // array for them. Subscribers to the event can manually add "platform
+    // sites" to their list via this mechanism if desireable.
+    $sites = $platform instanceof PlatformSitesInterface ? $platform->getPlatformSites() : [];
+    $event = new FilterPlatformSites($this, $platform, $sites);
+    $this->dispatcher->dispatch(CommonConsoleEvents::FILTER_PLATFORM_SITES, $event);
+    return $event->getPlatformSites();
   }
 
 }
