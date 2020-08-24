@@ -76,7 +76,7 @@ trait PlatformCommandTrait {
   /**
    * {@inheritdoc}
    */
-  public function getPlatformSites(string $name) {
+  public function getPlatformSites(string $name): array {
     $platform = $this->getPlatform($name);
     // Not all platforms implement the platform sites interface. Set empty
     // array for them. Subscribers to the event can manually add "platform
