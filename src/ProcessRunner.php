@@ -89,7 +89,7 @@ class ProcessRunner {
         $output->getFormatter()->setStyle($name, $style);
       }
     }
-    $process->run(function ($type, $buffer) use ($process, $output, $platform) {
+    return $process->run(function ($type, $buffer) use ($process, $output, $platform) {
       $platform->out($process, $output, $type, $buffer);
       if (Process::ERR === $type) {
         $output->writeln("<error>$buffer</error>");
