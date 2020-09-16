@@ -121,7 +121,7 @@ class PlatformFactory {
       }
       public static function getQuestions() {}
       public static function getPlatformId(): string {}
-      public function execute(Command $command, InputInterface $input, OutputInterface $output): void {}
+      public function execute(Command $command, InputInterface $input, OutputInterface $output): int {}
       public function out(Process $process, OutputInterface $output, string $type, string $buffer): void {}
       public function get(string $key) {
         return $this->config->get($key);
