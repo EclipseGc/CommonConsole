@@ -46,8 +46,11 @@ interface PlatformInterface extends CommandQuestionInterface {
    *   The input object.
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    *   The output object.
+   * 
+   * @return int
+   *   The process exit code.
    */
-  public function execute(Command $command, InputInterface $input, OutputInterface $output) : void ;
+  public function execute(Command $command, InputInterface $input, OutputInterface $output) : int ;
 
   /**
    * ProcessRunner proxy method to allow a to response to specific output.
