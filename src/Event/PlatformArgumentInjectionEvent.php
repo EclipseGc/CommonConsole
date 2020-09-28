@@ -162,7 +162,7 @@ class PlatformArgumentInjectionEvent extends Event {
       }
       
       $res[$site] = new ArrayInput(array_merge(
-        ['command' => $this->getCommandName()] + $args,
+        ['command' => $this->getCommandName()] + $args + ['--uri' => $site],
         $options
       ));
     }
