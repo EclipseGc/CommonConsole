@@ -2,7 +2,7 @@
 
 namespace EclipseGc\CommonConsole\Tests\EventSubscriber\ConsoleCommand;
 
-use PHPUnit\Framework\TestCase;
+use EclipseGc\CommonConsole\Tests\CommonConsoleTestBase;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 /**
@@ -14,23 +14,7 @@ use Symfony\Component\Console\Tester\ApplicationTester;
  *
  * @package EclipseGc\CommonConsole\Tests\EventSubscriber\ConsoleCommand
  */
-class AliasFinderTest extends TestCase {
-
-  /**
-   * The service container used for testing.
-   *
-   * @var \Symfony\Component\DependencyInjection\ContainerBuilder
-   */
-  protected static $container;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function setUpBeforeClass(): void {
-    parent::setUpBeforeClass();
-
-    static::$container = require_once __DIR__ .'/../../../includes/container.php';
-  }
+class AliasFinderTest extends CommonConsoleTestBase {
 
   /**
    * @covers ::onConsoleCommand
@@ -39,8 +23,8 @@ class AliasFinderTest extends TestCase {
    */
   public function testOnConsoleCommand(array $parameters, string $expected, string $message) {
     /** @var \Symfony\Component\Console\Application $application */
-    $application = static::$container->get('common_console_application');
-    $application->setDispatcher(static::$container->get('event_dispatcher'));
+    $application = $this->getContainer()->get('common_console_application');
+    $application->setDispatcher($this->getContainer()->get('event_dispatcher'));
     $application->setAutoExit(FALSE);
     $app_tester = new ApplicationTester($application);
 
