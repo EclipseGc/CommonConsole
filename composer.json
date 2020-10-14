@@ -14,7 +14,8 @@
     "ext-json": "*"
   },
   "require-dev": {
-    "phpunit/phpunit": "^9.3@dev"
+    "phpunit/phpunit": "^9.3@dev",
+    "phpspec/prophecy-phpunit": "^2.0@dev"
   },
   "bin": [
     "bin/commoncli"
