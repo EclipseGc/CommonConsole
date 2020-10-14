@@ -81,6 +81,9 @@ class AliasFinder implements EventSubscriberInterface {
         }
       }
     }
+    if (!isset($platform_input->getArguments()['alias'])) {
+      $input = $platform_input;
+    }
   }
 
   protected function getPlatformInput(InputInterface $input) {
@@ -89,12 +92,21 @@ class AliasFinder implements EventSubscriberInterface {
     /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
     $definition = $property->getValue($input);
     $arrayInput = ['command' => $input->getArgument('command')];
+    $alias_key = NULL;
     foreach ($input->getArguments() as $key => $argument) {
+
       if (preg_match(self::ALIAS_PATTERN, $argument)) {
+        $alias_key = $key;
         continue;
       }
       $arrayInput[$key] = $argument;
     }
+    // Make sure the input parameters are correctly set.
+    if (!$alias_key && $arrayInput['alias']) {
+      $arrayInput['drush_command'] = $arrayInput['alias'];
+      unset($arrayInput['alias']);
+    }
+
     foreach ($input->getOptions() as $key => $option_value) {
       $option = $definition->getOption($key);
       if ($option->getDefault() !== $option_value) {

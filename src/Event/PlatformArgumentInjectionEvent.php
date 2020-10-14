@@ -125,7 +125,7 @@ class PlatformArgumentInjectionEvent extends Event {
    * @throws \Exception
    */
   public function setDecoratedInput(array $arguments): void {
-    $args = $this->input->getArguments();
+    $args = array_filter($this->input->getArguments());
     $options = $this->input->getOptions();
     $definition = $this->command->getDefinition();
     foreach ($options as $key => $val) {
