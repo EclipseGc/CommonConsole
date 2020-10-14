@@ -30,6 +30,11 @@ abstract class CommonConsoleTestBase extends TestCase {
     return $this->container;
   }
 
+  /**
+   * Get an OutputInterface implementation we can introspect for testing.
+   *
+   * @return \Symfony\Component\Console\Output\OutputInterface
+   */
   protected function getTestOutput(): OutputInterface {
     $output = new class implements OutputInterface {
 
