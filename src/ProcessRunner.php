@@ -82,13 +82,16 @@ class ProcessRunner {
    * @param \Symfony\Component\Process\Process $process
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    * @param \Symfony\Component\Console\Output\OutputInterface $output
+   * @param int $timeout
+   *   Process timeout.
    */
-  public function run(Process $process, PlatformInterface $platform, OutputInterface $output) {
+  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = 600) {
     foreach ($this->formatters as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);
       }
     }
+    $process->setTimeout($timeout);
     return $process->run(function ($type, $buffer) use ($process, $output, $platform) {
       $platform->out($process, $output, $type, $buffer);
       if (Process::ERR === $type) {
