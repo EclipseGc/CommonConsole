@@ -2,6 +2,9 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
+use Acquia\Console\Cloud\Client\AcquiaCloudClientFactory;
+use AcquiaCloudApi\Connector\Client;
+use AcquiaCloudApi\Endpoints\Environments;
 use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
@@ -18,6 +21,7 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Process\Process;
 
 /**
  * Class CreatePlatform
@@ -75,6 +79,7 @@ class PlatformCreate extends Command {
    */
   protected function configure() {
     $this->setDescription('Create a new platform on which to execute common console commands.');
+    $this->setAliases(['pc']);
   }
 
   /**
@@ -129,6 +134,39 @@ class PlatformCreate extends Command {
     catch (\Exception $exception) {
       $output->writeln(sprintf("<error>The platform was not successfully saved.\nERROR: %s</error>", $exception->getMessage()));
     }
+
+    $path = $this->getAppDirectoryQuestion($config, $output);
+    $platform->set('platform.executable_path', $path);
+    $platform->save();
+  }
+
+  protected function getAppDirectoryQuestion(Config $config, OutputInterface $output) {
+    if (!in_array($config->get('platform.type'), ['Acquia Cloud', 'Acquia Cloud Multi Site', 'Acquia Cloud Site Factory'], TRUE)) {
+      return;
+    }
+
+    $environments = new Environments($this->getAceClient($config->get('acquia.cloud.api_key'), $config->get('acquia.cloud.api_secret')));
+    $env_ids = ($config->get('acquia.cloud.environment.ids'));
+
+    $env_id = reset($env_ids);
+    $environment = $environments->get($env_id);
+
+    $sshUrl = $environment->sshUrl;
+    [, $url] = explode('@', $sshUrl);
+    [$application] = explode('.', $url);
+    return $this->getPathToExecutable($sshUrl, $application, $output);
+  }
+
+  protected function getPathToExecutable($ssh_url, $application, $output): string {
+    $command = "ssh $ssh_url 'cd /var/www/html/$application; find . -executable -type f | grep commoncli'";
+    $process = new Process($command);
+    $process->run();
+    return trim($process->getOutput());
+  }
+
+  protected function getAceClient(string $api_key, string $secret_key) : Client {
+    $factory = new AcquiaCloudClientFactory();
+    return $factory->fromCredentials($api_key, $secret_key);
   }
 
 }
