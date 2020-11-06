@@ -135,8 +135,8 @@ class PlatformCreate extends Command {
       $output->writeln(sprintf("<error>The platform was not successfully saved.\nERROR: %s</error>", $exception->getMessage()));
     }
 
-    $path = $this->getAppDirectoryQuestion($config, $output);
-    $platform->set('platform.executable_path', $path);
+    $paths = $this->getAppDirectoryQuestion($config, $output);
+    $platform->set('platform.executable_path', $paths);
     $platform->save();
   }
 
@@ -148,13 +148,17 @@ class PlatformCreate extends Command {
     $environments = new Environments($this->getAceClient($config->get('acquia.cloud.api_key'), $config->get('acquia.cloud.api_secret')));
     $env_ids = ($config->get('acquia.cloud.environment.ids'));
 
-    $env_id = reset($env_ids);
-    $environment = $environments->get($env_id);
+    $executable_path = [];
 
-    $sshUrl = $environment->sshUrl;
-    [, $url] = explode('@', $sshUrl);
-    [$application] = explode('.', $url);
-    return $this->getPathToExecutable($sshUrl, $application, $output);
+    foreach ($env_ids as $env_id) {
+      $environment = $environments->get($env_id);
+      $sshUrl = $environment->sshUrl;
+      [, $url] = explode('@', $sshUrl);
+      [$application] = explode('.', $url);
+      $executable_path[$env_id] = $this->getPathToExecutable($sshUrl, $application, $output);
+    }
+
+    return $executable_path;
   }
 
   protected function getPathToExecutable($ssh_url, $application, $output): string {
