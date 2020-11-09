@@ -2,13 +2,11 @@
 
 namespace EclipseGc\CommonConsole\Command;
 
-use Acquia\Console\Cloud\Client\AcquiaCloudClientFactory;
-use AcquiaCloudApi\Connector\Client;
-use AcquiaCloudApi\Endpoints\Environments;
 use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
+use EclipseGc\CommonConsole\Event\PlatformConfigEvent;
 use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -21,7 +19,6 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Process\Process;
 
 /**
  * Class CreatePlatform
@@ -127,50 +124,18 @@ class PlatformCreate extends Command {
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
     try {
-      $platform = $this->factory->getMockPlatformFromConfig($config, $this->storage);
+      $event = new PlatformConfigEvent($config, $output);
+      $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_CONFIG, $event);
+      if ($event->hasError()) {
+        throw new \Exception(implode(', ', $event->getErrors()));
+      }
+      $platform = $this->factory->getMockPlatformFromConfig($event->getConfig(), $this->storage);
       $platform->save();
       $output->writeln("Successfully saved.");
     }
     catch (\Exception $exception) {
       $output->writeln(sprintf("<error>The platform was not successfully saved.\nERROR: %s</error>", $exception->getMessage()));
     }
-
-    $paths = $this->getAppDirectoryQuestion($config, $output);
-    $platform->set('platform.executable_path', $paths);
-    $platform->save();
-  }
-
-  protected function getAppDirectoryQuestion(Config $config, OutputInterface $output) {
-    if (!in_array($config->get('platform.type'), ['Acquia Cloud', 'Acquia Cloud Multi Site', 'Acquia Cloud Site Factory'], TRUE)) {
-      return;
-    }
-
-    $environments = new Environments($this->getAceClient($config->get('acquia.cloud.api_key'), $config->get('acquia.cloud.api_secret')));
-    $env_ids = ($config->get('acquia.cloud.environment.ids'));
-
-    $executable_path = [];
-
-    foreach ($env_ids as $env_id) {
-      $environment = $environments->get($env_id);
-      $sshUrl = $environment->sshUrl;
-      [, $url] = explode('@', $sshUrl);
-      [$application] = explode('.', $url);
-      $executable_path[$env_id] = $this->getPathToExecutable($sshUrl, $application, $output);
-    }
-
-    return $executable_path;
-  }
-
-  protected function getPathToExecutable($ssh_url, $application, $output): string {
-    $command = "ssh $ssh_url 'cd /var/www/html/$application; find . -executable -type f | grep commoncli'";
-    $process = new Process($command);
-    $process->run();
-    return trim($process->getOutput());
-  }
-
-  protected function getAceClient(string $api_key, string $secret_key) : Client {
-    $factory = new AcquiaCloudClientFactory();
-    return $factory->fromCredentials($api_key, $secret_key);
   }
 
 }
