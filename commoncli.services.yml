@@ -34,6 +34,10 @@ services:
   platform.factory:
     class: EclipseGc\CommonConsole\Platform\PlatformFactory
     arguments: ['@event_dispatcher', '@process.runner', '@service_container']
+  config.storage:
+    class: EclipseGc\CommonConsole\Config\ConfigStorage
+    arguments: ['@file_system']
+    public: true
   alias.finder:
     class: EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand\AliasFinder
     arguments: ['@event_dispatcher']
