@@ -3,6 +3,7 @@
 namespace EclipseGc\CommonConsole\Config;
 
 use Consolidation\Config\Config;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
@@ -62,6 +63,33 @@ class ConfigStorage {
     $path = $this->ensureDirectory($dir_parts);
     $config_file = implode(DIRECTORY_SEPARATOR, [$path, "{$name}.yml"]);
     return $this->filesystem->exists($config_file);
+  }
+
+  /**
+   * Returns all available configs within given directory.
+   *
+   * @return \Consolidation\Config\Config[]
+   *   The list of configs.
+   */
+  public function loadAll(array $dir_parts): array {
+    $dir = $this->ensureDirectory($dir_parts);
+    $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir));
+    $files = new \RegexIterator($iterator, '/^.+\.yml$/i', \RecursiveRegexIterator::GET_MATCH);
+
+    $configs = [];
+    foreach ($files as $item) {
+     foreach ($item as $path) {
+       try {
+         $content = file_get_contents($path);
+         $configs[] = new Config(Yaml::parse($content));
+       }
+       catch (LogicException $e) {
+         $this->logger->error($e->getMessage());
+       }
+     }
+    }
+
+    return $configs;
   }
 
 }
