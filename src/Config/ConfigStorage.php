@@ -28,6 +28,16 @@ class ConfigStorage {
     $this->filesystem = $filesystem;
   }
 
+  /**
+   * Save configuration into config file.
+   *
+   * @param \Consolidation\Config\Config $config
+   *   Config object.
+   * @param string $name
+   *   Config name.
+   * @param array $dir_parts
+   *   The location of the config directory.
+   */
   public function save(Config $config, string $name, array $dir_parts): void {
     $path = $this->ensureDirectory($dir_parts);
     $config_file = implode(DIRECTORY_SEPARATOR, [$path, "{$name}.yml"]);
@@ -40,7 +50,7 @@ class ConfigStorage {
    * @return string
    *   The location of the config directory.
    */
-  protected function ensureDirectory(array $dir_parts) : string {
+  protected function ensureDirectory(array $dir_parts): string {
     array_unshift($dir_parts, getenv('HOME'));
     $directory = implode(DIRECTORY_SEPARATOR, $dir_parts);
     if (!$this->filesystem->exists($directory)) {
@@ -59,7 +69,7 @@ class ConfigStorage {
    *
    * @return bool
    */
-  public function configExists(array $dir_parts, string $name) : bool {
+  public function configExists(array $dir_parts, string $name): bool {
     $path = $this->ensureDirectory($dir_parts);
     $config_file = implode(DIRECTORY_SEPARATOR, [$path, "{$name}.yml"]);
     return $this->filesystem->exists($config_file);
