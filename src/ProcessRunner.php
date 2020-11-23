@@ -97,7 +97,7 @@ class ProcessRunner {
       if (Process::ERR === $type) {
         $output->writeln("<error>$buffer</error>");
       } else {
-        $output->writeln("<info>$buffer</info>");
+        $output->writeln($buffer);
       }
     });
   }
