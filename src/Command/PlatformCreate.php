@@ -6,6 +6,7 @@ use Consolidation\Config\Config;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
+use EclipseGc\CommonConsole\Event\PlatformConfigEvent;
 use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -75,6 +76,7 @@ class PlatformCreate extends Command {
    */
   protected function configure() {
     $this->setDescription('Create a new platform on which to execute common console commands.');
+    $this->setAliases(['pc']);
   }
 
   /**
@@ -122,7 +124,12 @@ class PlatformCreate extends Command {
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
     try {
-      $platform = $this->factory->getMockPlatformFromConfig($config, $this->storage);
+      $event = new PlatformConfigEvent($config, $output);
+      $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_CONFIG, $event);
+      if ($event->hasError()) {
+        throw new \Exception(implode(', ', $event->getErrors()));
+      }
+      $platform = $this->factory->getMockPlatformFromConfig($event->getConfig(), $this->storage);
       $platform->save();
       $output->writeln("Successfully saved.");
     }

@@ -30,5 +30,7 @@ final class CommonConsoleEvents {
   const PLATFORM_ARGS_INJ = 'commonconsole.platform.argument.injection';
 
   const FILTER_PLATFORM_SITES = 'commonconsole.platform.sites.filter';
+  
+  const PLATFORM_CONFIG = 'commonconsole.platform.config';
 
 }
