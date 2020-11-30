@@ -3,6 +3,7 @@
 namespace EclipseGc\CommonConsole\Config;
 
 use Consolidation\Config\Config;
+use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
@@ -73,6 +74,15 @@ class ConfigStorage {
     $path = $this->ensureDirectory($dir_parts);
     $config_file = implode(DIRECTORY_SEPARATOR, [$path, "{$name}.yml"]);
     return $this->filesystem->exists($config_file);
+  }
+
+  public function load(string $name, array $dir_parts) {
+    $config_dir = $this->ensureDirectory($dir_parts);
+    $config_file = $config_dir . DIRECTORY_SEPARATOR . $name . '.yml';
+    if (!$this->filesystem->exists($config_file)) {
+      throw new \Exception(sprintf("Config by name %s not found. Please check your available configurations and try again.", $name));
+    }
+    return new Config(Yaml::parse(file_get_contents($config_file)));
   }
 
   /**
