@@ -4,6 +4,7 @@ namespace EclipseGc\CommonConsole\Event;
 
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use Consolidation\Config\Config;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
@@ -27,6 +28,13 @@ class PlatformConfigEvent extends Event {
   protected $config;
 
   /**
+   * InputInterface instance.
+   *
+   * @var \Symfony\Component\Console\Input\InputInterface
+   */
+  protected $input;
+
+  /**
    * OutputInterface instance.
    *
    * @var \Symfony\Component\Console\Output\OutputInterface
@@ -39,8 +47,9 @@ class PlatformConfigEvent extends Event {
    * @param \Consolidation\Config\Config $config
    *   Config to modify.
    */
-  public function __construct(Config $config, OutputInterface $output) {
+  public function __construct(Config $config, InputInterface $input, OutputInterface $output) {
     $this->config = $config;
+    $this->input = $input;
     $this->output = $output;
   }
 
@@ -51,6 +60,15 @@ class PlatformConfigEvent extends Event {
    */
   public function getConfig() : Config {
     return $this->config;
+  }
+
+  /**
+   * Gets InputInterface instance.
+   *
+   * @return \Symfony\Component\Console\Input\InputInterface
+   */
+  public function getInput() {
+    return $this->input;
   }
 
   /**
