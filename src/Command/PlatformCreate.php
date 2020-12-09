@@ -124,7 +124,7 @@ class PlatformCreate extends Command {
       $answer = $helper->ask($input, $output, $quest);
     } while ($answer !== TRUE);
     try {
-      $event = new PlatformConfigEvent($config, $output);
+      $event = new PlatformConfigEvent($config, $input, $output);
       $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_CONFIG, $event);
       if ($event->hasError()) {
         throw new \Exception(implode(', ', $event->getErrors()));
