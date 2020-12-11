@@ -48,6 +48,9 @@ class ConfigStorage {
   /**
    * Ensure that the config directory exists.
    *
+   * @param array $dir_parts
+   *   The location of the config directory.
+   *
    * @return string
    *   The location of the config directory.
    */
@@ -63,8 +66,8 @@ class ConfigStorage {
   /**
    * Checks config exists or not.
    *
-   * @param array $dir
-   *   Config location.
+   * @param array $dir_parts
+   *   The location of the config directory.
    * @param string $name
    *   Config name.
    *
@@ -76,6 +79,17 @@ class ConfigStorage {
     return $this->filesystem->exists($config_file);
   }
 
+  /**
+   * Returns configuration based on given name.
+   *
+   * @param string $name
+   *   Config name.
+   * @param array $dir_parts
+   *   The location of the config directory.
+   *
+   * @return \Consolidation\Config\Config
+   * @throws \Exception
+   */
   public function load(string $name, array $dir_parts) {
     $config_dir = $this->ensureDirectory($dir_parts);
     $config_file = $config_dir . DIRECTORY_SEPARATOR . $name . '.yml';
@@ -87,6 +101,9 @@ class ConfigStorage {
 
   /**
    * Returns all available configs within given directory.
+   *
+   * @param array $dir_parts
+   *   The location of the config directory.
    *
    * @return \Consolidation\Config\Config[]
    *   The list of configs.
