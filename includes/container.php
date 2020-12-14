@@ -101,6 +101,9 @@ $containerBuilder = new class($autoloader, $autoloaderFile) {
     if ($installed) {
       $installed = json_decode($installed);
       foreach ($installed as $package) {
+        if (!is_object($package)) {
+          continue;
+        }
         if (file_exists("{$this->vendorDir}/{$package->name}") && $directory = realpath("{$this->vendorDir}/{$package->name}")) {
           $locations[$directory] = $directory;
         }
