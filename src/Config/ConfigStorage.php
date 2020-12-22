@@ -3,6 +3,7 @@
 namespace EclipseGc\CommonConsole\Config;
 
 use Consolidation\Config\Config;
+use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
@@ -47,6 +48,9 @@ class ConfigStorage {
   /**
    * Ensure that the config directory exists.
    *
+   * @param array $dir_parts
+   *   The location of the config directory.
+   *
    * @return string
    *   The location of the config directory.
    */
@@ -62,8 +66,8 @@ class ConfigStorage {
   /**
    * Checks config exists or not.
    *
-   * @param array $dir
-   *   Config location.
+   * @param array $dir_parts
+   *   The location of the config directory.
    * @param string $name
    *   Config name.
    *
@@ -76,7 +80,30 @@ class ConfigStorage {
   }
 
   /**
+   * Returns configuration based on given name.
+   *
+   * @param string $name
+   *   Config name.
+   * @param array $dir_parts
+   *   The location of the config directory.
+   *
+   * @return \Consolidation\Config\Config
+   * @throws \Exception
+   */
+  public function load(string $name, array $dir_parts) {
+    $config_dir = $this->ensureDirectory($dir_parts);
+    $config_file = $config_dir . DIRECTORY_SEPARATOR . $name . '.yml';
+    if (!$this->filesystem->exists($config_file)) {
+      throw new \Exception(sprintf("Config by name %s not found. Please check your available configurations and try again.", $name));
+    }
+    return new Config(Yaml::parse(file_get_contents($config_file)));
+  }
+
+  /**
    * Returns all available configs within given directory.
+   *
+   * @param array $dir_parts
+   *   The location of the config directory.
    *
    * @return \Consolidation\Config\Config[]
    *   The list of configs.
