@@ -87,6 +87,7 @@ class ConfigStorage {
    *   The location of the config directory.
    *
    * @return \Consolidation\Config\Config
+   *   Config object.
    * @throws \Exception
    */
   public function load(string $name, array $dir_parts): Config {
