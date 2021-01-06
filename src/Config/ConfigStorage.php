@@ -3,7 +3,6 @@
 namespace EclipseGc\CommonConsole\Config;
 
 use Consolidation\Config\Config;
-use EclipseGc\CommonConsole\Exception\MissingPlatformException;
 use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
@@ -88,15 +87,35 @@ class ConfigStorage {
    *   The location of the config directory.
    *
    * @return \Consolidation\Config\Config
+   *   Config object.
    * @throws \Exception
    */
-  public function load(string $name, array $dir_parts) {
+  public function load(string $name, array $dir_parts): Config {
     $config_dir = $this->ensureDirectory($dir_parts);
     $config_file = $config_dir . DIRECTORY_SEPARATOR . $name . '.yml';
     if (!$this->filesystem->exists($config_file)) {
       throw new \Exception(sprintf("Config by name %s not found. Please check your available configurations and try again.", $name));
     }
     return new Config(Yaml::parse(file_get_contents($config_file)));
+  }
+
+  /**
+   * Deletes a configuration based on given name.
+   *
+   * @param string $name
+   *   Config name.
+   * @param array $dir_parts
+   *   The location of the config directory.
+   *
+   * @throws \Exception
+   */
+  public function delete(string $name, array $dir_parts) : void {
+    $config_dir = $this->ensureDirectory($dir_parts);
+    $config_file = $config_dir . DIRECTORY_SEPARATOR . $name . '.yml';
+    if (!$this->filesystem->exists($config_file)) {
+      throw new \Exception(sprintf("Config by name %s not found. Please check your available configurations and try again.", $name));
+    }
+    $this->filesystem->remove($config_file);
   }
 
   /**
@@ -115,15 +134,15 @@ class ConfigStorage {
 
     $configs = [];
     foreach ($files as $item) {
-     foreach ($item as $path) {
-       try {
-         $content = file_get_contents($path);
-         $configs[] = new Config(Yaml::parse($content));
-       }
-       catch (LogicException $e) {
-         $this->logger->error($e->getMessage());
-       }
-     }
+      foreach ($item as $path) {
+        try {
+          $content = file_get_contents($path);
+          $configs[] = new Config(Yaml::parse($content));
+        }
+        catch (LogicException $e) {
+          $this->logger->error($e->getMessage());
+        }
+      }
     }
 
     return $configs;
