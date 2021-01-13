@@ -100,7 +100,7 @@ $containerBuilder = new class($autoloader, $autoloaderFile) {
     $installed = file_get_contents("{$this->vendorDir}/composer/installed.json");
     if ($installed) {
       $installed = json_decode($installed);
-      foreach ($installed as $package) {
+      foreach ($installed->packages as $package) {
         if (!is_object($package)) {
           continue;
         }
