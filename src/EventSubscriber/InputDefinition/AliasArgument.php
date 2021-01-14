@@ -30,7 +30,7 @@ class AliasArgument implements EventSubscriberInterface {
    */
   public function onCreateApplication(CreateApplicationEvent $event) {
     // Provide the option for specifying platform aliases.
-    $event->getApplication()->getDefinition()->addArgument(new InputArgument('alias', InputArgument::OPTIONAL, 'Provide a platform alias for remote execution.'));
+    $event->getApplication()->getDefinition()->addArgument(new InputArgument('alias', InputArgument::REQUIRED, 'Provide a platform alias for remote execution.'));
   }
 
 }

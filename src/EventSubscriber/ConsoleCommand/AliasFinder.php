@@ -2,12 +2,15 @@
 
 namespace EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand;
 
+use EclipseGc\CommonConsole\Command\PlatformBootStrapCommandInterface;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\FindAliasEvent;
 use EclipseGc\CommonConsole\PlatformCommandInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -58,7 +61,14 @@ class AliasFinder implements EventSubscriberInterface {
     $input = $event->getInput();
     $output = $event->getOutput();
     $command = $event->getCommand();
-    $platform_input = $this->getPlatformInput($input);
+    $merged_arguments = $event->getCommand()->getDefinition()->getArguments();
+    //if (count($merged_arguments) < 3 || $command instanceof PlatformBootStrapCommandInterface) {
+      unset($merged_arguments['alias']);
+      $merged_arguments['alias'] = new InputArgument('alias', InputArgument::OPTIONAL, 'Provide a platform alias for remote execution.');
+      $event->getCommand()->getDefinition()->setArguments($merged_arguments);
+    $command instanceof PlatformBootStrapCommandInterface ?
+      $platform_input = $this->getPlatformInput($input, TRUE) :
+      $platform_input = $this->getPlatformInput($input);
     foreach ($input->getArguments() as $name => $argument) {
       if (preg_match(self::ALIAS_PATTERN, $argument)) {
         $alias = substr($argument, 1);
@@ -83,15 +93,17 @@ class AliasFinder implements EventSubscriberInterface {
     }
   }
 
-  protected function getPlatformInput(InputInterface $input) {
+  protected function getPlatformInput(InputInterface $input, bool $skip_alias = FALSE) {
     $property = new \ReflectionProperty($input, 'definition');
     $property->setAccessible(TRUE);
     /** @var \Symfony\Component\Console\Input\InputDefinition $definition */
     $definition = $property->getValue($input);
     $arrayInput = ['command' => $input->getArgument('command')];
     foreach ($input->getArguments() as $key => $argument) {
-      if (preg_match(self::ALIAS_PATTERN, $argument)) {
-        continue;
+      if ($skip_alias ) {
+        if (preg_match(self::ALIAS_PATTERN, $argument)) {
+          continue;
+        }
       }
       $arrayInput[$key] = $argument;
     }
