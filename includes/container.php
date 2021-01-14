@@ -100,7 +100,11 @@ $containerBuilder = new class($autoloader, $autoloaderFile) {
     $installed = file_get_contents("{$this->vendorDir}/composer/installed.json");
     if ($installed) {
       $installed = json_decode($installed);
-      foreach ($installed as $package) {
+      $packages = isset($installed->packages) && is_array($installed->packages) ? $installed->packages : $installed;
+      foreach ($packages as $package) {
+        if (!is_object($package)) {
+          continue;
+        }
         if (file_exists("{$this->vendorDir}/{$package->name}") && $directory = realpath("{$this->vendorDir}/{$package->name}")) {
           $locations[$directory] = $directory;
         }
