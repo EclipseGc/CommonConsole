@@ -18,8 +18,9 @@ class PlatformSubscriberDefaults implements EventSubscriberInterface {
   }
 
   public function onGetPlatformTypes(GetPlatformTypesEvent $event) {
-    $event->addPlatformType(SshPlatform::getPlatformId());
-    $event->addPlatformType(DdevPlatform::getPlatformId());
+    // Commenting these out for CHUC GA.
+    // $event->addPlatformType(SshPlatform::getPlatformId());
+    // $event->addPlatformType(DdevPlatform::getPlatformId());
   }
 
   public function onGetPlatformType(GetPlatformTypeEvent $event) {
