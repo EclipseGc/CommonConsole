@@ -66,6 +66,10 @@ services:
     class: EclipseGc\CommonConsole\EventSubscriber\InputDefinition\BareOutputOption
     tags:
       - { name: kernel.event_subscriber }
+  input.definition.group:
+    class: EclipseGc\CommonConsole\EventSubscriber\InputDefinition\GroupOption
+    tags:
+      - { name: kernel.event_subscriber }
 
   # Output formatting.
   formatting.output.default:
