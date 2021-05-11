@@ -30,7 +30,7 @@ class GroupOption implements EventSubscriberInterface {
    */
   public function onCreateApplication(CreateApplicationEvent $event) {
     // Provide the option for specifying groups.
-    $event->getApplication()->getDefinition()->addOption(new InputOption('group', NULL, InputOption::VALUE_OPTIONAL, 'The group for which to run a request.'));
+    $event->getApplication()->getDefinition()->addOption(new InputOption('group', NULL, InputOption::VALUE_OPTIONAL, 'Limit commands to run against a specific group of sites.'));
   }
 
 }
