@@ -15,6 +15,11 @@ interface PlatformInterface extends CommandQuestionInterface {
 
   public const PLATFORM_ALIAS_KEY = 'platform.alias';
 
+  public const GROUP_CONFIG_LOCATION = [
+    '.commonconsole',
+    'groups',
+  ];
+
   /**
    * Gets the platform id.
    *
