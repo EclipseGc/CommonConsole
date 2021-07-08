@@ -3,10 +3,9 @@
 namespace EclipseGc\CommonConsole\Event;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class PlatformArgumentInjectionEvent.
@@ -21,15 +20,15 @@ class PlatformArgumentInjectionEvent extends Event {
 
   /**
    * The command's input object.
-   * 
+   *
    * @var \Symfony\Component\Console\Input\InputInterface
    */
   protected $input;
 
   /**
    * The list of sites in a platform.
-   * 
-   * @var array 
+   *
+   * @var array
    */
   protected $sites;
 
@@ -39,10 +38,10 @@ class PlatformArgumentInjectionEvent extends Event {
    * @var string
    */
   protected $command;
-  
+
   /**
    * Decorated input containing the mapping between sites and their args.
-   * 
+   *
    * @var array
    */
   protected $decoratedInput;
@@ -68,7 +67,7 @@ class PlatformArgumentInjectionEvent extends Event {
 
   /**
    * The available sites for the given platform.
-   * 
+   *
    * @return array
    *   The list of sites. Should be used as key.
    */
@@ -98,7 +97,7 @@ class PlatformArgumentInjectionEvent extends Event {
 
   /**
    * Returns the decorated input.
-   * 
+   *
    * @return array
    *   The list of inputs mapped to platform sites.
    */
@@ -149,7 +148,7 @@ class PlatformArgumentInjectionEvent extends Event {
       if (!in_array($site, $this->sites, TRUE)) {
         throw new \Exception("No such site: $site");
       }
-      
+
       if ($params !== NULL) {
         foreach ($params as $arg => $val) {
           if ($this->isOption($arg)) {
@@ -160,19 +159,19 @@ class PlatformArgumentInjectionEvent extends Event {
           $args[$arg] = $val;
         }
       }
-      
+
       $res[$site] = new ArrayInput(array_merge(
         ['command' => $this->getCommandName()] + $args + ['--uri' => $site],
         $options
       ));
     }
-    
+
     $this->decoratedInput = $res;
   }
 
   /**
    * Checks if the provided parameter is an option.
-   * 
+   *
    * @param string $arg
    *   The parameter to check.
    *

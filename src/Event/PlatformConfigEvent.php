@@ -2,11 +2,10 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
-use EclipseGc\CommonConsole\CommonConsoleEvents;
 use Consolidation\Config\Config;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Class PlatformConfigEvent.
@@ -22,7 +21,7 @@ class PlatformConfigEvent extends Event {
 
   /**
    * The config being changed.
-   * 
+   *
    * @var \Consolidation\Config\Config
    */
   protected $config;
