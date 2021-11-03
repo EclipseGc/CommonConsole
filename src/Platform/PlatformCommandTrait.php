@@ -6,6 +6,8 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
 use EclipseGc\CommonConsole\Event\FilterPlatformSites;
 use EclipseGc\CommonConsole\PlatformInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -85,6 +87,36 @@ trait PlatformCommandTrait {
     $event = new FilterPlatformSites($this, $platform, $sites);
     $this->dispatcher->dispatch(CommonConsoleEvents::FILTER_PLATFORM_SITES, $event);
     return $event->getPlatformSites();
+  }
+
+  /**
+   * Runs the command with given options.
+   *
+   * Extract options from input and passes to command if appropriate.
+   *
+   * @param \Symfony\Component\Console\Command\Command $backup_command
+   *   Command to run.
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   Input interface.
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   *   Output interface.
+   *
+   * @return int
+   *   The command exit code.
+   */
+  protected function runBackupCommand(Command $backup_command, InputInterface $input, OutputInterface $output): int {
+    $platform = $this->getPlatform('source');
+    $alias = $input->getArgument('alias');
+    $new_input['alias'] = $alias;
+
+    if ($input->hasOption('group')) {
+      $group = $input->getOption('group');
+      $new_input['--group'] = $group;
+    }
+
+    $bind_input = new ArrayInput($new_input);
+    $backup_command->addPlatform($alias, $platform);
+    return $backup_command->run($bind_input, $output);
   }
 
 }
