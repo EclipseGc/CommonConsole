@@ -94,7 +94,7 @@ trait PlatformCommandTrait {
    *
    * Extract options from input and passes to command if appropriate.
    *
-   * @param \Symfony\Component\Console\Command\Command $backup_command
+   * @param \Symfony\Component\Console\Command\Command $command
    *   Command to run.
    * @param \Symfony\Component\Console\Input\InputInterface $input
    *   Input interface.
@@ -104,19 +104,10 @@ trait PlatformCommandTrait {
    * @return int
    *   The command exit code.
    */
-  protected function runBackupCommand(Command $backup_command, InputInterface $input, OutputInterface $output): int {
+  protected function runCommand(Command $command, InputInterface $input, OutputInterface $output): int {
     $platform = $this->getPlatform('source');
-    $alias = $input->getArgument('alias');
-    $new_input['alias'] = $alias;
-
-    if ($input->hasOption('group')) {
-      $group = $input->getOption('group');
-      $new_input['--group'] = $group;
-    }
-
-    $bind_input = new ArrayInput($new_input);
-    $backup_command->addPlatform($alias, $platform);
-    return $backup_command->run($bind_input, $output);
+    $command->addPlatform($input->getArgument('alias'), $platform);
+    return $command->run($input, $output);
   }
 
 }
