@@ -11,11 +11,6 @@ interface PlatformCommandInterface {
 
   const ANY_PLATFORM = 'any_platform';
 
-  public const GROUP_CONFIG_LOCATION = [
-    '.commonconsole',
-    'groups',
-  ];
-
   /**
    * Add a platform for using within the command.
    *
