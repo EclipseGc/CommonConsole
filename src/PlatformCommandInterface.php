@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole;
 
 /**
- * Interface PlatformCommandInterface
+ * Interface PlatformCommandInterface.
  *
  * @package EclipseGc\CommonConsole
  */
@@ -24,7 +24,7 @@ interface PlatformCommandInterface {
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    *   A platform to add to the command.
    */
-  public function addPlatform(string $alias, PlatformInterface $platform) : void ;
+  public function addPlatform(string $alias, PlatformInterface $platform) : void;
 
   /**
    * Get the platform by its internal command name.
@@ -40,7 +40,7 @@ interface PlatformCommandInterface {
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface|null
    */
-  public function getPlatform(string $name) : ?PlatformInterface ;
+  public function getPlatform(string $name) : ?PlatformInterface;
 
   /**
    * The list of necessary platforms for this command named by intent.
@@ -55,7 +55,7 @@ interface PlatformCommandInterface {
    *
    * @return string[]
    */
-  public static function getExpectedPlatformOptions() : array ;
+  public static function getExpectedPlatformOptions() : array;
 
   /**
    * Filters the list of platform sites provided by the platform object.
@@ -69,6 +69,6 @@ interface PlatformCommandInterface {
    *
    * @return array
    */
-  public function getPlatformSites(string $name) : array ;
+  public function getPlatformSites(string $name) : array;
 
 }

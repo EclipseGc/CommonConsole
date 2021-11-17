@@ -6,6 +6,8 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
 use EclipseGc\CommonConsole\Event\FilterPlatformSites;
 use EclipseGc\CommonConsole\PlatformInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -85,6 +87,27 @@ trait PlatformCommandTrait {
     $event = new FilterPlatformSites($this, $platform, $sites);
     $this->dispatcher->dispatch(CommonConsoleEvents::FILTER_PLATFORM_SITES, $event);
     return $event->getPlatformSites();
+  }
+
+  /**
+   * Runs the command with given options.
+   *
+   * Extract options from input and passes to command if appropriate.
+   *
+   * @param \Symfony\Component\Console\Command\Command $command
+   *   Command to run.
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   Input interface.
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   *   Output interface.
+   *
+   * @return int
+   *   The command exit code.
+   */
+  protected function runCommand(Command $command, InputInterface $input, OutputInterface $output): int {
+    $platform = $this->getPlatform('source');
+    $command->addPlatform($input->getArgument('alias'), $platform);
+    return $command->run($input, $output);
   }
 
 }
