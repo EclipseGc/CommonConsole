@@ -85,7 +85,7 @@ class ProcessRunner {
    * @param int $timeout
    *   Process timeout.
    */
-  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = 600) {
+  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = 3000) {
     foreach ($this->formatters as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);
