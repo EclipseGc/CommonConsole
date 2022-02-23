@@ -29,7 +29,6 @@ class TimeoutOption implements EventSubscriberInterface {
    *   The create input event.
    */
   public function onCreateApplication(CreateApplicationEvent $event) {
-    // Provide the option for specifying timeout.
     $event->getApplication()->getDefinition()->addOption(new InputOption('timeout', NULL, InputOption::VALUE_REQUIRED, 'The process timeout in seconds.'));
   }
 
