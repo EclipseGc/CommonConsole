@@ -11,6 +11,11 @@ use Symfony\Component\Process\Process;
 class ProcessRunner {
 
   /**
+   * Default timout for process execution.
+   */
+  public const DEFAULT_TIMEOUT = 3000;
+
+  /**
    * The input object.
    *
    * @var \Symfony\Component\Console\Input\InputInterface
@@ -85,7 +90,7 @@ class ProcessRunner {
    * @param int $timeout
    *   Process timeout.
    */
-  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = 3000) {
+  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = ProcessRunner::DEFAULT_TIMEOUT) {
     foreach ($this->formatters as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);
