@@ -91,6 +91,8 @@ class ProcessRunner {
    *   Process timeout.
    */
   public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = ProcessRunner::DEFAULT_TIMEOUT) {
+    $timeout = $timeout > ProcessRunner::DEFAULT_TIMEOUT ? $timeout : ProcessRunner::DEFAULT_TIMEOUT;
+
     foreach ($this->formatters as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);
