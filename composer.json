@@ -4,7 +4,7 @@
   "type": "project",
   "license": "GPL-2.0-or-later",
   "require": {
-    "consolidation/config": "^1.0@dev",
+    "consolidation/config": "^1.0@dev || ^2",
     "symfony/config": "^3.4 || ^4.3@dev",
     "symfony/console": "^3.4 || ^4.2",
     "symfony/dependency-injection": "^3.4 || ^4.3@dev",
