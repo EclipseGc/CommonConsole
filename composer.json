@@ -12,6 +12,7 @@
     "symfony/filesystem": "^3.4 || ^4.3@dev",
     "symfony/process": "^3.4 || ^4.3@dev",
     "symfony/yaml": "^3.4 || ^4.2",
+    "php": ">=7.3",
     "ext-json": "*"
   },
   "require-dev": {
