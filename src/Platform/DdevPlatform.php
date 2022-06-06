@@ -37,7 +37,7 @@ class DdevPlatform extends PlatformBase {
    * {@inheritdoc}
    */
   public function execute(Command $command, InputInterface $input, OutputInterface $output) : int {
-    $process = Process::fromShellCommandline("cd {$this->get('ddev.local.wrapper_dir')}; ddev exec {$this->get('ddev.remote.vendor_dir')}/bin/commoncli {$input->__toString()}");
+    $process = new Process("cd {$this->get('ddev.local.wrapper_dir')}; ddev exec {$this->get('ddev.remote.vendor_dir')}/bin/commoncli {$input->__toString()}");
     return $this->runner->run($process, $this, $output);
   }
 

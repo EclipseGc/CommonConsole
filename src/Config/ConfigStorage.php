@@ -140,7 +140,7 @@ class ConfigStorage {
           $configs[] = new Config(Yaml::parse($content));
         }
         catch (LogicException $e) {
-          $this->logger->error($e->getMessage());
+          throw new LogicException(sprintf("Config with path: %s couldn't be parsed. Error: %s", $path, $e->getMessage()));
         }
       }
     }

@@ -87,9 +87,9 @@ class PlatformCreate extends Command {
     $table = new Table($output);
     $table->setHeaders(['Property', 'Value']);
     $helper = $this->getHelper('question');
-    /** @var \Symfony\Component\Console\Question\Question[] $questions */
+
     $event = new GetPlatformTypesEvent();
-    $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPES, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::GET_PLATFORM_TYPES);
     $question = new ChoiceQuestion("Platform Type: ", $event->getPlatformTypes());
     $platform_type = $helper->ask($input, $output, $question);
     $table->addRow([PlatformInterface::PLATFORM_TYPE_KEY, $platform_type]);
@@ -102,7 +102,7 @@ class PlatformCreate extends Command {
       PlatformInterface::PLATFORM_ALIAS_KEY => new Question("Alias: "),
     ];
     $platform_event = new GetPlatformTypeEvent($platform_type);
-    $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $platform_event);
+    $this->dispatcher->dispatch($platform_event, CommonConsoleEvents::GET_PLATFORM_TYPE);
     $platform_class = $platform_event->getClass();
     $questions += $platform_class::getQuestions();
     do {
@@ -125,7 +125,7 @@ class PlatformCreate extends Command {
     } while ($answer !== TRUE);
     try {
       $event = new PlatformConfigEvent($config, $input, $output);
-      $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_CONFIG, $event);
+      $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_CONFIG);
       if ($event->hasError()) {
         throw new \Exception(implode(', ', $event->getErrors()));
       }

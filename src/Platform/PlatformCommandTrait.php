@@ -57,7 +57,7 @@ trait PlatformCommandTrait {
     foreach ($options as $name => $expectation) {
       if (empty($this->platforms[$name])) {
         $event = new AddPlatformToCommandEvent($expectation, $platform, $alias);
-        $this->dispatcher->dispatch(CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND, $event);
+        $this->dispatcher->dispatch($event, CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND);
         if (!$event->platformMatchesExpectation()) {
           throw new \Exception(sprintf("Invalid Platform value. Expected a platform of type '%s'. Type of '%s' given.", $expectation, $platform::getPlatformId()));
         }
@@ -85,7 +85,7 @@ trait PlatformCommandTrait {
     // sites" to their list via this mechanism if desireable.
     $sites = $platform instanceof PlatformSitesInterface ? $platform->getPlatformSites() : [];
     $event = new FilterPlatformSites($this, $platform, $sites);
-    $this->dispatcher->dispatch(CommonConsoleEvents::FILTER_PLATFORM_SITES, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::FILTER_PLATFORM_SITES);
     return $event->getPlatformSites();
   }
 

@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole\Event;
 
 use EclipseGc\CommonConsole\PlatformInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class PlatformDeleteEvent extends Event {
 

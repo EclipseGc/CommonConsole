@@ -28,7 +28,7 @@ class IoFactory {
   public static function createApplication(EventDispatcherInterface $dispatcher) : Application {
     $application = new Application('CommonConsole', '0.0.1');
     $event = new CreateApplicationEvent($application);
-    $dispatcher->dispatch(CommonConsoleEvents::CREATE_APPLICATION, $event);
+    $dispatcher->dispatch($event, CommonConsoleEvents::CREATE_APPLICATION);
     return $application;
   }
 
@@ -52,7 +52,7 @@ class IoFactory {
       $output = new ConsoleOutput();
     }
     $event = new OutputFormatterStyleEvent();
-    $dispatcher->dispatch(CommonConsoleEvents::OUTPUT_FORMATTER_STYLE, $event);
+    $dispatcher->dispatch($event, CommonConsoleEvents::OUTPUT_FORMATTER_STYLE);
     foreach ($event->getFormatterStyles() as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {
         $output->getFormatter()->setStyle($name, $style);

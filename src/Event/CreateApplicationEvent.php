@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole\Event;
 
 use Symfony\Component\Console\Application;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 class CreateApplicationEvent extends Event {
 

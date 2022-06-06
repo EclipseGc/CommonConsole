@@ -39,7 +39,7 @@ class Bootstrapper implements EventSubscriberInterface {
     $command = $event->getCommand();
     if ($command instanceof PlatformBootStrapCommandInterface) {
       $bootstrapEvent = new BootstrapEvent($command->getPlatformBootstrapType(), $event);
-      $dispatcher->dispatch(CommonConsoleEvents::PLATFORM_BOOTSTRAP, $bootstrapEvent);
+      $dispatcher->dispatch($bootstrapEvent, CommonConsoleEvents::PLATFORM_BOOTSTRAP);
     }
   }
 
