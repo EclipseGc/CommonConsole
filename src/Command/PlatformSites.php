@@ -45,7 +45,7 @@ class PlatformSites extends Command implements PlatformCommandInterface {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     /** @var \EclipseGc\CommonConsole\Platform\PlatformSitesInterface $platform */
     $platform = $this->getPlatform('source');
     $sites = $platform->getPlatformSites();
@@ -58,6 +58,7 @@ class PlatformSites extends Command implements PlatformCommandInterface {
     else {
       $output->writeln(sprintf('<error>No sites found for the specified platform %s</error>', $this->platformAliases['source']));
     }
+    return 0;
   }
 
 }

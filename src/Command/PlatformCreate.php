@@ -82,7 +82,7 @@ class PlatformCreate extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $output->writeln('<info>This command will step you through the process of creating a new platform on which to perform common console commands.</info>');
     $table = new Table($output);
     $table->setHeaders(['Property', 'Value']);
@@ -136,6 +136,7 @@ class PlatformCreate extends Command {
     catch (\Exception $exception) {
       $output->writeln(sprintf("<error>The platform was not successfully saved.\nERROR: %s</error>", $exception->getMessage()));
     }
+    return 0;
   }
 
 }

@@ -52,7 +52,7 @@ class PlatformList extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $aliases = $this->platformStorage->loadAll();
     if (!$aliases) {
       $output->writeln('No platform available.');
