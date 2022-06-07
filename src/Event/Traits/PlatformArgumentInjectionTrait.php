@@ -42,7 +42,7 @@ trait PlatformArgumentInjectionTrait {
    */
   protected function dispatchPlatformArgumentInjectionEvent(InputInterface $input, array $sites, Command $command): array {
     $event = new PlatformArgumentInjectionEvent($input, $sites, $command);
-    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_ARGS_INJ, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_ARGS_INJ);
     return $event->getDecoratedInput();
   }
   

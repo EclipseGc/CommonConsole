@@ -63,7 +63,7 @@ class AliasFinder implements EventSubscriberInterface {
       if (preg_match(self::ALIAS_PATTERN, $argument)) {
         $alias = substr($argument, 1);
         $findAliasEvent = new FindAliasEvent($alias, $event);
-        $this->dispatcher->dispatch(CommonConsoleEvents::ALIAS_FIND, $findAliasEvent);
+        $this->dispatcher->dispatch($findAliasEvent, CommonConsoleEvents::ALIAS_FIND);
         if (!$findAliasEvent->getPlatform()) {
           $output->writeln("<error>" . sprintf("Alias by name %s not found. Please check your available aliases and try again.", $alias) . "</error>");
           $event->disableCommand();
