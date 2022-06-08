@@ -63,7 +63,7 @@ class PlatformDelete extends Command {
   /**
    * {@inheritdoc}
    */
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $alias = $input->getArgument('alias');
     $platform = $this->storage->load($alias);
     if (!$platform) {

@@ -71,7 +71,7 @@ class PlatformFactory {
    */
   public function getPlatform(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
     $event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
-    $this->dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::GET_PLATFORM_TYPE);
 
     $class = $event->getClass();
     if (!$class || !class_exists($class)) {
@@ -81,7 +81,7 @@ class PlatformFactory {
     if (in_array(PlatformDependencyInjectionInterface::class, class_implements($class))) {
       return $class::create($this->container, $config, $this->runner, $storage);
     }
-    
+
     return new $class($config, $this->runner, $storage);
   }
 

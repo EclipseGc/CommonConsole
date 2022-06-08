@@ -4,7 +4,7 @@ namespace EclipseGc\CommonConsole\Event;
 
 use EclipseGc\CommonConsole\PlatformFactoryInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class GetPlatformTypeEvent

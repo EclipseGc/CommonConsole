@@ -41,7 +41,7 @@ class ProcessRunner {
 
   public function getOutputStyles(EventDispatcherInterface $dispatcher) {
     $event = new OutputFormatterStyleEvent();
-    $dispatcher->dispatch(CommonConsoleEvents::OUTPUT_FORMATTER_STYLE, $event);
+    $dispatcher->dispatch($event, CommonConsoleEvents::OUTPUT_FORMATTER_STYLE);
     $this->formatters = $event->getFormatterStyles();
   }
 

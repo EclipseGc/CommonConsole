@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole\Event;
 
 use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class OutputFormatterStyleEvent

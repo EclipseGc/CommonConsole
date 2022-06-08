@@ -4,7 +4,6 @@ namespace EclipseGc\CommonConsole\EventSubscriber\Bootstrap;
 
 use Composer\Autoload\ClassLoader;
 use Drupal\Core\DrupalKernel;
-use Drupal\Core\Site\Settings;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\BootstrapEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

@@ -140,7 +140,7 @@ class PlatformStorage {
     $alias = $platform->getAlias();
     $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$alias}.yml"]);
     $event = new PlatformWriteEvent($platform);
-    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_WRITE, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_WRITE);
     if ($event->hasError()) {
       throw new \Exception(sprintf("Save aborted! An unexpected error occurred during save.\nERROR: %s", implode("\n", $event->getErrors())));
     }
@@ -163,7 +163,7 @@ class PlatformStorage {
       throw new MissingPlatformException(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
     $event = new PlatformDeleteEvent($platform);
-    $this->dispatcher->dispatch(CommonConsoleEvents::PLATFORM_DELETE, $event);
+    $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_DELETE);
     if ($event->hasError()) {
       throw new \Exception(sprintf("Deletion aborted! An unexpected error occurred during deletion.\nERROR: %s", implode("\n", $event->getErrors())));
     }

@@ -27,13 +27,13 @@ class PlatformCreateTest extends CommonConsoleTestBase {
   public function testPlatformCreate() {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
 
-    $dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPES, Argument::type(GetPlatformTypesEvent::class))->will(function($arguments) {
+    $dispatcher->dispatch(Argument::type(GetPlatformTypesEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPES)->will(function($arguments) {
       /** @var GetPlatformTypesEvent $event */
       $event = $arguments[1];
       $event->addPlatformType('foo_platform');
     });
 
-    $dispatcher->dispatch(CommonConsoleEvents::GET_PLATFORM_TYPE, Argument::type(GetPlatformTypeEvent::class))->will(function($arguments) {
+    $dispatcher->dispatch(Argument::type(GetPlatformTypeEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPE)->will(function($arguments) {
       /** @var GetPlatformTypeEvent $event */
       $event = $arguments[1];
       $event->addClass(FooPlatform::class);
