@@ -104,6 +104,7 @@ class PlatformCreateTest extends CommonConsoleTestBase {
     $expected = 'This command will step you through the process of creating a new platform on which to perform common console commands.' . PHP_EOL .
 'Platform Type:' . PHP_EOL .
 '   [0] foo_platform' . PHP_EOL .
+' > ' . PHP_EOL .
 'Name: Alias: +----------------+--------------+' . PHP_EOL .
 '| Property       | Value        |' . PHP_EOL .
 '+----------------+--------------+' . PHP_EOL .
