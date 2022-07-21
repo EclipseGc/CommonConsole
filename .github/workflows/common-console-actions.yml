@@ -3,8 +3,6 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    env:
-      COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
         os: [ ubuntu-latest ]
@@ -22,14 +20,10 @@ jobs:
 
       - name: Install composer dependencies
         run: |
-          composer require --dev php-coveralls/php-coveralls
           composer install
 
       - name: Run PHPUnit
         run: ./vendor/bin/phpunit
-
-      - name: Run Coveralls
-        run: ./vendor/bin/php-coveralls -v
 
       - name: Run phpcs
         run: |
