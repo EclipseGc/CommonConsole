@@ -30,7 +30,18 @@ class AliasFinderTest extends CommonConsoleTestBase {
 
     $app_tester->run($parameters);
     $output = $app_tester->getDisplay();
-    $this->assertStringContainsStringIgnoringCase($expected, $output, $message);
+    $this->assertStringContainsStringIgnoringCase($this->normalizeString($expected), $this->normalizeString($output), $message);
+  }
+
+  /**
+   * Normalizes the output removing characters that won't be displayed.
+   *
+   * @param string $string
+   *
+   * @return string
+   */
+  protected function normalizeString(string $string): string {
+    return str_replace(array(' ', "\n", "\t", "\r"), '', $string);
   }
 
   /**
