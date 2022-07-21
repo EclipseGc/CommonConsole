@@ -7,6 +7,7 @@ use EclipseGc\CommonConsole\Command\PlatformCreate;
 use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 use EclipseGc\CommonConsole\Event\GetPlatformTypesEvent;
+use EclipseGc\CommonConsole\Event\PlatformConfigEvent;
 use EclipseGc\CommonConsole\Platform\PlatformFactory;
 use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use EclipseGc\CommonConsole\PlatformInterface;
@@ -29,14 +30,21 @@ class PlatformCreateTest extends CommonConsoleTestBase {
 
     $dispatcher->dispatch(Argument::type(GetPlatformTypesEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPES)->will(function($arguments) {
       /** @var GetPlatformTypesEvent $event */
-      $event = $arguments[1];
+      $event = $arguments[0];
       $event->addPlatformType('foo_platform');
+      return $event;
     });
 
     $dispatcher->dispatch(Argument::type(GetPlatformTypeEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPE)->will(function($arguments) {
       /** @var GetPlatformTypeEvent $event */
-      $event = $arguments[1];
+      $event = $arguments[0];
       $event->addClass(FooPlatform::class);
+      return $event;
+    });
+
+    $dispatcher->dispatch(Argument::type(PlatformConfigEvent::class), CommonConsoleEvents::PLATFORM_CONFIG)->will(function($arguments) {
+      /** @var PlatformConfigEvent $event */
+      return $arguments[0];
     });
 
     $storage = $this->prophesize(PlatformStorage::class);
@@ -93,19 +101,18 @@ class PlatformCreateTest extends CommonConsoleTestBase {
    * @return string
    */
   private function getExpectedOutput() {
-    $expected = "This command will step you through the process of creating a new platform on which to perform common console commands.
-Platform Type: 
-  [0] foo_platform
- > f[K7oo_platform8o[K7o_platform8o[K7_platform8_[K7platform8p[K7latform8l[K7atform8a[K7tform8t[K7form8f[K7orm8o[K7rm8r[K7m8m[K78
-Name: Alias: +----------------+--------------+
-| Property       | Value        |
-+----------------+--------------+
-| platform.type  | foo_platform |
-| platform.name  | Foo Test     |
-| platform.alias | footest      |
-+----------------+--------------+
-Are these config correct? Successfully saved.
-";
+    $expected = 'This command will step you through the process of creating a new platform on which to perform common console commands.' . PHP_EOL .
+'Platform Type:' . PHP_EOL .
+'   [0] foo_platform' . PHP_EOL .
+' > f[K7oo_platform8o[K7o_platform8o[K7_platform8_[K7platform8p[K7latform8l[K7atform8a[K7tform8t[K7form8f[K7orm8o[K7rm8r[K7m8m[K78' . PHP_EOL .
+'Name: Alias: +----------------+--------------+' . PHP_EOL .
+'| Property       | Value        |' . PHP_EOL .
+'+----------------+--------------+' . PHP_EOL .
+'| platform.type  | foo_platform |' . PHP_EOL .
+'| platform.name  | Foo Test     |' . PHP_EOL .
+'| platform.alias | footest      |' . PHP_EOL .
+'+----------------+--------------+' . PHP_EOL .
+'Are these config correct? Successfully saved.' . PHP_EOL ;
     return $this->normalizeOutput($expected);
   }
 
