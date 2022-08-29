@@ -27,11 +27,15 @@ class PlatformStorage {
   ];
 
   /**
+   * File system.
+   *
    * @var \Symfony\Component\Filesystem\Filesystem
    */
   protected $filesystem;
 
   /**
+   * Event dispatcher.
+   *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
   protected $dispatcher;
@@ -59,6 +63,8 @@ class PlatformStorage {
    *   The event dispatcher.
    * @param \EclipseGc\CommonConsole\Platform\PlatformFactory $factory
    *   The platform factory.
+   * @param \Psr\Log\LoggerInterface $logger
+   *   Logger.
    */
   public function __construct(Filesystem $filesystem, EventDispatcherInterface $dispatcher, PlatformFactory $factory, LoggerInterface $logger) {
     $this->filesystem = $filesystem;
@@ -75,6 +81,8 @@ class PlatformStorage {
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface|null
    *   The platform object on success. NULL if it doesn't exist.
+   *
+   * @throws \EclipseGc\CommonConsole\Exception\MissingPlatformException
    */
   public function load(string $alias) : ?PlatformInterface {
     $directory = $this->ensureDirectory();
@@ -100,7 +108,9 @@ class PlatformStorage {
       if ($item->getExtension() !== 'yml') {
         continue;
       }
-      $config = new Config(Yaml::parse(file_get_contents(implode(DIRECTORY_SEPARATOR, [$dir, $item->getFilename()]))));
+      $config = new Config(Yaml::parse(file_get_contents(implode(
+        DIRECTORY_SEPARATOR, [$dir, $item->getFilename()]
+      ))));
       try {
         $platforms[] = $this->getPlatformFactory()->getPlatform($config, $this);
       }
@@ -119,6 +129,7 @@ class PlatformStorage {
    *   The platform to check to see if it exists.
    *
    * @return bool
+   *   True if exists, false otherwise.
    */
   public function exists(string $name) : bool {
     $directory = $this->ensureDirectory();
@@ -134,6 +145,8 @@ class PlatformStorage {
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    *   Returns a fully loaded platform object on success. Null on failure.
+   *
+   * @throws \EclipseGc\CommonConsole\Exception\MissingPlatformException
    */
   public function save(PlatformInterface $platform) : PlatformInterface {
     $directory = $this->ensureDirectory();
@@ -158,7 +171,9 @@ class PlatformStorage {
    */
   public function delete(PlatformInterface $platform) : void {
     $directory = $this->ensureDirectory();
-    $alias_file = implode(DIRECTORY_SEPARATOR, [$directory, "{$platform->getAlias()}.yml"]);
+    $alias_file = implode(DIRECTORY_SEPARATOR,
+      [$directory, "{$platform->getAlias()}.yml"]
+    );
     if (!$this->filesystem->exists($alias_file)) {
       throw new MissingPlatformException(sprintf("The expected alias file was missing from: %s.", $alias_file));
     }
@@ -190,6 +205,7 @@ class PlatformStorage {
    * Gets the platform factory object to create platforms.
    *
    * @return \EclipseGc\CommonConsole\Platform\PlatformFactory
+   *   Platform factory.
    */
   protected function getPlatformFactory() : PlatformFactory {
     return $this->factory;

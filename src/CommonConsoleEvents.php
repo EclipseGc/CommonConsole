@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole;
 
 /**
- *
+ * Event classes.
  */
 final class CommonConsoleEvents {
 

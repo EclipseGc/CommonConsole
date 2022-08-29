@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
 /**
- *
+ * Service file loader across all common-console components.
  */
 class ServicesFileLoader extends YamlFileLoader {
 
@@ -21,14 +21,17 @@ class ServicesFileLoader extends YamlFileLoader {
    * existing logic in a foreach loop, and proxy to this method to invoke
    * upstream private calls.
    *
-   * @param $method
+   * @param string $method
+   *   Method name.
    * @param mixed ...$args
+   *   Arguments.
    *
    * @return mixed
+   *   Method result.
    *
    * @throws \ReflectionException
    */
-  protected function getPrivateMethod($method, ...$args) {
+  protected function getPrivateMethod(string $method, ...$args) {
     $method = new \ReflectionMethod(YamlFileLoader::class, $method);
     $method->setAccessible(TRUE);
     return $method->invoke($this, ...$args);
@@ -37,8 +40,10 @@ class ServicesFileLoader extends YamlFileLoader {
   /**
    * Manually set private properties on the super class.
    *
-   * @param $property
-   * @param $value
+   * @param string $property
+   *   Property name.
+   * @param mixed $value
+   *   Property value.
    *
    * @throws \ReflectionException
    */

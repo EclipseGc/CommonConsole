@@ -17,6 +17,7 @@ interface PlatformBootStrapCommandInterface {
    * bootstrap requirement and react accordingly.
    *
    * @return string
+   *   Platform bootstrap.
    */
   public function getPlatformBootstrapType() : string;
 

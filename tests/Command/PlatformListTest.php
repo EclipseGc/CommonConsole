@@ -9,18 +9,20 @@ use EclipseGc\CommonConsole\Tests\CommonConsoleTestBase;
 use Symfony\Component\Console\Input\ArrayInput;
 
 /**
- *
+ * PlatformListTest.
  */
 class PlatformListTest extends CommonConsoleTestBase {
 
   /**
-   * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+   * Tests platform list.
+   *
+   * @throws \Exception
    *
    * @covers \EclipseGc\CommonConsole\Command\PlatformList::execute
    *
    * @dataProvider listDataProvider
    */
-  public function testList(array $platforms, array $input, array $expected_messages, array $expected_newlines, array $expected_options, int $expected_rc) {
+  public function testList(array $platforms, array $input, array $expected_messages, array $expected_newlines, array $expected_options, int $expected_rc): void {
     $storage = $this->prophesize(PlatformStorage::class);
     $storage->loadAll()->willReturn($platforms);
     $command = new PlatformList($storage->reveal());
@@ -38,8 +40,9 @@ class PlatformListTest extends CommonConsoleTestBase {
    * A data provider for ::testList()
    *
    * @return array[]
+   *   Data provider.
    */
-  public function listDataProvider() {
+  public function listDataProvider(): array {
     $platform1 = $this->prophesize(PlatformInterface::class);
     $platform1->getAlias()->willReturn('foo');
     $platform1->get('platform.type')->willReturn('foo_type');

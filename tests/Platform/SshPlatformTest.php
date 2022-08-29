@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 /**
- *
+ * SshPlatformTest.
  */
 class SshPlatformTest extends CommonConsoleTestBase {
 

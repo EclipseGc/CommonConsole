@@ -44,9 +44,12 @@ class QuestionFactory {
    * Identifies and instantiates questions as necessary.
    *
    * @param mixed $question
+   *   Question object/callable.
    * @param \Consolidation\Config\Config $config
+   *   Config object.
    *
    * @return \Symfony\Component\Console\Question\Question
+   *   Question object.
    */
   public function getQuestion($question, Config $config): Question {
     if ($question instanceof Question) {
@@ -58,7 +61,7 @@ class QuestionFactory {
     if (!empty($question['question']) && !empty($question['services']) && is_callable($question['question'])) {
       $services = $question['services'];
       $args = [
-        $config
+        $config,
       ];
       foreach ($services as $service_id) {
         if (!$this->container->has($service_id)) {

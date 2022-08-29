@@ -35,7 +35,12 @@ class FindAliasEvent extends Event {
   protected $platform;
 
   /**
+   * FindAliasEvent constructor.
    *
+   * @param string $alias
+   *   Platform alias.
+   * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
+   *   Event object.
    */
   public function __construct(string $alias, ConsoleCommandEvent $event) {
     $this->alias = $alias;
@@ -46,6 +51,7 @@ class FindAliasEvent extends Event {
    * Get the alias string name.
    *
    * @return string
+   *   Alias.
    */
   public function getAlias() : string {
     return $this->alias;
@@ -55,6 +61,7 @@ class FindAliasEvent extends Event {
    * Get the ConsoleCommandEvent that was intercepted for alias identification.
    *
    * @return \Symfony\Component\Console\Event\ConsoleCommandEvent
+   *   Event.
    */
   public function getEvent() : ConsoleCommandEvent {
     return $this->event;
@@ -66,7 +73,7 @@ class FindAliasEvent extends Event {
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
    *   The platform object to use for the alias.
    */
-  public function setPlatform(PlatformInterface $platform) {
+  public function setPlatform(PlatformInterface $platform): void {
     $this->platform = $platform;
   }
 
@@ -74,6 +81,7 @@ class FindAliasEvent extends Event {
    * Get the platform for this alias if any is available.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface|null
+   *   Platform if available else null.
    */
   public function getPlatform() : ?PlatformInterface {
     return $this->platform;

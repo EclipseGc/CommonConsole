@@ -19,7 +19,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- *
+ * PlatformCreateTest.
  */
 class PlatformCreateTest extends CommonConsoleTestBase {
 
@@ -88,8 +88,10 @@ class PlatformCreateTest extends CommonConsoleTestBase {
    * representation so that we can compare output.
    *
    * @param string $string
+   *   Output to normalize.
    *
    * @return string|string[]|null
+   *   Normalized output.
    */
   private function normalizeOutput(string $string) {
     return preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $string);
@@ -102,6 +104,7 @@ class PlatformCreateTest extends CommonConsoleTestBase {
    * output, we need to represent those in our expected output.
    *
    * @return string
+   *   Expectation.
    */
   private function getExpectedOutput() {
     $expected = 'This command will step you through the process of creating a new platform on which to perform common console commands.' . PHP_EOL .

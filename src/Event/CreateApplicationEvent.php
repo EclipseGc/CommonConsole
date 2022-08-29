@@ -6,11 +6,13 @@ use Symfony\Component\Console\Application;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- *
+ * CreateApplicationEvent.
  */
 class CreateApplicationEvent extends Event {
 
   /**
+   * Console application.
+   *
    * @var \Symfony\Component\Console\Application
    */
   protected $application;
@@ -26,7 +28,10 @@ class CreateApplicationEvent extends Event {
   }
 
   /**
+   * Returns application.
+   *
    * @return \Symfony\Component\Console\Application
+   *   Application.
    */
   public function getApplication(): Application {
     return $this->application;

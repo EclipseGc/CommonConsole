@@ -25,7 +25,7 @@ class PlatformSites extends Command implements PlatformCommandInterface {
   protected static $defaultName = 'platform:sites';
 
   /**
-   *
+   * PlatformSites constructor.
    */
   public function __construct(EventDispatcherInterface $dispatcher, string $name = NULL) {
     $this->dispatcher = $dispatcher;
@@ -40,11 +40,11 @@ class PlatformSites extends Command implements PlatformCommandInterface {
   }
 
   /**
-   *
+   * Return expected platform options.
    */
   public static function getExpectedPlatformOptions(): array {
     return [
-      'source' => '\EclipseGc\CommonConsole\Platform\PlatformSitesInterface'
+      'source' => '\EclipseGc\CommonConsole\Platform\PlatformSitesInterface',
     ];
   }
 

@@ -42,6 +42,7 @@ class SshPlatform extends PlatformBase {
    *   The collected configuration values.
    *
    * @return \Symfony\Component\Console\Question\Question
+   *   Question.
    */
   public static function getRemoteVendorDir(Config $config) : Question {
     $parts = [

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 /**
- *
+ * PlatformInterface.
  */
 interface PlatformInterface extends CommandQuestionInterface {
 
@@ -22,6 +22,7 @@ interface PlatformInterface extends CommandQuestionInterface {
    * Gets the platform id.
    *
    * @return string
+   *   Platform Id.
    */
   public static function getPlatformId() : string;
 
@@ -29,6 +30,7 @@ interface PlatformInterface extends CommandQuestionInterface {
    * Extracts the alias string from a platform.
    *
    * @return string
+   *   Alias.
    */
   public function getAlias() : string;
 
@@ -100,6 +102,7 @@ interface PlatformInterface extends CommandQuestionInterface {
    * Export the config values as an array.
    *
    * @return array
+   *   Config array.
    *
    * @see \Consolidation\Config\ConfigInterface::export()
    */
@@ -109,6 +112,7 @@ interface PlatformInterface extends CommandQuestionInterface {
    * Saves the platform object.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Platform object.
    */
   public function save() : PlatformInterface;
 

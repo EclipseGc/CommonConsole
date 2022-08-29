@@ -15,6 +15,7 @@ interface PlatformSitesInterface extends PlatformInterface {
    * Get a list of sites associated to the platform.
    *
    * @return array
+   *   Platform sites.
    */
   public function getPlatformSites(): array;
 

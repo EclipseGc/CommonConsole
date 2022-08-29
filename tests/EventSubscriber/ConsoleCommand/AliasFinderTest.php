@@ -37,8 +37,10 @@ class AliasFinderTest extends CommonConsoleTestBase {
    * Normalizes the output removing characters that won't be displayed.
    *
    * @param string $string
+   *   String to normalize.
    *
    * @return string
+   *   Normalized string.
    */
   protected function normalizeString(string $string): string {
     return str_replace([' ', "\n", "\t", "\r"], '', $string);
@@ -47,7 +49,7 @@ class AliasFinderTest extends CommonConsoleTestBase {
   /**
    * Provides parameters for the application under test.
    */
-  public function appParameterDataProvider() {
+  public function appParameterDataProvider(): array {
     return [
       [
         ['command' => 'list', '--help' => TRUE],

@@ -34,7 +34,7 @@ trait OptionsCheckerTrait {
       return;
     }
 
-    throw new \Exception(sprintf('Missing required option(s): %s', join(', ', $missing_options)));
+    throw new \Exception(sprintf('Missing required option(s): %s', implode(', ', $missing_options)));
   }
 
 }

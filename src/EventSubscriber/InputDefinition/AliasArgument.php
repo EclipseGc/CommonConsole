@@ -18,7 +18,8 @@ class AliasArgument implements EventSubscriberInterface {
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[CommonConsoleEvents::CREATE_APPLICATION] = ['onCreateApplication', 1000];
+    $events[CommonConsoleEvents::CREATE_APPLICATION]
+      = ['onCreateApplication', 1000];
     return $events;
   }
 
@@ -28,7 +29,7 @@ class AliasArgument implements EventSubscriberInterface {
    * @param \EclipseGc\CommonConsole\Event\CreateApplicationEvent $event
    *   The create input event.
    */
-  public function onCreateApplication(CreateApplicationEvent $event) {
+  public function onCreateApplication(CreateApplicationEvent $event): void {
     // Provide the option for specifying platform aliases.
     $event->getApplication()->getDefinition()->addArgument(new InputArgument('alias', InputArgument::OPTIONAL, 'Provide a platform alias for remote execution.'));
   }

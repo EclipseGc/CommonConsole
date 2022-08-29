@@ -43,6 +43,7 @@ class BootstrapEvent extends Event {
    * Gets the string representing the platform type.
    *
    * @return string
+   *   Platform type.
    */
   public function getPlatformType(): string {
     return $this->platformType;
@@ -52,6 +53,7 @@ class BootstrapEvent extends Event {
    * Gets the console command event.
    *
    * @return \Symfony\Component\Console\Event\ConsoleCommandEvent
+   *   Event object.
    */
   public function getConsoleCommandEvent(): ConsoleCommandEvent {
     return $this->consoleCommandEvent;

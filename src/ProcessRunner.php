@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Process\Process;
 
 /**
- *
+ * Process runner.
  */
 class ProcessRunner {
 
@@ -43,9 +43,9 @@ class ProcessRunner {
   }
 
   /**
-   *
+   * Get output styles.
    */
-  public function getOutputStyles(EventDispatcherInterface $dispatcher) {
+  public function getOutputStyles(EventDispatcherInterface $dispatcher): void {
     $event = new OutputFormatterStyleEvent();
     $dispatcher->dispatch($event, CommonConsoleEvents::OUTPUT_FORMATTER_STYLE);
     $this->formatters = $event->getFormatterStyles();
@@ -62,7 +62,7 @@ class ProcessRunner {
    *
    * @throws \ReflectionException
    */
-  public function getCommandString(InputInterface $input) {
+  public function getCommandString(InputInterface $input): string {
     $string = '';
     $string .= implode(' ', $input->getArguments());
     $definition = new \ReflectionProperty($input, 'definition');
@@ -91,13 +91,19 @@ class ProcessRunner {
    * which it might want to react.
    *
    * @param \Symfony\Component\Process\Process $process
+   *   Process.
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
+   *   Platform.
    * @param \Symfony\Component\Console\Output\OutputInterface $output
+   *   Output.
    * @param int $timeout
    *   Process timeout.
+   *
+   * @return int
+   *   Process return code.
    */
-  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = ProcessRunner::DEFAULT_TIMEOUT) {
-    $timeout = $timeout > ProcessRunner::DEFAULT_TIMEOUT ? $timeout : ProcessRunner::DEFAULT_TIMEOUT;
+  public function run(Process $process, PlatformInterface $platform, OutputInterface $output, int $timeout = ProcessRunner::DEFAULT_TIMEOUT): int {
+    $timeout = $timeout > self::DEFAULT_TIMEOUT ? $timeout : self::DEFAULT_TIMEOUT;
 
     foreach ($this->formatters as $name => $style) {
       if (!$output->getFormatter()->hasStyle($name)) {

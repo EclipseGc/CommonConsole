@@ -24,6 +24,7 @@ class IoFactory {
    *   The event dispatcher.
    *
    * @return \Symfony\Component\Console\Application
+   *   Application.
    */
   public static function createApplication(EventDispatcherInterface $dispatcher) : Application {
     $application = new Application('CommonConsole', '0.0.1');
