@@ -8,7 +8,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class ConfigStorage
+ * Class ConfigStorage.
  *
  * @package EclipseGc\CommonConsole\Config
  */
@@ -88,6 +88,7 @@ class ConfigStorage {
    *
    * @return \Consolidation\Config\Config
    *   Config object.
+   *
    * @throws \Exception
    */
   public function load(string $name, array $dir_parts): Config {

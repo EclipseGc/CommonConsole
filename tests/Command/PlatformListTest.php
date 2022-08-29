@@ -8,6 +8,9 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use EclipseGc\CommonConsole\Tests\CommonConsoleTestBase;
 use Symfony\Component\Console\Input\ArrayInput;
 
+/**
+ *
+ */
 class PlatformListTest extends CommonConsoleTestBase {
 
   /**
@@ -46,30 +49,30 @@ class PlatformListTest extends CommonConsoleTestBase {
     return [
       // No platforms.
       [
-        // Platforms
+        // Platforms.
         [],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => 'No platform available.',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [0 => 0],
-        // Return Code
+        // Return Code.
         0,
       ],
-      // Single platform
+      // Single platform.
       [
-        // Platforms
+        // Platforms.
         [
           $platform1->reveal(),
         ],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => '+-------+----------+',
           1 => '|<info> Alias </info>|<info> Type     </info>|',
@@ -77,9 +80,9 @@ class PlatformListTest extends CommonConsoleTestBase {
           3 => '| foo   | foo_type |',
           4 => '+-------+----------+',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [
           0 => 0,
           1 => 0,
@@ -87,19 +90,19 @@ class PlatformListTest extends CommonConsoleTestBase {
           3 => 0,
           4 => 0,
         ],
-        // Return Code
+        // Return Code.
         0,
       ],
-      // Multiple platforms
+      // Multiple platforms.
       [
-        // Platforms
+        // Platforms.
         [
           $platform1->reveal(),
           $platform2->reveal()
         ],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => '+-------+----------+',
           1 => '|<info> Alias </info>|<info> Type     </info>|',
@@ -108,9 +111,9 @@ class PlatformListTest extends CommonConsoleTestBase {
           4 => '| bar   | bar_type |',
           5 => '+-------+----------+',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [
           0 => 0,
           1 => 0,
@@ -119,7 +122,7 @@ class PlatformListTest extends CommonConsoleTestBase {
           4 => 0,
           5 => 0,
         ],
-        // Return Code
+        // Return Code.
         0,
       ],
     ];

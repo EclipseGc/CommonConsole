@@ -9,6 +9,9 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ *
+ */
 abstract class CommonConsoleTestBase extends TestCase {
 
   use ProphecyTrait;
@@ -44,6 +47,9 @@ abstract class CommonConsoleTestBase extends TestCase {
 
       protected $options = [];
 
+      /**
+       *
+       */
       public function getOutput() : array {
         return [
           'messages' => $this->messages,
@@ -52,6 +58,9 @@ abstract class CommonConsoleTestBase extends TestCase {
         ];
       }
 
+      /**
+       *
+       */
       public function write($messages, $newline = FALSE, $options = 0) {
         $count = count($this->messages);
         $this->messages[$count] = $messages;
@@ -59,47 +68,81 @@ abstract class CommonConsoleTestBase extends TestCase {
         $this->options[$count] = $options;
       }
 
+      /**
+       *
+       */
       public function writeln($messages, $options = 0) {
         $count = count($this->messages);
         $this->messages[$count] = $messages;
         $this->options[$count] = $options;
       }
 
+      /**
+       *
+       */
       public function setVerbosity($level) {}
 
+      /**
+       *
+       */
       public function getVerbosity() {
         return self::VERBOSITY_QUIET;
       }
 
+      /**
+       *
+       */
       public function isQuiet() {
         return TRUE;
       }
 
+      /**
+       *
+       */
       public function isVerbose() {
         return FALSE;
       }
 
+      /**
+       *
+       */
       public function isVeryVerbose() {
         return FALSE;
       }
 
+      /**
+       *
+       */
       public function isDebug() {
         return FALSE;
       }
 
+      /**
+       *
+       */
       public function setDecorated($decorated) {
         return FALSE;
       }
 
+      /**
+       *
+       */
       public function isDecorated() {
         return FALSE;
       }
 
+      /**
+       *
+       */
       public function setFormatter(OutputFormatterInterface $formatter) {}
 
+      /**
+       *
+       */
       public function getFormatter() {
         return new BareOutputFormatter();
       }
+
     };
     return $output;
   }

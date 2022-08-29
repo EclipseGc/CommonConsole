@@ -7,6 +7,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
+/**
+ *
+ */
 interface PlatformInterface extends CommandQuestionInterface {
 
   public const PLATFORM_TYPE_KEY = 'platform.type';
@@ -20,14 +23,14 @@ interface PlatformInterface extends CommandQuestionInterface {
    *
    * @return string
    */
-  public static function getPlatformId() : string ;
+  public static function getPlatformId() : string;
 
   /**
    * Extracts the alias string from a platform.
    *
    * @return string
    */
-  public function getAlias() : string ;
+  public function getAlias() : string;
 
   /**
    * Execute a command on the defined platform.
@@ -46,11 +49,11 @@ interface PlatformInterface extends CommandQuestionInterface {
    *   The input object.
    * @param \Symfony\Component\Console\Output\OutputInterface $output
    *   The output object.
-   * 
+   *
    * @return int
    *   The process exit code.
    */
-  public function execute(Command $command, InputInterface $input, OutputInterface $output) : int ;
+  public function execute(Command $command, InputInterface $input, OutputInterface $output) : int;
 
   /**
    * ProcessRunner proxy method to allow a to response to specific output.
@@ -64,7 +67,7 @@ interface PlatformInterface extends CommandQuestionInterface {
    * @param string $buffer
    *   The message from the process object.
    */
-  public function out(Process $process, OutputInterface $output, string $type, string $buffer) : void ;
+  public function out(Process $process, OutputInterface $output, string $type, string $buffer) : void;
 
   /**
    * Gets the configuration value.
@@ -100,13 +103,13 @@ interface PlatformInterface extends CommandQuestionInterface {
    *
    * @see \Consolidation\Config\ConfigInterface::export()
    */
-  public function export() : array ;
+  public function export() : array;
 
   /**
    * Saves the platform object.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function save() : PlatformInterface ;
+  public function save() : PlatformInterface;
 
 }

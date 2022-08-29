@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class OutputFactory
+ * Class OutputFactory.
  *
  * @package EclipseGc\CommonConsole
  */
@@ -21,7 +21,7 @@ class IoFactory {
    * Create the application.
    *
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
-   *   The event dispatcher
+   *   The event dispatcher.
    *
    * @return \Symfony\Component\Console\Application
    */

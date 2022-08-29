@@ -6,7 +6,7 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class AddPlatformToCommandEvent
+ * Class AddPlatformToCommandEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */

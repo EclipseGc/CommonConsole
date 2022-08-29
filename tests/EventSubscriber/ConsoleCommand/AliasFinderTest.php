@@ -41,7 +41,7 @@ class AliasFinderTest extends CommonConsoleTestBase {
    * @return string
    */
   protected function normalizeString(string $string): string {
-    return str_replace(array(' ', "\n", "\t", "\r"), '', $string);
+    return str_replace([' ', "\n", "\t", "\r"], '', $string);
   }
 
   /**
@@ -50,12 +50,12 @@ class AliasFinderTest extends CommonConsoleTestBase {
   public function appParameterDataProvider() {
     return [
       [
-        ['command' => 'list', '--help' => true],
+        ['command' => 'list', '--help' => TRUE],
         'list [options] [--] [<namespace>]',
         'Prints out the usage of list command',
       ],
       [
-        ['--help' => true],
+        ['--help' => TRUE],
         'list [options] [--] [<namespace>]',
         'Prints out the usage of list command',
       ],
@@ -65,12 +65,12 @@ class AliasFinderTest extends CommonConsoleTestBase {
         'There is no such alias.',
       ],
       [
-        ['command' => 'list', '--help' => true, '@foo'],
+        ['command' => 'list', '--help' => TRUE, '@foo'],
         'Alias by name foo not found. Please check your available aliases and try again.',
         'There is no such alias, if a flag was defined.',
       ],
       [
-        ['command' => 'list', '@foo', '--help' => true],
+        ['command' => 'list', '@foo', '--help' => TRUE],
         'Alias by name foo not found. Please check your available aliases and try again.',
         'There is no such alias, no matter where the alias was put.',
       ],

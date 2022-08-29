@@ -6,6 +6,9 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ *
+ */
 class FilterPlatformSites extends Event {
 
   /**
@@ -39,14 +42,14 @@ class FilterPlatformSites extends Event {
   /**
    * @return \Symfony\Component\Console\Command\Command
    */
-  public function getCommand(): \Symfony\Component\Console\Command\Command {
+  public function getCommand(): Command {
     return $this->command;
   }
 
   /**
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function getPlatform(): \EclipseGc\CommonConsole\PlatformInterface {
+  public function getPlatform(): PlatformInterface {
     return $this->platform;
   }
 

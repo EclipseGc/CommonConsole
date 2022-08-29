@@ -8,7 +8,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class QuestionFactory
+ * Class QuestionFactory.
  *
  * Questions can be dynamically built together on some commands, this factory
  * provides a generic catch-all solution for instantiating questions and

@@ -7,7 +7,7 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FindAliasEvent
+ * Class FindAliasEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -34,6 +34,9 @@ class FindAliasEvent extends Event {
    */
   protected $platform;
 
+  /**
+   *
+   */
   public function __construct(string $alias, ConsoleCommandEvent $event) {
     $this->alias = $alias;
     $this->event = $event;

@@ -6,7 +6,7 @@ use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class BootstrapEvent
+ * Class BootstrapEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -22,7 +22,7 @@ class BootstrapEvent extends Event {
   /**
    * The console command event which spawned this bootstrap.
    *
-   * @var ConsoleCommandEvent
+   * @var \Symfony\Component\Console\Event\ConsoleCommandEvent
    */
   protected $consoleCommandEvent;
 
@@ -31,7 +31,7 @@ class BootstrapEvent extends Event {
    *
    * @param string $platformType
    *   The platform type.
-   * @param ConsoleCommandEvent $event
+   * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
    *   The console command event.
    */
   public function __construct(string $platformType, ConsoleCommandEvent $event) {
@@ -51,7 +51,7 @@ class BootstrapEvent extends Event {
   /**
    * Gets the console command event.
    *
-   * @return ConsoleCommandEvent
+   * @return \Symfony\Component\Console\Event\ConsoleCommandEvent
    */
   public function getConsoleCommandEvent(): ConsoleCommandEvent {
     return $this->consoleCommandEvent;

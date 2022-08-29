@@ -6,7 +6,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class OutputFormatterStyleEvent
+ * Class OutputFormatterStyleEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -15,7 +15,7 @@ class OutputFormatterStyleEvent extends Event {
   /**
    * The output formatter styles.
    *
-   * @var OutputFormatterStyleInterface[]
+   * @var \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface[]
    */
   protected $styles = [];
 
@@ -39,7 +39,7 @@ class OutputFormatterStyleEvent extends Event {
   /**
    * Gets the set output formatter styles.
    *
-   * @return OutputFormatterStyleInterface[]
+   * @return \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface[]
    */
   public function getFormatterStyles() : array {
     return $this->styles;

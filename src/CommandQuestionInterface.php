@@ -1,10 +1,9 @@
 <?php
 
-
 namespace EclipseGc\CommonConsole;
 
 /**
- * Interface CommandQuestionInterface
+ * Interface CommandQuestionInterface.
  *
  * @package EclipseGc\CommonConsole
  */

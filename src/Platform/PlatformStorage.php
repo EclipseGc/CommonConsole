@@ -15,7 +15,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class PlatformStorage
+ * Class PlatformStorage.
  *
  * @package EclipseGc\CommonConsole\Platform
  */

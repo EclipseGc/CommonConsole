@@ -7,7 +7,7 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class GetPlatformTypeEvent
+ * Class GetPlatformTypeEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */

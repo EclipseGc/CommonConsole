@@ -45,5 +45,5 @@ trait PlatformArgumentInjectionTrait {
     $this->dispatcher->dispatch($event, CommonConsoleEvents::PLATFORM_ARGS_INJ);
     return $event->getDecoratedInput();
   }
-  
+
 }

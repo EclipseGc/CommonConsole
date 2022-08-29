@@ -8,6 +8,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Process\Process;
 
+/**
+ *
+ */
 class ProcessRunner {
 
   /**
@@ -39,6 +42,9 @@ class ProcessRunner {
     $this->input = $input;
   }
 
+  /**
+   *
+   */
   public function getOutputStyles(EventDispatcherInterface $dispatcher) {
     $event = new OutputFormatterStyleEvent();
     $dispatcher->dispatch($event, CommonConsoleEvents::OUTPUT_FORMATTER_STYLE);
@@ -103,7 +109,8 @@ class ProcessRunner {
       $platform->out($process, $output, $type, $buffer);
       if (Process::ERR === $type) {
         $output->writeln("<error>$buffer</error>");
-      } else {
+      }
+      else {
         $output->writeln($buffer);
       }
     });

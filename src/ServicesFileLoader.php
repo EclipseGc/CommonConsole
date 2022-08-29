@@ -6,6 +6,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ *
+ */
 class ServicesFileLoader extends YamlFileLoader {
 
   /**
@@ -22,10 +25,10 @@ class ServicesFileLoader extends YamlFileLoader {
    * @param mixed ...$args
    *
    * @return mixed
+   *
    * @throws \ReflectionException
    */
-  protected function getPrivateMethod($method, ...$args)
-  {
+  protected function getPrivateMethod($method, ...$args) {
     $method = new \ReflectionMethod(YamlFileLoader::class, $method);
     $method->setAccessible(TRUE);
     return $method->invoke($this, ...$args);
@@ -39,8 +42,7 @@ class ServicesFileLoader extends YamlFileLoader {
    *
    * @throws \ReflectionException
    */
-  protected function getPrivateProperty($property, $value)
-  {
+  protected function getPrivateProperty($property, $value) {
     $property = new \ReflectionProperty(YamlFileLoader::class, $property);
     $property->setAccessible(TRUE);
     $property->setValue($this, $value);
@@ -49,8 +51,7 @@ class ServicesFileLoader extends YamlFileLoader {
   /**
    * {@inheritdoc}
    */
-  public function load($resource, $type = null)
-  {
+  public function load($resource, $type = NULL) {
     $paths = $this->locator->locate($resource, NULL, FALSE);
     foreach ($paths as $path) {
 
@@ -58,15 +59,15 @@ class ServicesFileLoader extends YamlFileLoader {
 
       $this->container->fileExists($path);
 
-      // empty file
+      // Empty file.
       if (NULL === $content) {
         return;
       }
 
-      // imports
+      // Imports.
       $this->getPrivateMethod('parseImports', $content, $path);
 
-      // parameters
+      // Parameters.
       if (isset($content['parameters'])) {
         if (!\is_array($content['parameters'])) {
           throw new InvalidArgumentException(sprintf('The "parameters" key should contain an array in %s. Check your YAML syntax.', $path));
@@ -77,10 +78,10 @@ class ServicesFileLoader extends YamlFileLoader {
         }
       }
 
-      // extensions
+      // Extensions.
       $this->getPrivateMethod('loadFromExtensions', $content);
 
-      // services
+      // Services.
       $this->getPrivateProperty('anonymousServicesCount', 0);
 
       $this->getPrivateProperty('anonymousServicesSuffix', '~' . ContainerBuilder::hash($path));

@@ -11,7 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class Bootstrapper
+ * Class Bootstrapper.
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand
  */
@@ -26,7 +26,7 @@ class Bootstrapper implements EventSubscriberInterface {
   }
 
   /**
-   * Dispatches a new event for bootstrapping a application on a platform.
+   * Dispatches a new event for bootstrapping an application on a platform.
    *
    * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
    *   The console command event.
@@ -35,7 +35,7 @@ class Bootstrapper implements EventSubscriberInterface {
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
    */
-  public function onConsoleCommand(ConsoleCommandEvent $event, string $event_name, EventDispatcherInterface $dispatcher) {
+  public function onConsoleCommand(ConsoleCommandEvent $event, string $event_name, EventDispatcherInterface $dispatcher): void {
     $command = $event->getCommand();
     if ($command instanceof PlatformBootStrapCommandInterface) {
       $bootstrapEvent = new BootstrapEvent($command->getPlatformBootstrapType(), $event);

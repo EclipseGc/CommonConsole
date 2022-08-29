@@ -6,7 +6,7 @@ use Consolidation\Config\ConfigInterface;
 use EclipseGc\CommonConsole\Event\GetPlatformTypeEvent;
 
 /**
- * Interface PlatformFactoryInterface
+ * Interface PlatformFactoryInterface.
  *
  * @package EclipseGc\CommonConsole
  */
@@ -24,6 +24,6 @@ interface PlatformFactoryInterface {
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
-  public function create(GetPlatformTypeEvent $event, ConfigInterface $config, ProcessRunner $runner) : PlatformInterface ;
+  public function create(GetPlatformTypeEvent $event, ConfigInterface $config, ProcessRunner $runner) : PlatformInterface;
 
 }

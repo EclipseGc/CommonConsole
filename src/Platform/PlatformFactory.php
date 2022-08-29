@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * Class PlatformFactory
+ * Class PlatformFactory.
  *
  * This class converts Consolidation\Config\ConfigInterface objects into
  * PlatformInterface objects. For saved data, use ::getPlatform() which will
@@ -52,6 +52,9 @@ class PlatformFactory {
    */
   protected $container;
 
+  /**
+   *
+   */
   public function __construct(EventDispatcherInterface $dispatcher, ProcessRunner $runner, ContainerInterface $container) {
     $this->dispatcher = $dispatcher;
     $this->runner = $runner;
@@ -106,36 +109,76 @@ class PlatformFactory {
    * @return \EclipseGc\CommonConsole\PlatformInterface
    */
   public function getMockPlatformFromConfig(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
-    // Create a mock platform object to save
+    // Create a mock platform object to save.
     return new class($config, $storage) implements PlatformInterface {
 
       protected $config = [];
       protected $storage;
 
+      /**
+       *
+       */
       public function __construct(ConfigInterface $config, PlatformStorage $storage) {
         $this->config = $config;
         $this->storage = $storage;
       }
+
+      /**
+       *
+       */
       public function getAlias(): string {
         return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
       }
+
+      /**
+       *
+       */
       public static function getQuestions() {}
+
+      /**
+       *
+       */
       public static function getPlatformId(): string {}
+
+      /**
+       *
+       */
       public function execute(Command $command, InputInterface $input, OutputInterface $output): int {}
+
+      /**
+       *
+       */
       public function out(Process $process, OutputInterface $output, string $type, string $buffer): void {}
+
+      /**
+       *
+       */
       public function get(string $key) {
         return $this->config->get($key);
       }
+
+      /**
+       *
+       */
       public function set(string $key, $value) : self {
         $this->config->set($key, $value);
         return $this;
       }
+
+      /**
+       *
+       */
       public function export() : array {
         return $this->config->export();
       }
+
+      /**
+       *
+       */
       public function save() : PlatformInterface {
         return $this->storage->save($this);
       }
+
     };
   }
 
