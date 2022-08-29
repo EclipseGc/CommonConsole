@@ -23,7 +23,7 @@ class ServicesFileLoader extends YamlFileLoader {
    *
    * @param string $method
    *   Method name.
-   * @param mixed ...$args
+   * @param mixed $args
    *   Arguments.
    *
    * @return mixed
