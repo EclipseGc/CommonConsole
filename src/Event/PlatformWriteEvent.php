@@ -6,18 +6,22 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class PlatformWriteEvent
+ * Class PlatformWriteEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
 class PlatformWriteEvent extends Event {
 
   /**
+   * Platform.
+   *
    * @var \EclipseGc\CommonConsole\PlatformInterface
    */
   protected $platform;
 
   /**
+   * Errors.
+   *
    * @var array
    */
   protected $errors = [];
@@ -36,6 +40,7 @@ class PlatformWriteEvent extends Event {
    * Get the alias string for the platform.
    *
    * @return string
+   *   Alias.
    */
   public function getAlias() : string {
     // @todo be better.
@@ -46,6 +51,7 @@ class PlatformWriteEvent extends Event {
    * Get the platform to be saved.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Platform.
    */
   public function getPlatform() : PlatformInterface {
     return $this->platform;
@@ -62,9 +68,10 @@ class PlatformWriteEvent extends Event {
   }
 
   /**
-   * Whether or not any errors were encountered during the event.
+   * Whether any errors were encountered during the event.
    *
    * @return bool
+   *   True if errors exist, false otherwise.
    */
   public function hasError() : bool {
     return (bool) $this->errors;
@@ -74,6 +81,7 @@ class PlatformWriteEvent extends Event {
    * Gets any logged errors encountered by the event.
    *
    * @return array
+   *   Errors if any.
    */
   public function getErrors() : array {
     return $this->errors;

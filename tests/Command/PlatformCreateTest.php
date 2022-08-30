@@ -18,6 +18,9 @@ use Prophecy\Argument;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * PlatformCreateTest.
+ */
 class PlatformCreateTest extends CommonConsoleTestBase {
 
   /**
@@ -28,22 +31,22 @@ class PlatformCreateTest extends CommonConsoleTestBase {
   public function testPlatformCreate() {
     $dispatcher = $this->prophesize(EventDispatcherInterface::class);
 
-    $dispatcher->dispatch(Argument::type(GetPlatformTypesEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPES)->will(function($arguments) {
-      /** @var GetPlatformTypesEvent $event */
+    $dispatcher->dispatch(Argument::type(GetPlatformTypesEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPES)->will(function ($arguments) {
+      /** @var \EclipseGc\CommonConsole\Event\GetPlatformTypesEvent $event */
       $event = $arguments[0];
       $event->addPlatformType('foo_platform');
       return $event;
     });
 
-    $dispatcher->dispatch(Argument::type(GetPlatformTypeEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPE)->will(function($arguments) {
-      /** @var GetPlatformTypeEvent $event */
+    $dispatcher->dispatch(Argument::type(GetPlatformTypeEvent::class), CommonConsoleEvents::GET_PLATFORM_TYPE)->will(function ($arguments) {
+      /** @var \EclipseGc\CommonConsole\Event\GetPlatformTypeEvent $event */
       $event = $arguments[0];
       $event->addClass(FooPlatform::class);
       return $event;
     });
 
-    $dispatcher->dispatch(Argument::type(PlatformConfigEvent::class), CommonConsoleEvents::PLATFORM_CONFIG)->will(function($arguments) {
-      /** @var PlatformConfigEvent $event */
+    $dispatcher->dispatch(Argument::type(PlatformConfigEvent::class), CommonConsoleEvents::PLATFORM_CONFIG)->will(function ($arguments) {
+      /** @var \EclipseGc\CommonConsole\Event\PlatformConfigEvent $event */
       return $arguments[0];
     });
 
@@ -51,13 +54,13 @@ class PlatformCreateTest extends CommonConsoleTestBase {
     $storage->save(Argument::type(PlatformInterface::class))->will(function ($arguments) {
       return $arguments[0];
     })
-    ->shouldBeCalledOnce();
+      ->shouldBeCalledOnce();
 
     $factory = $this->prophesize(PlatformFactory::class);
-    $factory->getMockPlatformFromConfig(Argument::type(Config::class), Argument::type(PlatformStorage::class))->will(function($arguments) {
-      /** @var Config $config */
+    $factory->getMockPlatformFromConfig(Argument::type(Config::class), Argument::type(PlatformStorage::class))->will(function ($arguments) {
+      /** @var \Consolidation\Config\Config $config */
       $config = $arguments[0];
-      /** @var PlatformStorage $storage */
+      /** @var \EclipseGc\CommonConsole\Platform\PlatformStorage $storage */
       $storage = $arguments[1];
       return new FooPlatform($config->export(), $storage);
     });
@@ -85,8 +88,10 @@ class PlatformCreateTest extends CommonConsoleTestBase {
    * representation so that we can compare output.
    *
    * @param string $string
+   *   Output to normalize.
    *
    * @return string|string[]|null
+   *   Normalized output.
    */
   private function normalizeOutput(string $string) {
     return preg_replace('/[\x00-\x1F\x7F\xA0]/u', '', $string);
@@ -99,20 +104,21 @@ class PlatformCreateTest extends CommonConsoleTestBase {
    * output, we need to represent those in our expected output.
    *
    * @return string
+   *   Expectation.
    */
   private function getExpectedOutput() {
     $expected = 'This command will step you through the process of creating a new platform on which to perform common console commands.' . PHP_EOL .
-'Platform Type:' . PHP_EOL .
-'   [0] foo_platform' . PHP_EOL .
-' > ' . PHP_EOL .
-'Name: Alias: +----------------+--------------+' . PHP_EOL .
-'| Property       | Value        |' . PHP_EOL .
-'+----------------+--------------+' . PHP_EOL .
-'| platform.type  | foo_platform |' . PHP_EOL .
-'| platform.name  | Foo Test     |' . PHP_EOL .
-'| platform.alias | footest      |' . PHP_EOL .
-'+----------------+--------------+' . PHP_EOL .
-'Are these config correct? Successfully saved.' . PHP_EOL ;
+    'Platform Type:' . PHP_EOL .
+    '   [0] foo_platform' . PHP_EOL .
+    ' > ' . PHP_EOL .
+    'Name: Alias: +----------------+--------------+' . PHP_EOL .
+    '| Property       | Value        |' . PHP_EOL .
+    '+----------------+--------------+' . PHP_EOL .
+    '| platform.type  | foo_platform |' . PHP_EOL .
+    '| platform.name  | Foo Test     |' . PHP_EOL .
+    '| platform.alias | footest      |' . PHP_EOL .
+    '+----------------+--------------+' . PHP_EOL .
+    'Are these config correct? Successfully saved.' . PHP_EOL;
     return $this->normalizeOutput($expected);
   }
 

@@ -10,7 +10,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
 /**
- * Class SshPlatform
+ * Class SshPlatform.
  *
  * @package EclipseGc\CommonConsole\Platform
  */
@@ -42,6 +42,7 @@ class SshPlatform extends PlatformBase {
    *   The collected configuration values.
    *
    * @return \Symfony\Component\Console\Question\Question
+   *   Question.
    */
   public static function getRemoteVendorDir(Config $config) : Question {
     $parts = [

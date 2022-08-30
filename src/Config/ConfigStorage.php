@@ -8,13 +8,15 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class ConfigStorage
+ * Class ConfigStorage.
  *
  * @package EclipseGc\CommonConsole\Config
  */
 class ConfigStorage {
 
   /**
+   * File system.
+   *
    * @var \Symfony\Component\Filesystem\Filesystem
    */
   protected $filesystem;
@@ -23,6 +25,7 @@ class ConfigStorage {
    * ConfigStorage constructor.
    *
    * @param \Symfony\Component\Filesystem\Filesystem $filesystem
+   *   File system.
    */
   public function __construct(Filesystem $filesystem) {
     $this->filesystem = $filesystem;
@@ -71,6 +74,7 @@ class ConfigStorage {
    *   Config name.
    *
    * @return bool
+   *   True if file exists, false otherwise.
    */
   public function configExists(array $dir_parts, string $name): bool {
     $path = $this->ensureDirectory($dir_parts);
@@ -88,6 +92,7 @@ class ConfigStorage {
    *
    * @return \Consolidation\Config\Config
    *   Config object.
+   *
    * @throws \Exception
    */
   public function load(string $name, array $dir_parts): Config {

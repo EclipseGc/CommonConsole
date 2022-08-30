@@ -2,28 +2,33 @@
 
 namespace EclipseGc\CommonConsole\Event;
 
-use EclipseGc\CommonConsole\PlatformFactoryInterface;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class GetPlatformTypeEvent
+ * Class GetPlatformTypeEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
 class GetPlatformTypeEvent extends Event {
 
   /**
+   * Platform type.
+   *
    * @var string
    */
   protected $platformType;
 
   /**
+   * Platform class.
+   *
    * @var string
    */
   protected $class;
 
   /**
+   * Platform factory.
+   *
    * @var string
    */
   protected $factory = '';
@@ -32,7 +37,7 @@ class GetPlatformTypeEvent extends Event {
    * GetPlatformTypeEvent constructor.
    *
    * @param string $platformType
-   *   The platform type.
+   *   Platform type.
    */
   public function __construct(string $platformType) {
     $this->platformType = $platformType;
@@ -42,6 +47,7 @@ class GetPlatformTypeEvent extends Event {
    * Get the platform type intended to be instantiated.
    *
    * @return string
+   *   Platform type.
    */
   public function getPlatformType() : string {
     return $this->platformType;
@@ -55,7 +61,7 @@ class GetPlatformTypeEvent extends Event {
    *
    * @throws \Exception
    */
-  public function addClass(string $class) {
+  public function addClass(string $class): void {
     if (!in_array(PlatformInterface::class, class_implements($class))) {
       throw new \Exception(sprintf("Invalid Platform class. Must implement %s.", PlatformInterface::class));
     }
@@ -66,8 +72,9 @@ class GetPlatformTypeEvent extends Event {
    * Get the class to instantiate for the platform.
    *
    * @return string
+   *   Platform class.
    */
-  public function getClass() {
+  public function getClass(): string {
     return $this->class;
   }
 

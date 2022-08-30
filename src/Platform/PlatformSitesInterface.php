@@ -5,7 +5,7 @@ namespace EclipseGc\CommonConsole\Platform;
 use EclipseGc\CommonConsole\PlatformInterface;
 
 /**
- * Interface PlatformSitesInterface
+ * Interface PlatformSitesInterface.
  *
  * @package Acquia\ContentHubCli\Platform
  */
@@ -15,7 +15,8 @@ interface PlatformSitesInterface extends PlatformInterface {
    * Get a list of sites associated to the platform.
    *
    * @return array
+   *   Platform sites.
    */
-  public function getPlatformSites(): array ;
+  public function getPlatformSites(): array;
 
 }

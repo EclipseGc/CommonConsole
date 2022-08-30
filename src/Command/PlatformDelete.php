@@ -15,7 +15,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * @package EclipseGc\CommonConsole\Command
  */
 class PlatformDelete extends Command {
-  
+
   /**
    * {@inheritdoc}
    */
@@ -33,7 +33,7 @@ class PlatformDelete extends Command {
    *
    * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
    *   The platform storage service.
-   * @param string|NULL $name
+   * @param string|null $name
    *   The name of this command.
    */
   public function __construct(PlatformStorage $storage, string $name = NULL) {

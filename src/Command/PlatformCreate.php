@@ -21,7 +21,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
- * Class CreatePlatform
+ * Class CreatePlatform.
  *
  * @package EclipseGc\CommonConsole\Command
  */

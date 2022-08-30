@@ -8,7 +8,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Class QuestionFactory
+ * Class QuestionFactory.
  *
  * Questions can be dynamically built together on some commands, this factory
  * provides a generic catch-all solution for instantiating questions and
@@ -44,9 +44,12 @@ class QuestionFactory {
    * Identifies and instantiates questions as necessary.
    *
    * @param mixed $question
+   *   Question object/callable.
    * @param \Consolidation\Config\Config $config
+   *   Config object.
    *
    * @return \Symfony\Component\Console\Question\Question
+   *   Question object.
    */
   public function getQuestion($question, Config $config): Question {
     if ($question instanceof Question) {
@@ -58,7 +61,7 @@ class QuestionFactory {
     if (!empty($question['question']) && !empty($question['services']) && is_callable($question['question'])) {
       $services = $question['services'];
       $args = [
-        $config
+        $config,
       ];
       foreach ($services as $service_id) {
         if (!$this->container->has($service_id)) {

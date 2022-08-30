@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * Class PlatformBase
+ * Class PlatformBase.
  *
  * @package EclipseGc\CommonConsole\Platform
  */

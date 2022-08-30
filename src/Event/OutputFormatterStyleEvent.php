@@ -6,7 +6,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyleInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class OutputFormatterStyleEvent
+ * Class OutputFormatterStyleEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -15,7 +15,7 @@ class OutputFormatterStyleEvent extends Event {
   /**
    * The output formatter styles.
    *
-   * @var OutputFormatterStyleInterface[]
+   * @var \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface[]
    */
   protected $styles = [];
 
@@ -29,7 +29,7 @@ class OutputFormatterStyleEvent extends Event {
    *
    * @throws \Exception
    */
-  public function addOutputFormatterStyle(string $name, OutputFormatterStyleInterface $style) {
+  public function addOutputFormatterStyle(string $name, OutputFormatterStyleInterface $style): void {
     if (!empty($this->styles[$name])) {
       throw new \Exception(sprintf("The output formatter style of name %s is already set by another event subscriber.", $name));
     }
@@ -39,7 +39,8 @@ class OutputFormatterStyleEvent extends Event {
   /**
    * Gets the set output formatter styles.
    *
-   * @return OutputFormatterStyleInterface[]
+   * @return \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface[]
+   *   Styles array.
    */
   public function getFormatterStyles() : array {
     return $this->styles;

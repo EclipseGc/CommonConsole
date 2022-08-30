@@ -5,6 +5,9 @@ namespace EclipseGc\CommonConsole\Event;
 use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
+/**
+ * PlatformDeleteEvent.
+ */
 class PlatformDeleteEvent extends Event {
 
   /**
@@ -15,6 +18,8 @@ class PlatformDeleteEvent extends Event {
   protected $platform;
 
   /**
+   * Errors.
+   *
    * @var array
    */
   protected $errors = [];
@@ -30,7 +35,10 @@ class PlatformDeleteEvent extends Event {
   }
 
   /**
+   * Returns platform.
+   *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Platform.
    */
   public function getPlatform() : PlatformInterface {
     return $this->platform;
@@ -47,9 +55,10 @@ class PlatformDeleteEvent extends Event {
   }
 
   /**
-   * Whether or not any errors were encountered during the event.
+   * Whether any errors were encountered during the event.
    *
    * @return bool
+   *   True if errors, else false.
    */
   public function hasError() : bool {
     return (bool) $this->errors;
@@ -59,6 +68,7 @@ class PlatformDeleteEvent extends Event {
    * Gets any logged errors encountered by the event.
    *
    * @return array
+   *   Errors.
    */
   public function getErrors() : array {
     return $this->errors;

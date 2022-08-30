@@ -8,16 +8,21 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use EclipseGc\CommonConsole\Tests\CommonConsoleTestBase;
 use Symfony\Component\Console\Input\ArrayInput;
 
+/**
+ * PlatformListTest.
+ */
 class PlatformListTest extends CommonConsoleTestBase {
 
   /**
-   * @throws \Symfony\Component\Console\Exception\ExceptionInterface
+   * Tests platform list.
+   *
+   * @throws \Exception
    *
    * @covers \EclipseGc\CommonConsole\Command\PlatformList::execute
    *
    * @dataProvider listDataProvider
    */
-  public function testList(array $platforms, array $input, array $expected_messages, array $expected_newlines, array $expected_options, int $expected_rc) {
+  public function testList(array $platforms, array $input, array $expected_messages, array $expected_newlines, array $expected_options, int $expected_rc): void {
     $storage = $this->prophesize(PlatformStorage::class);
     $storage->loadAll()->willReturn($platforms);
     $command = new PlatformList($storage->reveal());
@@ -35,8 +40,9 @@ class PlatformListTest extends CommonConsoleTestBase {
    * A data provider for ::testList()
    *
    * @return array[]
+   *   Data provider.
    */
-  public function listDataProvider() {
+  public function listDataProvider(): array {
     $platform1 = $this->prophesize(PlatformInterface::class);
     $platform1->getAlias()->willReturn('foo');
     $platform1->get('platform.type')->willReturn('foo_type');
@@ -46,30 +52,30 @@ class PlatformListTest extends CommonConsoleTestBase {
     return [
       // No platforms.
       [
-        // Platforms
+        // Platforms.
         [],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => 'No platform available.',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [0 => 0],
-        // Return Code
+        // Return Code.
         0,
       ],
-      // Single platform
+      // Single platform.
       [
-        // Platforms
+        // Platforms.
         [
           $platform1->reveal(),
         ],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => '+-------+----------+',
           1 => '|<info> Alias </info>|<info> Type     </info>|',
@@ -77,9 +83,9 @@ class PlatformListTest extends CommonConsoleTestBase {
           3 => '| foo   | foo_type |',
           4 => '+-------+----------+',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [
           0 => 0,
           1 => 0,
@@ -87,19 +93,19 @@ class PlatformListTest extends CommonConsoleTestBase {
           3 => 0,
           4 => 0,
         ],
-        // Return Code
+        // Return Code.
         0,
       ],
-      // Multiple platforms
+      // Multiple platforms.
       [
-        // Platforms
+        // Platforms.
         [
           $platform1->reveal(),
           $platform2->reveal()
         ],
-        // Input
+        // Input.
         [],
-        // Messages
+        // Messages.
         [
           0 => '+-------+----------+',
           1 => '|<info> Alias </info>|<info> Type     </info>|',
@@ -108,9 +114,9 @@ class PlatformListTest extends CommonConsoleTestBase {
           4 => '| bar   | bar_type |',
           5 => '+-------+----------+',
         ],
-        // Newlines
+        // Newlines.
         [],
-        // Options
+        // Options.
         [
           0 => 0,
           1 => 0,
@@ -119,7 +125,7 @@ class PlatformListTest extends CommonConsoleTestBase {
           4 => 0,
           5 => 0,
         ],
-        // Return Code
+        // Return Code.
         0,
       ],
     ];

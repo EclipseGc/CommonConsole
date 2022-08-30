@@ -2,8 +2,6 @@
 
 namespace EclipseGc\CommonConsole\Exception;
 
-use Throwable;
-
 /**
  * Class MissingPlatformException.
  *

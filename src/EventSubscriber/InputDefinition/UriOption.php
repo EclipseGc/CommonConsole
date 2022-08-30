@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class AliasArgument
+ * Class AliasArgument.
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\InputDefinition
  */

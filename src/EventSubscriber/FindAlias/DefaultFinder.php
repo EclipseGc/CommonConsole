@@ -8,13 +8,15 @@ use EclipseGc\CommonConsole\Platform\PlatformStorage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class DefaultFinder
+ * Default platform finder.
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\FindAlias
  */
 class DefaultFinder implements EventSubscriberInterface {
 
   /**
+   * Platform storage.
+   *
    * @var \EclipseGc\CommonConsole\Platform\PlatformStorage
    */
   protected $storage;
@@ -45,7 +47,7 @@ class DefaultFinder implements EventSubscriberInterface {
    *
    * @throws \Exception
    */
-  public function onFindAlias(FindAliasEvent $event) {
+  public function onFindAlias(FindAliasEvent $event): void {
     $platform = $this->storage->load($event->getAlias());
     $event->setPlatform($platform);
     $event->stopPropagation();

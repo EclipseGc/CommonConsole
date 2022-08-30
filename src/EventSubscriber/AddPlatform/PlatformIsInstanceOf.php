@@ -6,13 +6,17 @@ use EclipseGc\CommonConsole\CommonConsoleEvents;
 use EclipseGc\CommonConsole\Event\AddPlatformToCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Checks platform instance matches the expectation.
+ */
 class PlatformIsInstanceOf implements EventSubscriberInterface {
 
   /**
    * {@inheritdoc}
    */
   public static function getSubscribedEvents() {
-    $events[CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND] = ['onAddPlatformToCommand', 100];
+    $events[CommonConsoleEvents::ADD_PLATFORM_TO_COMMAND]
+      = ['onAddPlatformToCommand', 100];
     return $events;
   }
 

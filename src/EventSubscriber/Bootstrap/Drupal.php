@@ -10,7 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class Drupal
+ * Class Drupal.
  *
  * Used in the context of a Drupal site instance to bootstrap Drupal to a
  * functional state.
@@ -30,8 +30,6 @@ class Drupal implements EventSubscriberInterface {
    *
    * @param \Composer\Autoload\ClassLoader $autoloader
    *   The composer class loader.
-   * @param string $autoloadFile
-   *   The location of the autoload file.
    */
   public function __construct(ClassLoader $autoloader) {
     $this->loader = $autoloader;
@@ -50,8 +48,10 @@ class Drupal implements EventSubscriberInterface {
    *
    * @param \EclipseGc\CommonConsole\Event\BootstrapEvent $bootstrapEvent
    *   The bootstrap event.
+   *
+   * @throws \Exception
    */
-  public function onPlatformBootstrap(BootstrapEvent $bootstrapEvent) {
+  public function onPlatformBootstrap(BootstrapEvent $bootstrapEvent): void {
     if ($bootstrapEvent->getPlatformType() === 'drupal8') {
       if (!class_exists(DrupalKernel::class)) {
         $consoleEvent = $bootstrapEvent->getConsoleCommandEvent();
@@ -74,8 +74,9 @@ class Drupal implements EventSubscriberInterface {
   }
 
   /**
-   * Set up the $_SERVER globals so that Drupal will see the same values
-   * that it does when serving pages via the web server.
+   * Set up the $_SERVER globals so that Drupal will see the same values.
+   *
+   * That it does when serving pages via the web server.
    */
   protected function setServerGlobals($uri) {
     // Fake the necessary HTTP headers that Drupal needs:
@@ -88,11 +89,11 @@ class Drupal implements EventSubscriberInterface {
         $drupal_base_url = parse_url($uri);
       }
       // Fill in defaults.
-      $drupal_base_url += array(
+      $drupal_base_url += [
         'path' => '',
         'host' => NULL,
         'port' => NULL,
-      );
+      ];
       $_SERVER['HTTP_HOST'] = $drupal_base_url['host'];
 
       if ($drupal_base_url['scheme'] == 'https') {
@@ -114,7 +115,7 @@ class Drupal implements EventSubscriberInterface {
     $_SERVER['PHP_SELF'] = $_SERVER['REQUEST_URI'] . 'index.php';
     $_SERVER['SCRIPT_NAME'] = $_SERVER['PHP_SELF'];
     $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
-    $_SERVER['REQUEST_METHOD']  = 'GET';
+    $_SERVER['REQUEST_METHOD'] = 'GET';
 
     $_SERVER['SERVER_SOFTWARE'] = NULL;
     $_SERVER['HTTP_USER_AGENT'] = NULL;

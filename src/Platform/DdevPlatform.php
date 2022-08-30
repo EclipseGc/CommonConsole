@@ -10,7 +10,7 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Process\Process;
 
 /**
- * Class DdevPlatform
+ * Class DdevPlatform.
  *
  * @package EclipseGc\CommonConsole\Platform
  */

@@ -39,6 +39,7 @@ interface PlatformCommandInterface {
    *   The internal platform name.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface|null
+   *   Platform if available, else null.
    */
   public function getPlatform(string $name) : ?PlatformInterface;
 
@@ -54,6 +55,7 @@ interface PlatformCommandInterface {
    *  ];
    *
    * @return string[]
+   *   Expected platform options.
    */
   public static function getExpectedPlatformOptions() : array;
 
@@ -66,8 +68,10 @@ interface PlatformCommandInterface {
    * given command being run.
    *
    * @param string $name
+   *   Platform name to filter with.
    *
    * @return array
+   *   Sites for this platform.
    */
   public function getPlatformSites(string $name) : array;
 

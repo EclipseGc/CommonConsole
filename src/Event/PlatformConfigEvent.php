@@ -15,6 +15,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 class PlatformConfigEvent extends Event {
 
   /**
+   * Errors.
+   *
    * @var array
    */
   protected $errors = [];
@@ -45,6 +47,10 @@ class PlatformConfigEvent extends Event {
    *
    * @param \Consolidation\Config\Config $config
    *   Config to modify.
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   Input.
+   * @param \Symfony\Component\Console\Output\OutputInterface $output
+   *   Output.
    */
   public function __construct(Config $config, InputInterface $input, OutputInterface $output) {
     $this->config = $config;
@@ -56,6 +62,7 @@ class PlatformConfigEvent extends Event {
    * Gets config instance.
    *
    * @return \Consolidation\Config\Config
+   *   Config.
    */
   public function getConfig() : Config {
     return $this->config;
@@ -65,8 +72,9 @@ class PlatformConfigEvent extends Event {
    * Gets InputInterface instance.
    *
    * @return \Symfony\Component\Console\Input\InputInterface
+   *   Input.
    */
-  public function getInput() {
+  public function getInput(): InputInterface {
     return $this->input;
   }
 
@@ -74,8 +82,9 @@ class PlatformConfigEvent extends Event {
    * Gets OutputInterface instance.
    *
    * @return \Symfony\Component\Console\Output\OutputInterface
+   *   Output.
    */
-  public function getOutput() {
+  public function getOutput(): OutputInterface {
     return $this->output;
   }
 
@@ -90,9 +99,10 @@ class PlatformConfigEvent extends Event {
   }
 
   /**
-   * Whether or not any errors were encountered during the event.
+   * Whether any errors were encountered during the event.
    *
    * @return bool
+   *   True if errors, false otherwise.
    */
   public function hasError() : bool {
     return (bool) $this->errors;
@@ -102,6 +112,7 @@ class PlatformConfigEvent extends Event {
    * Gets any logged errors encountered by the event.
    *
    * @return array
+   *   Returns errors.
    */
   public function getErrors() : array {
     return $this->errors;

@@ -3,7 +3,7 @@
 namespace EclipseGc\CommonConsole\Command;
 
 /**
- * Interface PlatformBootStrapCommandInterface
+ * Interface PlatformBootStrapCommandInterface.
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand
  */
@@ -17,7 +17,8 @@ interface PlatformBootStrapCommandInterface {
    * bootstrap requirement and react accordingly.
    *
    * @return string
+   *   Platform bootstrap.
    */
-  public function getPlatformBootstrapType() : string ;
+  public function getPlatformBootstrapType() : string;
 
 }

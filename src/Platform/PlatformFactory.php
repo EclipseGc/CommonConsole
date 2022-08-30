@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Process\Process;
 
 /**
- * Class PlatformFactory
+ * Class PlatformFactory.
  *
  * This class converts Consolidation\Config\ConfigInterface objects into
  * PlatformInterface objects. For saved data, use ::getPlatform() which will
@@ -52,6 +52,9 @@ class PlatformFactory {
    */
   protected $container;
 
+  /**
+   * PlatformFactory constructor.
+   */
   public function __construct(EventDispatcherInterface $dispatcher, ProcessRunner $runner, ContainerInterface $container) {
     $this->dispatcher = $dispatcher;
     $this->runner = $runner;
@@ -63,11 +66,11 @@ class PlatformFactory {
    *
    * @param \Consolidation\Config\ConfigInterface $config
    *   The configuration values to use for instantiating the platform.
-   *
    * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
    *   The platform storage.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Platform object.
    */
   public function getPlatform(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
     $event = new GetPlatformTypeEvent($config->get(PlatformInterface::PLATFORM_TYPE_KEY));
@@ -99,43 +102,99 @@ class PlatformFactory {
    *
    * @param \Consolidation\Config\ConfigInterface $config
    *   The config for the mock platform.
-   *
    * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
    *   The platform storage.
    *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Platform object.
    */
   public function getMockPlatformFromConfig(ConfigInterface $config, PlatformStorage $storage) : PlatformInterface {
-    // Create a mock platform object to save
+    // Create a mock platform object to save.
     return new class($config, $storage) implements PlatformInterface {
 
+      /**
+       * Config object.
+       *
+       * @var array|\Consolidation\Config\ConfigInterface
+       */
       protected $config = [];
+
+      /**
+       * Platform storage.
+       *
+       * @var \EclipseGc\CommonConsole\Platform\PlatformStorage
+       */
       protected $storage;
 
+      /**
+       * Dynamic constructor.
+       *
+       * @param \Consolidation\Config\ConfigInterface $config
+       *   Config object.
+       * @param \EclipseGc\CommonConsole\Platform\PlatformStorage $storage
+       *   Platform storage.
+       */
       public function __construct(ConfigInterface $config, PlatformStorage $storage) {
         $this->config = $config;
         $this->storage = $storage;
       }
+
+      /**
+       * {@inheritDoc}
+       */
       public function getAlias(): string {
         return $this->config->get(PlatformInterface::PLATFORM_ALIAS_KEY);
       }
+
+      /**
+       * {@inheritDoc}
+       */
       public static function getQuestions() {}
+
+      /**
+       * {@inheritDoc}
+       */
       public static function getPlatformId(): string {}
+
+      /**
+       * {@inheritDoc}
+       */
       public function execute(Command $command, InputInterface $input, OutputInterface $output): int {}
+
+      /**
+       * {@inheritDoc}
+       */
       public function out(Process $process, OutputInterface $output, string $type, string $buffer): void {}
+
+      /**
+       * {@inheritDoc}
+       */
       public function get(string $key) {
         return $this->config->get($key);
       }
+
+      /**
+       * {@inheritDoc}
+       */
       public function set(string $key, $value) : self {
         $this->config->set($key, $value);
         return $this;
       }
+
+      /**
+       * {@inheritDoc}
+       */
       public function export() : array {
         return $this->config->export();
       }
+
+      /**
+       * {@inheritDoc}
+       */
       public function save() : PlatformInterface {
         return $this->storage->save($this);
       }
+
     };
   }
 

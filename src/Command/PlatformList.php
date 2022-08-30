@@ -58,14 +58,14 @@ class PlatformList extends Command {
       $output->writeln('No platform available.');
       return 0;
     }
-    
+
     $table = new Table($output);
     $table->setHeaders(['Alias', 'Type']);
     foreach ($aliases as $platform) {
       $table->addRow([$platform->getAlias(), $platform->get('platform.type')]);
     }
     $table->render();
-    
+
     return 0;
   }
 

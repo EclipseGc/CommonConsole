@@ -13,7 +13,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class AliasFinder
+ * Class AliasFinder.
  *
  * @package EclipseGc\CommonConsole\EventSubscriber\ConsoleCommand
  */
@@ -24,7 +24,7 @@ class AliasFinder implements EventSubscriberInterface {
   /**
    * AliasFinder constructor.
    *
-   * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
+   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    *   The event dispatcher.
    */
   protected $dispatcher;
@@ -53,8 +53,7 @@ class AliasFinder implements EventSubscriberInterface {
    * @param \Symfony\Component\Console\Event\ConsoleCommandEvent $event
    *   The console command event.
    */
-  public function onConsoleCommand(ConsoleCommandEvent $event) {
-    /** @var \Symfony\Component\Console\Input\InputInterface $input */
+  public function onConsoleCommand(ConsoleCommandEvent $event): void {
     $input = $event->getInput();
     $output = $event->getOutput();
     $command = $event->getCommand();
@@ -83,6 +82,17 @@ class AliasFinder implements EventSubscriberInterface {
     }
   }
 
+  /**
+   * Returns platform input from given console input.
+   *
+   * @param \Symfony\Component\Console\Input\InputInterface $input
+   *   Console input.
+   *
+   * @return \Symfony\Component\Console\Input\ArrayInput
+   *   Array input.
+   *
+   * @throws \ReflectionException
+   */
   protected function getPlatformInput(InputInterface $input) {
     $property = new \ReflectionProperty($input, 'definition');
     $property->setAccessible(TRUE);

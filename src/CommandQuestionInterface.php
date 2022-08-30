@@ -1,10 +1,9 @@
 <?php
 
-
 namespace EclipseGc\CommonConsole;
 
 /**
- * Interface CommandQuestionInterface
+ * Interface CommandQuestionInterface.
  *
  * @package EclipseGc\CommonConsole
  */
@@ -33,6 +32,7 @@ interface CommandQuestionInterface {
    *  public static function getRemoteVendorDir(array $values) {...
    *
    * @return array
+   *   Question list.
    */
   public static function getQuestions();
 

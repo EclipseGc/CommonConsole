@@ -6,7 +6,7 @@ use EclipseGc\CommonConsole\PlatformInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class AddPlatformToCommandEvent
+ * Class AddPlatformToCommandEvent.
  *
  * @package EclipseGc\CommonConsole\Event
  */
@@ -50,8 +50,11 @@ class AddPlatformToCommandEvent extends Event {
    * AddPlatformToCommandEvent constructor.
    *
    * @param string $expectation
+   *   Expectation string.
    * @param \EclipseGc\CommonConsole\PlatformInterface $platform
+   *   Platform object.
    * @param string $alias
+   *   Platform alias.
    */
   public function __construct(string $expectation, PlatformInterface $platform, string $alias) {
     $this->expectation = $expectation;
@@ -60,35 +63,50 @@ class AddPlatformToCommandEvent extends Event {
   }
 
   /**
+   * Returns expectation.
+   *
    * @return string
+   *   Expectation.
    */
   public function getExpectation(): string {
     return $this->expectation;
   }
 
   /**
+   * Returns platform.
+   *
    * @return \EclipseGc\CommonConsole\PlatformInterface
+   *   Returns platform.
    */
   public function getPlatform(): PlatformInterface {
     return $this->platform;
   }
 
   /**
+   * Returns alias.
+   *
    * @return string
+   *   Platform alias.
    */
   public function getAlias(): string {
     return $this->alias;
   }
 
   /**
+   * Sets expectation match flag.
+   *
    * @param bool $value
+   *   True or false expectation value.
    */
   public function setPlatformExpectationMatch(bool $value): void {
     $this->platformMatchesExpectation = $value;
   }
 
   /**
+   * Returns expectation match.
+   *
    * @return bool
+   *   Expectation match flag.
    */
   public function platformMatchesExpectation(): bool {
     return $this->platformMatchesExpectation;
