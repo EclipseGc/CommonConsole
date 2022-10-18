@@ -101,6 +101,7 @@ class ServicesFileLoader extends YamlFileLoader {
         }
       }
     }
+    return NULL;
   }
 
 }

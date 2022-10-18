@@ -59,7 +59,7 @@ class AliasFinder implements EventSubscriberInterface {
     $command = $event->getCommand();
     $platform_input = $this->getPlatformInput($input);
     foreach ($input->getArguments() as $name => $argument) {
-      if (preg_match(self::ALIAS_PATTERN, $argument)) {
+      if (preg_match(self::ALIAS_PATTERN, $argument ?? '')) {
         $alias = substr($argument, 1);
         $findAliasEvent = new FindAliasEvent($alias, $event);
         $this->dispatcher->dispatch($findAliasEvent, CommonConsoleEvents::ALIAS_FIND);
@@ -100,7 +100,7 @@ class AliasFinder implements EventSubscriberInterface {
     $definition = $property->getValue($input);
     $arrayInput = ['command' => $input->getArgument('command')];
     foreach ($input->getArguments() as $key => $argument) {
-      if (preg_match(self::ALIAS_PATTERN, $argument)) {
+      if (preg_match(self::ALIAS_PATTERN, $argument ?? '')) {
         continue;
       }
       $arrayInput[$key] = $argument;

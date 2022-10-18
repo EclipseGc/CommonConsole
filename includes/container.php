@@ -61,7 +61,8 @@ $containerBuilder = new class($autoloader, $autoloaderFile) {
     $locations = array_merge($this->getComposerDirs(), $this->getInstalledDirectories());
     $loader = new ServicesFileLoader($container, new FileLocator($locations));
     $loader->load('commoncli.services.yml');
-    $container->setParameter('autoloader', $this->autoloader);
+    $container->setParameter('autoloader', NULL);
+    $container->set('autoloader', $this->autoloader);
     $container->setParameter('autoload.file', $this->autoloaderFile);
     $container->addCompilerPass(new RegisterListenersPass());
     $container->addCompilerPass(new CommandCompilerPass());
