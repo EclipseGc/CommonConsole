@@ -125,6 +125,7 @@ class PlatformArgumentInjectionEvent extends Event {
    */
   public function setDecoratedInput(array $arguments): void {
     $args = $this->input->getArguments();
+    unset($args['alias']);
     $options = $this->input->getOptions();
     $definition = $this->command->getDefinition();
     foreach ($options as $key => $val) {
@@ -136,7 +137,7 @@ class PlatformArgumentInjectionEvent extends Event {
       else {
         // Insert the option into the array IF it was actually used.
         if ((bool) $val === TRUE) {
-          $options["--$key"] = NULL;
+          $options["--$key"] = '';
         }
       }
 
