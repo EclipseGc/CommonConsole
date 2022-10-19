@@ -102,35 +102,35 @@ abstract class CommonConsoleTestBase extends TestCase {
       /**
        * Get verbosity overide.
        */
-      public function getVerbosity() {
+      public function getVerbosity(): int {
         return self::VERBOSITY_QUIET;
       }
 
       /**
        * isQuiet override.
        */
-      public function isQuiet() {
+      public function isQuiet(): bool {
         return TRUE;
       }
 
       /**
        * isVerbose override.
        */
-      public function isVerbose() {
+      public function isVerbose(): bool {
         return FALSE;
       }
 
       /**
        * isVeryVerbose override.
        */
-      public function isVeryVerbose() {
+      public function isVeryVerbose(): bool {
         return FALSE;
       }
 
       /**
        * isDebug override.
        */
-      public function isDebug() {
+      public function isDebug(): bool {
         return FALSE;
       }
 
@@ -144,7 +144,7 @@ abstract class CommonConsoleTestBase extends TestCase {
       /**
        * isDecorated override.
        */
-      public function isDecorated() {
+      public function isDecorated(): bool {
         return FALSE;
       }
 
@@ -156,7 +156,7 @@ abstract class CommonConsoleTestBase extends TestCase {
       /**
        * getFormatter override.
        */
-      public function getFormatter() {
+      public function getFormatter(): OutputFormatterInterface {
         return new BareOutputFormatter();
       }
 

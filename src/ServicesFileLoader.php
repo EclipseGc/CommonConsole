@@ -56,7 +56,7 @@ class ServicesFileLoader extends YamlFileLoader {
   /**
    * {@inheritdoc}
    */
-  public function load($resource, $type = NULL) {
+  public function load(mixed $resource, string $type = NULL): mixed {
     $paths = $this->locator->locate($resource, NULL, FALSE);
     foreach ($paths as $path) {
 
@@ -66,7 +66,7 @@ class ServicesFileLoader extends YamlFileLoader {
 
       // Empty file.
       if (NULL === $content) {
-        return;
+        return NULL;
       }
 
       // Imports.
@@ -101,6 +101,7 @@ class ServicesFileLoader extends YamlFileLoader {
         }
       }
     }
+    return NULL;
   }
 
 }

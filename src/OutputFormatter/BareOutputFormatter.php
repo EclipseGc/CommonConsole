@@ -21,7 +21,7 @@ class BareOutputFormatter implements OutputFormatterInterface {
   /**
    * {@inheritDoc}
    */
-  public function isDecorated() {
+  public function isDecorated(): bool {
     return FALSE;
   }
 
@@ -35,21 +35,21 @@ class BareOutputFormatter implements OutputFormatterInterface {
   /**
    * {@inheritDoc}
    */
-  public function hasStyle($name) {
+  public function hasStyle($name): bool {
     return FALSE;
   }
 
   /**
    * {@inheritDoc}
    */
-  public function getStyle($name) {
+  public function getStyle($name): OutputFormatterStyleInterface {
     throw new InvalidArgumentException(sprintf('Undefined style: "%s".', $name));
   }
 
   /**
    * {@inheritDoc}
    */
-  public function format($message) {
+  public function format($message): ?string {
     return $message;
   }
 
